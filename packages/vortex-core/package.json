@@ -1,0 +1,29 @@
+{
+	"name": "@vortexjs/core",
+	"module": "src/index.ts",
+	"type": "module",
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"exports": {
+		".": {
+			"import": "./src/index.ts"
+		},
+		"./jsx-runtime": {
+			"import": "./src/jsx/jsx-runtime.ts"
+		},
+		"./jsx-dev-runtime": {
+			"import": "./src/jsx/jsx-dev-runtime.ts"
+		},
+		"./render": {
+			"import": "./src/render/index.ts"
+		},
+		"./jsx-common": {
+			"import": "./src/jsx/jsx-common.ts"
+		}
+	}
+}

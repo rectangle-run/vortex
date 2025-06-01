@@ -1,0 +1,13 @@
+{
+	"name": "vortex",
+	"private": true,
+	"workspaces": ["packages/*"],
+	"scripts": {
+		"fmt": "biome check --write",
+		"dev": "cd ./packages/example && bun dev"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4"
+	},
+	"trustedDependencies": ["@biomejs/biome"]
+}
