@@ -5,9 +5,10 @@ export type ElementProps<T extends HTMLElement> = Partial<
 		[key in keyof T]: T[key] extends string | number | boolean ? T[key] : never;
 	} & {
 		className: string;
-		children: JSXChildren;
 	}
->;
+> & {
+	children: JSXChildren;
+};
 
 type BaseIntrinsicElements = {
 	[key in keyof HTMLElementTagNameMap]: ElementProps<

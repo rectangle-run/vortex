@@ -4,10 +4,12 @@
 	"workspaces": ["packages/*"],
 	"scripts": {
 		"fmt": "biome check --write",
-		"dev": "cd ./packages/example && bun dev"
+		"dev": "cd ./packages/example && bun dev",
+		"pub": "bun ./publishing.ts"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4"
+		"@biomejs/biome": "1.9.4",
+		"inquirer": "^12.6.3"
 	},
 	"trustedDependencies": ["@biomejs/biome"]
 }
