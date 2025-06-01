@@ -1,15 +1,23 @@
 {
-	"name": "vortex",
-	"private": true,
-	"workspaces": ["packages/*"],
-	"scripts": {
-		"fmt": "biome check --write",
-		"dev": "cd ./packages/example && bun dev",
-		"pub": "bun ./publishing.ts"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"inquirer": "^12.6.3"
-	},
-	"trustedDependencies": ["@biomejs/biome"]
+    "name": "vortex",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "fmt": "biome check --write",
+        "change": "changeset",
+        "pub": "changeset publish"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "1.9.4",
+        "inquirer": "^12.6.3",
+        "turbo": "^2.5.4",
+        "@changesets/cli": "^2.29.4"
+    },
+    "trustedDependencies": [
+        "@biomejs/biome",
+        "esbuild"
+    ],
+    "packageManager": "bun@1.2.15"
 }

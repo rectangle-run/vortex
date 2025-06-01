@@ -1,29 +1,41 @@
 {
-	"name": "@vortexjs/core",
-	"module": "src/index.ts",
-	"type": "module",
-	"private": true,
-	"devDependencies": {
-		"@types/bun": "latest"
-	},
-	"peerDependencies": {
-		"typescript": "^5"
-	},
-	"exports": {
-		".": {
-			"import": "./src/index.ts"
-		},
-		"./jsx-runtime": {
-			"import": "./src/jsx/jsx-runtime.ts"
-		},
-		"./jsx-dev-runtime": {
-			"import": "./src/jsx/jsx-dev-runtime.ts"
-		},
-		"./render": {
-			"import": "./src/render/index.ts"
-		},
-		"./jsx-common": {
-			"import": "./src/jsx/jsx-common.ts"
-		}
-	}
+    "name": "@vortexjs/core",
+    "module": "src/index.ts",
+    "type": "module",
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "scripts": {
+        "build": "tsup ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts ./src/jsx/jsx-common.ts --format esm,cjs --dts --out-dir dist",
+        "dev": "tsup ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts ./src/jsx/jsx-common.ts --format esm,cjs --dts --out-dir dist --watch"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./jsx-runtime": {
+            "types": "./dist/jsx/jsx-runtime.d.ts",
+            "import": "./dist/jsx/jsx-runtime.js",
+            "require": "./dist/jsx/jsx-runtime.cjs"
+        },
+        "./jsx-dev-runtime": {
+            "types": "./dist/jsx/jsx-dev-runtime.d.ts",
+            "import": "./dist/jsx/jsx-dev-runtime.js",
+            "require": "./dist/jsx/jsx-dev-runtime.cjs"
+        },
+        "./jsx-common": {
+            "types": "./dist/jsx/jsx-common.d.ts",
+            "import": "./dist/jsx/jsx-common.js",
+            "require": "./dist/jsx/jsx-common.cjs"
+        }
+    },
+    "version": "1.0.3",
+    "dependencies": {
+        "tsup": "^8.5.0"
+    }
 }

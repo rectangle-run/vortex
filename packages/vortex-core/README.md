@@ -1,15 +1,34 @@
-# core
+# Vortex Core
 
-To install dependencies:
+> [!IMPORTANT]
+> Vortex isn't very powerful on it's own, you need a renderer like `@vortexjs/dom`.
 
-```bash
-bun install
-```
-
-To run:
+## Setup
 
 ```bash
-bun run index.ts
+bun add @vortexjs/core @vortexjs/dom
 ```
 
-This project was created using `bun init` in bun v1.2.12. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## Usage
+
+```ts
+import { getImmediateValue, render, useState } from "@vortexjs/core";
+import { html } from "@vortexjs/dom";
+
+function App() {
+    const counter = useState(0);
+
+    setInterval(() => {
+        counter.set(getImmediateValue(counter) + 1);
+    }, 1);
+
+    return (
+        <>
+            <h1>Hello, multiverse!</h1>
+            <p>Counter = {counter}</p>
+        </>
+    );
+}
+
+render(html(), document.body, <App />);
+```

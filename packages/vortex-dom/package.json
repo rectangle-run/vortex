@@ -1,26 +1,36 @@
 {
-  "name": "@vortexjs/dom",
-  "module": "src/index.ts",
-  "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "dependencies": {
-    "@vortexjs/core": "workspace:*"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "exports": {
-    ".": {
-      "import": "./src/index.ts"
+    "name": "@vortexjs/dom",
+    "type": "module",
+    "devDependencies": {
+        "@types/bun": "latest"
     },
-    "./jsx-runtime": {
-      "import": "./src/jsx/jsx-runtime.ts"
+    "dependencies": {
+        "@vortexjs/core": "workspace:*",
+        "tsup": "^8.5.0"
     },
-    "./jsx-dev-runtime": {
-      "import": "./src/jsx/jsx-dev-runtime.ts"
-    }
-  },
-  "version": "1.0.3"
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "scripts": {
+        "build": "tsup ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts --format esm,cjs --dts --out-dir dist",
+        "dev": "tsup ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts --format esm,cjs --dts --out-dir dist --watch"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./jsx-runtime": {
+            "types": "./dist/jsx/jsx-runtime.d.ts",
+            "import": "./dist/jsx/jsx-runtime.js",
+            "require": "./dist/jsx/jsx-runtime.cjs"
+        },
+        "./jsx-dev-runtime": {
+            "types": "./dist/jsx/jsx-dev-runtime.d.ts",
+            "import": "./dist/jsx/jsx-dev-runtime.js",
+            "require": "./dist/jsx/jsx-dev-runtime.cjs"
+        }
+    },
+    "version": "1.0.3"
 }
