@@ -22,5 +22,5 @@
       "import": "./src/jsx/jsx-dev-runtime.ts"
     }
   },
-  "version": "1.0.1"
+  "version": "1.0.3"
 }
