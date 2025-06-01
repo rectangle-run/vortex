@@ -5,7 +5,8 @@
 	"scripts": {
 		"fmt": "biome check --write",
 		"change": "changeset",
-		"pub": "changeset version && changeset publish"
+		"pub": "changeset version && changeset publish",
+		"prepublish": "npm run fmt"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
