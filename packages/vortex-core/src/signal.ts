@@ -41,13 +41,18 @@ export interface Store<T> extends Signal<T> {
 	set(value: T): void;
 }
 
-export interface DerivedSignal<T> extends Signal<T> {
-	lifetime: Lifetime;
-}
+let idCounter = 0;
+
+const debugSignals = true;
 
 export function store<T>(initialValue: T): Store<T> {
+	const id = `signal-${idCounter++}`;
+
 	let value = initialValue;
+
 	const subscribers: ((value: T) => void)[] = [];
+
+	debugSignals && console.log(`[${id}]: initialized with `, value);
 
 	return {
 		[SignalGetter]() {
@@ -55,18 +60,23 @@ export function store<T>(initialValue: T): Store<T> {
 		},
 		subscribe(callback: (value: T) => void): Lifetime {
 			subscribers.push(callback);
+			debugSignals && console.trace(`[${id}]: subscribed with `, callback);
 			callback(value);
 
 			return new Lifetime().onClosed(() => {
 				subscribers.splice(subscribers.indexOf(callback), 1);
+				debugSignals && console.log(`[${id}]: unsubscribed `, callback);
 			});
 		},
 		set(newValue: T) {
+			using _escapeHatch = Component.hideComponent();
+
 			if (!equals(value, newValue)) {
 				value = newValue;
 				for (const subscriber of subscribers) {
 					subscriber(value);
 				}
+				debugSignals && console.log(`[${id}]: updated with `, value);
 			}
 		},
 	};
@@ -83,16 +93,17 @@ export function derived<T>(
 	props?: {
 		dynamic?: boolean;
 	},
-): DerivedSignal<T> {
+	signalLifetime: Lifetime = useComponent().lifetime,
+): Signal<T> {
 	const dynamic = props?.dynamic ?? false;
-
-	const signalLifetime = new Lifetime();
 
 	const dependencies: Signal<unknown>[] = [];
 
 	const innerSignal = store(
 		compute((signal) => {
-			dependencies.push(signal);
+			if (!dependencies.includes(signal)) {
+				dependencies.push(signal);
+			}
 			return signal[SignalGetter]();
 		}),
 	);
@@ -146,7 +157,6 @@ export function derived<T>(
 
 	return {
 		...innerSignal,
-		lifetime: signalLifetime,
 	};
 }
 
@@ -160,18 +170,19 @@ export function effect(
 	props?: {
 		dynamic?: boolean;
 	},
-): Lifetime {
+	outerLifetime: Lifetime = useComponent().lifetime,
+) {
 	const dynamic = props?.dynamic ?? false;
 
 	const dependencies: Signal<unknown>[] = [];
-
-	const outerLifetime = new Lifetime();
 
 	let latestLifetime = new Lifetime();
 
 	compute(
 		(signal) => {
-			dependencies.push(signal);
+			if (!dependencies.includes(signal)) {
+				dependencies.push(signal);
+			}
 			return signal[SignalGetter]();
 		},
 		{
@@ -238,8 +249,6 @@ export function effect(
 			})
 			.cascadesFrom(outerLifetime);
 	});
-
-	return outerLifetime;
 }
 
 export function isSignal(value: unknown): value is Signal<unknown> {
@@ -253,17 +262,9 @@ export function toSignal<T>(value: T | Signal<T>): Signal<T> {
 	return store(value);
 }
 
-export const useState = store; // Store is automatically garbage collected, because it doesn't have any dependencies that indirectly reference it via their callbacks.
+export const useState = store;
+export const useDerived = derived;
+export const useEffect = effect;
 
-export function useDerived<T>(
-	compute: (get: DerivedGetter) => T,
-	props?: {
-		dynamic?: boolean;
-	},
-): DerivedSignal<T> {
-	const result = derived(compute, props);
-
-	result.lifetime.cascadesFrom(useComponent().lifetime); // We don't want callbacks to reference the signal forever and cause a memory leak.
-
-	return result;
-}
+export type SignalOrValue<T> = T | Signal<T>;
+export type GetSignal<T> = T extends Signal<infer U> ? U : T;
