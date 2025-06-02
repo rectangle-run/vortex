@@ -5,7 +5,7 @@
 	"scripts": {
 		"fmt": "biome check --write",
 		"change": "changeset",
-		"pub": "rm -rf packages/*/dist || true && turbo build && changeset version && changeset publish",
+		"pub": "rm -rf packages/*/dist || true && turbo build && changeset version && changeset publish && npm run fmt && git add . && git commit -m \"Chore: Release\"",
 		"prepublish": "npm run fmt"
 	},
 	"devDependencies": {
