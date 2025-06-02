@@ -42,7 +42,7 @@ export interface Store<T> extends Signal<T> {
 
 let idCounter = 0;
 
-const debugSignals = true;
+const debugSignals = false;
 
 export function store<T>(initialValue: T): Store<T> {
 	const id = `signal-${idCounter++}`;
