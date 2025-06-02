@@ -1,7 +1,14 @@
 import type { JSXNode } from "../jsx/jsx-common";
 import type { Lifetime } from "../lifetime";
 import { Component, useComponent } from "../render";
-import { derived, getImmediateValue, isSignal, store, type Signal, type SignalOrValue } from "../signal";
+import {
+	type Signal,
+	type SignalOrValue,
+	derived,
+	getImmediateValue,
+	isSignal,
+	store,
+} from "../signal";
 
 export type Case = (() => JSXNode) | JSXNode;
 
@@ -13,29 +20,33 @@ export interface When extends Signal<JSXNode> {
 export function when(
 	condition: SignalOrValue<boolean>,
 	then: Case,
-	lt: Lifetime = useComponent().lifetime
+	lt: Lifetime = useComponent().lifetime,
 ): When {
 	const conditions = store<[SignalOrValue<boolean>, Case][]>([
 		[condition, then],
 	]);
 
-	const result = derived((get) => {
-		for (const [cond, value] of get(conditions)) {
-			if (isSignal(cond) ? get(cond) : cond) {
-				if (typeof value === "function") {
-					return {
-						type: "component",
-						children: [],
-						impl: value,
-						props: {},
-					} satisfies JSXNode;
-				}
+	const result = derived(
+		(get) => {
+			for (const [cond, value] of get(conditions)) {
+				if (isSignal(cond) ? get(cond) : cond) {
+					if (typeof value === "function") {
+						return {
+							type: "component",
+							children: [],
+							impl: value,
+							props: {},
+						} satisfies JSXNode;
+					}
 
-				return value;
+					return value;
+				}
 			}
-		}
-		return undefined;
-	}, { dynamic: true }, lt);
+			return undefined;
+		},
+		{ dynamic: true },
+		lt,
+	);
 
 	return {
 		...result,
@@ -44,12 +55,9 @@ export function when(
 			return this;
 		},
 		otherwise(value) {
-			conditions.set([
-				...getImmediateValue(conditions),
-				[store(true), value],
-			]);
+			conditions.set([...getImmediateValue(conditions), [store(true), value]]);
 
 			return result as Signal<JSXNode>;
 		},
-	}
+	};
 }
