@@ -25,6 +25,21 @@ export class Component {
 			},
 		};
 	}
+
+	static hideComponent() {
+		const previous = Component.rendering;
+
+		Component.rendering = null;
+
+		return {
+			[Symbol.dispose]() {
+				if (Component.rendering !== null) {
+					throw new Error("A component is already being rendered.");
+				}
+				Component.rendering = previous;
+			},
+		};
+	}
 }
 
 export function useComponent() {
