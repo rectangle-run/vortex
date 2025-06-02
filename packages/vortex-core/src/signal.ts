@@ -1,5 +1,4 @@
-import { Lifetime } from "./lifetime";
-import { Component, useComponent } from "./render/component";
+import { Lifetime, useHookLifetime } from "./lifetime";
 import { unwrap } from "./utils";
 
 export type Informant = ((signal: Signal<unknown>) => void) | null;
@@ -69,8 +68,6 @@ export function store<T>(initialValue: T): Store<T> {
 			});
 		},
 		set(newValue: T) {
-			using _escapeHatch = Component.hideComponent();
-
 			if (!equals(value, newValue)) {
 				value = newValue;
 				for (const subscriber of subscribers) {
@@ -93,7 +90,7 @@ export function derived<T>(
 	props?: {
 		dynamic?: boolean;
 	},
-	signalLifetime: Lifetime = useComponent().lifetime,
+	signalLifetime: Lifetime = useHookLifetime(),
 ): Signal<T> {
 	const dynamic = props?.dynamic ?? false;
 
@@ -170,7 +167,7 @@ export function effect(
 	props?: {
 		dynamic?: boolean;
 	},
-	outerLifetime: Lifetime = useComponent().lifetime,
+	outerLifetime: Lifetime = useHookLifetime(),
 ) {
 	const dynamic = props?.dynamic ?? false;
 

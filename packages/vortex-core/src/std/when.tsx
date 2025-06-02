@@ -1,6 +1,5 @@
 import type { JSXNode } from "../jsx/jsx-common";
-import type { Lifetime } from "../lifetime";
-import { Component, useComponent } from "../render";
+import { type Lifetime, useHookLifetime } from "../lifetime";
 import {
 	type Signal,
 	type SignalOrValue,
@@ -20,7 +19,7 @@ export interface When extends Signal<JSXNode> {
 export function when(
 	condition: SignalOrValue<boolean>,
 	then: Case,
-	lt: Lifetime = useComponent().lifetime,
+	lt: Lifetime = useHookLifetime(),
 ): When {
 	const conditions = store<[SignalOrValue<boolean>, Case][]>([
 		[condition, then],

@@ -8,7 +8,6 @@ import {
 	store,
 } from "../signal";
 import { trace, unreachable, unwrap } from "../utils";
-import { Component } from "./component";
 import {
 	FLElement,
 	FLFragment,
@@ -17,7 +16,6 @@ import {
 	FLText,
 } from "./fragments";
 
-export * from "./component";
 export * as FL from "./fragments";
 
 export interface Renderer<RendererNode, HydrationContext> {
@@ -85,13 +83,10 @@ class Reconciler<RendererNode, HydrationContext> {
 				return element;
 			}
 			case "component": {
-				const comp = new Component();
-
-				const render = comp.startRendering();
+				using _hook = Lifetime.changeHookLifetime(lt);
 				using _trace = trace(`Rendering ${node.impl.name}`);
 
 				const result = node.impl(node.props);
-				render[Symbol.dispose]();
 
 				return this.render(result, hydration, lt);
 			}
