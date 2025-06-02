@@ -1,10 +1,12 @@
-import { type Signal, derived, isSignal, toSignal } from "../signal";
+import { type Signal, derived, isSignal, toSignal, useDerived } from "../signal";
 
 export type JSXNode =
 	| JSXElement
 	| JSXComponent<unknown>
 	| JSXFragment
-	| JSXText;
+	| JSXText
+	| JSXDynamic
+	| undefined;
 
 export interface JSXSource {
 	fileName?: string;
@@ -33,7 +35,12 @@ export interface JSXFragment extends JSXSource {
 
 export interface JSXText extends JSXSource {
 	type: "text";
-	value: Signal<string>;
+	value: string;
+}
+
+export interface JSXDynamic extends JSXSource {
+	type: "dynamic";
+	value: Signal<JSXNode>;
 }
 
 export interface JSXRuntimeProps {
@@ -46,6 +53,7 @@ export const Fragment = Symbol("Fragment");
 export type JSXChildren =
 	| (JSXNode | string | number | boolean | undefined)
 	| (JSXNode | string | number | boolean | undefined)[]
+	| Signal<JSXNode>
 	| undefined;
 
 export function normalizeChildren(children: JSXChildren): JSXNode[] {
@@ -58,19 +66,23 @@ export function normalizeChildren(children: JSXChildren): JSXNode[] {
 		.map((x) =>
 			typeof x === "string" ||
 			typeof x === "number" ||
-			typeof x === "boolean" ||
-			isSignal(x)
+			typeof x === "boolean"
 				? createTextNode(x)
-				: x,
+				: isSignal(x) ? {
+					type: "dynamic",
+					value: useDerived(get => {
+						const val = get(x);
+						return typeof val === "number" ||
+							typeof val === "string" ||
+							typeof val === "boolean"
+							? createTextNode(val)
+							: val;
+					}),
+				} : x,
 		);
 }
 
 export function createTextNode(value: any, source?: JSXSource): JSXNode {
-	const valSignal = toSignal(value);
-
 	return {
 		type: "text",
-		value: derived((get) => String(get(valSignal))),
-		...source,
-	};
-}
+		value,
