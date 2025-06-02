@@ -6,7 +6,8 @@
 		"fmt": "biome check --write",
 		"change": "changeset",
 		"release": "npm run fmt && turbo build && changeset publish",
-		"version": "changeset version"
+		"version": "changeset version",
+		"dev": "turbo dev"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",

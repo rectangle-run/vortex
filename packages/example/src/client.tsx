@@ -9,19 +9,29 @@ import { html } from "@vortexjs/dom";
 
 function App() {
 	const counter = useState(0);
-
-	setInterval(() => {
-		counter.set(getImmediateValue(counter) + 1);
-	}, 1000);
+	const name = useState("multiverse");
 
 	return (
 		<>
-			<h1>Hello, multiverse!</h1>
+			<h1>Hello, {name}!</h1>
 			<p>Counter = {counter}</p>
+			<label>
+				Name
+				<input type="text" bind:value={name} />
+			</label>
+			<button
+				on:click={() => {
+					counter.set(getImmediateValue(counter) + 1);
+				}}
+				type="button"
+			>
+				Increment
+			</button>
+
 			{when(
 				useDerived((get) => get(counter) % 2 === 0),
 				() => (
-					<p>this number is {counter}</p>
+					<p>{counter} is an even number</p>
 				),
 			)}
 		</>

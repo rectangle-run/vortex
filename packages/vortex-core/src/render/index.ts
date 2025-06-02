@@ -1,12 +1,6 @@
 import type { JSXNode } from "../jsx/jsx-common";
 import { Lifetime } from "../lifetime";
-import {
-	type Signal,
-	derived,
-	effect,
-	getImmediateValue,
-	store,
-} from "../signal";
+import { type Store, effect, getImmediateValue } from "../signal";
 import { trace, unreachable, unwrap } from "../utils";
 import {
 	FLElement,
@@ -25,6 +19,12 @@ export interface Renderer<RendererNode, HydrationContext> {
 	setTextContent(node: RendererNode, text: string): void;
 	setChildren(node: RendererNode, children: RendererNode[]): void;
 	getHydrationContext(node: RendererNode): HydrationContext;
+	addEventListener(
+		node: RendererNode,
+		name: string,
+		event: (event: any) => void,
+	): Lifetime;
+	bindValue<T>(node: RendererNode, name: string, value: Store<T>): Lifetime;
 }
 
 class Reconciler<RendererNode, HydrationContext> {
@@ -77,6 +77,18 @@ class Reconciler<RendererNode, HydrationContext> {
 						.subscribe((next) => {
 							element.setAttribute(name, next);
 						})
+						.cascadesFrom(lt);
+				}
+
+				for (const [name, value] of Object.entries(node.bindings)) {
+					this.renderer
+						.bindValue(unwrap(element.rendererNode), name, value)
+						.cascadesFrom(lt);
+				}
+
+				for (const [name, handler] of Object.entries(node.eventHandlers)) {
+					this.renderer
+						.addEventListener(unwrap(element.rendererNode), name, handler)
 						.cascadesFrom(lt);
 				}
 

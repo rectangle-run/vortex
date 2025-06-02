@@ -1,4 +1,10 @@
-import type { Renderer } from "@vortexjs/core";
+import {
+	Lifetime,
+	type Renderer,
+	type Signal,
+	type Store,
+	getImmediateValue,
+} from "@vortexjs/core";
 import { unwrap } from "./utils";
 
 export interface HTMLHydrationContext {
@@ -96,6 +102,46 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 			return {
 				unclaimedNodes: Array.from(node.childNodes),
 			};
+		},
+		addEventListener(
+			node: Node,
+			name: string,
+			event: (event: any) => void,
+		): Lifetime {
+			const lt = new Lifetime();
+
+			if (node instanceof HTMLElement) {
+				const handler = (e: Event) => {
+					event(e);
+				};
+				node.addEventListener(name, handler);
+				lt.onClosed(() => node.removeEventListener(name, handler));
+			} else {
+				console.warn(
+					`Cannot add event listener to non-HTMLElement node: ${node}`,
+				);
+			}
+
+			return lt;
+		},
+		bindValue<T>(node: Node, name: string, value: Store<T>): Lifetime {
+			const lt = new Lifetime();
+
+			// @ts-ignore: This is all dynamic, so types are not strictly enforced
+			node[name] = getImmediateValue(value);
+
+			if (name === "value") {
+				function inputHandler() {
+					// @ts-ignore: This is all dynamic, so types are not strictly enforced
+					value.set(node[name]);
+				}
+
+				node.addEventListener("input", inputHandler);
+
+				lt.onClosed(() => node.removeEventListener("input", inputHandler));
+			}
+
+			return lt;
 		},
 	};
 }

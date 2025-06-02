@@ -3,6 +3,7 @@ import {
 	type JSXChildren,
 	type JSXNode,
 	type JSXRuntimeProps,
+	createElementInternal,
 	createTextNode,
 	normalizeChildren,
 } from "./jsx-common";
@@ -25,32 +26,7 @@ export function jsx(type: any, props: JSXRuntimeProps | null): JSXNode {
 	// Handle string (HTML elements)
 	if (typeof type === "string") {
 		// Convert non-JSX children to text nodes
-		const normalizedChildren = normalizeChildren(children).map((child) => {
-			if (
-				typeof child === "string" ||
-				typeof child === "number" ||
-				typeof child === "boolean"
-			) {
-				return createTextNode(child);
-			}
-			return child;
-		});
-
-		const properAttributes: Record<string, Signal<string | undefined>> = {};
-
-		for (const [key, value] of Object.entries(attributes)) {
-			if (value !== undefined) {
-				const valsig = toSignal(value);
-				properAttributes[key] = useDerived((get) => String(get(valsig)));
-			}
-		}
-
-		return {
-			type: "element",
-			name: type,
-			attributes: properAttributes,
-			children: normalizedChildren,
-		};
+		return createElementInternal(type, attributes, children);
 	}
 
 	// Handle function components
