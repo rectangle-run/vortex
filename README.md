@@ -148,6 +148,18 @@ function InputExample() {
 }
 ```
 
+### Element references with `use`
+
+```tsx
+function RefExample() {
+	return (
+		<div use={el => el.innerText = "Just kidding, the text gets overwritten by me!"}>
+			This says something cool!
+		</div>
+	);
+}
+```
+
 ## Setup
 
 1. **Install dependencies**

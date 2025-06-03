@@ -37,8 +37,11 @@ export interface JSXElement extends JSXSource {
 	attributes: Record<string, Signal<string | undefined>>;
 	bindings: Record<string, Store<any>>;
 	eventHandlers: Record<string, (event: any) => void>;
+	use: Use<unknown>;
 	children: JSXNode[];
 }
+
+export type Use<T> = ((ref: T) => void) | Use<T>[];
 
 export interface JSXComponent<Props> extends JSXSource {
 	type: "component";
@@ -129,6 +132,7 @@ export function createElementInternal(
 	const properAttributes: Record<string, Signal<string | undefined>> = {};
 	const bindings: Record<string, Store<any>> = {};
 	const eventHandlers: Record<string, (event: any) => void> = {};
+	const use: Use<unknown> = [];
 
 	for (const [key, value] of Object.entries(props)) {
 		if (value !== undefined) {
@@ -150,6 +154,13 @@ export function createElementInternal(
 					);
 				}
 				eventHandlers[eventKey] = value;
+			} else if (key === "use") {
+				if (typeof value !== "function" && !Array.isArray(value)) {
+					throw new Error(
+						"Use hook must be a function or an array of functions.",
+					);
+				}
+				use.push(value);
 			} else {
 				const valsig = toSignal(value);
 				properAttributes[key] = useDerived((get) => String(get(valsig)));
@@ -164,5 +175,6 @@ export function createElementInternal(
 		children: normalizedChildren,
 		bindings,
 		eventHandlers,
+		use,
 	};
 }

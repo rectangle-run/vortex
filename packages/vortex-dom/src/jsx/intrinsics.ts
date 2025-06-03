@@ -1,5 +1,4 @@
-import type { JSXNode, Signal, Store } from "@vortexjs/core";
-import type { JSXChildren } from "@vortexjs/core/jsx-common";
+import type { JSXChildren, JSXNode, Signal, Store, Use } from "@vortexjs/core";
 
 export type BindableProps<T extends HTMLElement> = T extends HTMLInputElement
 	? {
@@ -28,6 +27,7 @@ export type ElementProps<T extends HTMLElement> = {
 } & {
 	className?: string;
 	children?: JSXChildren;
+	use?: Use<T>;
 } & {
 	// @ts-ignore: for some reason typescript believes key can be a symbol
 	[key in keyof BindableProps<T> as `bind:${key}`]?: Store<

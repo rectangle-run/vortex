@@ -92,6 +92,12 @@ class Reconciler<RendererNode, HydrationContext> {
 						.cascadesFrom(lt);
 				}
 
+				const users = [node.use].flat() as ((ref: RendererNode) => void)[];
+
+				for (const user of users) {
+					user(unwrap(element.rendererNode));
+				}
+
 				return element;
 			}
 			case "component": {

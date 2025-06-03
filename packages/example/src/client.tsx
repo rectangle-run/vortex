@@ -28,6 +28,7 @@ function App() {
 				on:click={() => {
 					counter.set(getImmediateValue(counter) + 100);
 				}}
+				use={(element) => console.log("button element: ", element)}
 				type="button"
 			>
 				Increment
