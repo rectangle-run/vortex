@@ -1,5 +1,11 @@
 # @vortexjs/core
 
+## 2.2.0
+
+### Minor Changes
+
+- ccff23f: Add support for lists
+
 ## 2.1.0
 
 ### Minor Changes
