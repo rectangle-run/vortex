@@ -1,4 +1,5 @@
 import {
+	createContext,
 	getImmediateValue,
 	list,
 	render,
@@ -7,6 +8,14 @@ import {
 	when,
 } from "@vortexjs/core";
 import { html } from "@vortexjs/dom";
+
+const TestingContext = createContext<string>("TestingContext");
+
+function TestingComponent() {
+	const ctxData = TestingContext.use();
+
+	return <p>This is a testing component. Context data: {ctxData}</p>;
+}
 
 function App() {
 	const counter = useState(0);
@@ -19,7 +28,12 @@ function App() {
 
 	return (
 		<>
-			<p>Counter = {counter}</p>
+			<TestingContext value="Hello from Testing Context!">
+				<TestingComponent />
+			</TestingContext>
+			<p>
+				Counter = {counter}, Name = {name}
+			</p>
 			<label>
 				Name
 				<input type="text" bind:value={name} />

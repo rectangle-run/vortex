@@ -14,7 +14,15 @@ export type JSXNode =
 	| JSXText
 	| JSXDynamic
 	| JSXList<unknown>
+	| JSXContext
 	| undefined;
+
+export interface JSXContext {
+	type: "context";
+	id: string;
+	value: Signal<any>;
+	children: JSXNode;
+}
 
 export interface JSXList<T> {
 	type: "list";

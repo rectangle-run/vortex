@@ -1,3 +1,4 @@
+import { ContextScope } from "../context";
 import type { JSXNode } from "../jsx/jsx-common";
 import { Lifetime } from "../lifetime";
 import { type Store, effect, getImmediateValue, store } from "../signal";
@@ -37,6 +38,7 @@ class Reconciler<RendererNode, HydrationContext> {
 		node: JSXNode,
 		hydration: HydrationContext | undefined,
 		lt: Lifetime,
+		context: ContextScope,
 	): FLNode<RendererNode> {
 		if (node === undefined || node === null) {
 			return new FLFragment<RendererNode>();
@@ -46,7 +48,7 @@ class Reconciler<RendererNode, HydrationContext> {
 			case "fragment": {
 				const frag = new FLFragment<RendererNode>();
 				frag.children = node.children.map((child) =>
-					this.render(child, hydration, lt),
+					this.render(child, hydration, lt, context),
 				);
 				return frag;
 			}
@@ -69,7 +71,7 @@ class Reconciler<RendererNode, HydrationContext> {
 				);
 
 				element.children = node.children.map((child) =>
-					this.render(child, elmHydration, lt),
+					this.render(child, elmHydration, lt, context),
 				);
 
 				for (const [name, value] of Object.entries(node.attributes)) {
@@ -106,14 +108,19 @@ class Reconciler<RendererNode, HydrationContext> {
 
 				const result = node.impl(node.props);
 
-				return this.render(result, hydration, lt);
+				return this.render(result, hydration, lt, context);
 			}
 			case "dynamic": {
 				const swapContainer = new FLFragment<RendererNode>();
 
 				effect(
 					(get, { lifetime }) => {
-						const newRender = this.render(get(node.value), hydration, lifetime);
+						const newRender = this.render(
+							get(node.value),
+							hydration,
+							lifetime,
+							context,
+						);
 
 						swapContainer.children = [newRender];
 					},
@@ -162,6 +169,7 @@ class Reconciler<RendererNode, HydrationContext> {
 								node.renderItem(item, newKeys.indexOf(key)),
 								hydration,
 								itemLifetime,
+								context,
 							);
 
 							renderMap.set(key, {
@@ -183,6 +191,14 @@ class Reconciler<RendererNode, HydrationContext> {
 				});
 
 				return container;
+			}
+			case "context": {
+				const forked = context.fork();
+				using _newScope = ContextScope.setCurrent(forked);
+
+				forked.addContext(node.id, node.value);
+
+				return this.render(node.children, hydration, lt, forked);
 			}
 			default: {
 				console.log(node);
@@ -206,6 +222,7 @@ export function render<RendererNode, HydrationContext>(
 		component,
 		renderer.getHydrationContext(root),
 		lt,
+		ContextScope.current ?? new ContextScope(),
 	);
 
 	const portal = new FLPortal(root, renderer);
