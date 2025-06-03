@@ -1,5 +1,12 @@
 # @vortexjs/dom
 
+## 1.1.1
+
+### Patch Changes
+
+- Updated dependencies [ccff23f]
+  - @vortexjs/core@2.2.0
+
 ## 1.1.0
 
 ### Minor Changes

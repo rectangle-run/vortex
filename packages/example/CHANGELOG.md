@@ -1,5 +1,17 @@
 # @vortexjs/bun-example
 
+## 1.3.0
+
+### Minor Changes
+
+- ccff23f: Add support for lists
+
+### Patch Changes
+
+- Updated dependencies [ccff23f]
+  - @vortexjs/core@2.2.0
+  - @vortexjs/dom@1.1.1
+
 ## 1.2.0
 
 ### Minor Changes

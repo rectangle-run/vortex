@@ -36,7 +36,7 @@
 			"require": "./dist/jsx/jsx-common.cjs"
 		}
 	},
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"dependencies": {
 		"tsup": "^8.5.0"
 	}
