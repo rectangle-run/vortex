@@ -1,5 +1,16 @@
 # @vortexjs/core
 
+## 2.1.0
+
+### Minor Changes
+
+- d2e99ab: Add support for bindings
+- d2e99ab: Add support for event handlers
+
+### Patch Changes
+
+- 1fde5eb: Improve typings for children
+
 ## 2.0.0
 
 ### Major Changes
