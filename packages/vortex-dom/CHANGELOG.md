@@ -1,5 +1,18 @@
 # @vortexjs/dom
 
+## 1.2.0
+
+### Minor Changes
+
+- 7a9c31e: std: add clocks
+
+### Patch Changes
+
+- e5dbe4a: Fix typings to include use hook
+- Updated dependencies [e5dbe4a]
+- Updated dependencies [7a9c31e]
+  - @vortexjs/core@2.3.0
+
 ## 1.1.1
 
 ### Patch Changes
