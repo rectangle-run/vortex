@@ -8,6 +8,20 @@ export const SignalGetter = "@vortex-get-internal" as const;
 export function equals<T>(a: T, b: T): boolean {
 	if (a === b) return true;
 
+	if (typeof a !== typeof b) return false;
+
+	if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+	if (Array.isArray(a) && Array.isArray(b)) {
+		if (a.length !== b.length) return false;
+		for (let i = 0; i < a.length; i++) {
+			if (!equals(a[i], b[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	if (
 		typeof a === "object" &&
 		typeof b === "object" &&
@@ -68,12 +82,18 @@ export function store<T>(initialValue: T): Store<T> {
 			});
 		},
 		set(newValue: T) {
+			debugSignals &&
+				console.log(`[${id}]: trying to switch from `, value, " -> ", newValue);
+
 			if (!equals(value, newValue)) {
 				value = newValue;
 				for (const subscriber of subscribers) {
 					subscriber(value);
 				}
 				debugSignals && console.log(`[${id}]: updated with `, value);
+			} else {
+				debugSignals &&
+					console.log(`[${id}]: no change, value is still `, value);
 			}
 		},
 	};

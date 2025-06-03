@@ -1,6 +1,6 @@
 import type { JSXNode } from "../jsx/jsx-common";
 import { Lifetime } from "../lifetime";
-import { type Store, effect, getImmediateValue } from "../signal";
+import { type Store, effect, getImmediateValue, store } from "../signal";
 import { trace, unreachable, unwrap } from "../utils";
 import {
 	FLElement,
@@ -116,6 +116,67 @@ class Reconciler<RendererNode, HydrationContext> {
 				);
 
 				return swapContainer;
+			}
+			case "list": {
+				type ListType = unknown;
+
+				const swapContainer = new FLFragment<RendererNode>();
+				const renderMap: Map<
+					string,
+					{
+						node: FLNode<RendererNode>;
+						item: Store<ListType>;
+						lifetime: Lifetime;
+					}
+				> = new Map();
+
+				const container = new FLFragment<RendererNode>();
+				let lastKeyOrder = "";
+
+				effect((get) => {
+					const items = get(node.items);
+					const newKeys = items.map((item, idx) => node.getKey(item, idx));
+
+					for (const key of renderMap.keys()) {
+						if (!newKeys.includes(key)) {
+							const entry = unwrap(renderMap.get(key));
+							entry.lifetime.close();
+							renderMap.delete(key);
+						}
+					}
+
+					for (const key of newKeys) {
+						if (!renderMap.has(key)) {
+							const item = items[newKeys.indexOf(key)];
+							const itemStore = store(item);
+							const itemLifetime = new Lifetime();
+							using _hl = Lifetime.changeHookLifetime(itemLifetime);
+
+							const renderedItem = this.render(
+								node.renderItem(item, newKeys.indexOf(key)),
+								hydration,
+								itemLifetime,
+							);
+
+							renderMap.set(key, {
+								node: renderedItem,
+								item: itemStore,
+								lifetime: itemLifetime,
+							});
+						}
+					}
+
+					const newKeyOrder = newKeys.join("|||");
+
+					if (newKeyOrder !== lastKeyOrder) {
+						lastKeyOrder = newKeyOrder;
+						container.children = newKeys.map(
+							(key) => unwrap(renderMap.get(key)).node,
+						);
+					}
+				});
+
+				return container;
 			}
 			default: {
 				console.log(node);

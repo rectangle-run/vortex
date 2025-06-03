@@ -13,7 +13,17 @@ export type JSXNode =
 	| JSXFragment
 	| JSXText
 	| JSXDynamic
+	| JSXList<unknown>
 	| undefined;
+
+export interface JSXList<T> {
+	type: "list";
+	getKey(item: T, index: number): string;
+	renderItem(item: T, idx: number): JSXNode;
+	items: Signal<T[]>;
+	key(cb: (item: T, idx: number) => string | number): JSXList<T>;
+	show(cb: (item: T, idx: number) => JSXNode): JSXList<T>;
+}
 
 export interface JSXSource {
 	fileName?: string;

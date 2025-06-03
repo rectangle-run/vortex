@@ -1,5 +1,6 @@
 import {
 	getImmediateValue,
+	list,
 	render,
 	useDerived,
 	useState,
@@ -11,6 +12,11 @@ function App() {
 	const counter = useState(0);
 	const name = useState("multiverse");
 
+	const numbersToCounter = useDerived((get) => {
+		const currentCounter = get(counter);
+		return Array.from({ length: currentCounter }, (_, i) => i + 1);
+	});
+
 	return (
 		<>
 			<p>Counter = {counter}</p>
@@ -20,7 +26,7 @@ function App() {
 			</label>
 			<button
 				on:click={() => {
-					counter.set(getImmediateValue(counter) + 1);
+					counter.set(getImmediateValue(counter) + 100);
 				}}
 				type="button"
 			>
@@ -33,6 +39,12 @@ function App() {
 					<p>{counter} is an even number</p>
 				),
 			)}
+
+			{list(numbersToCounter).show((number) => (
+				<p>
+					{number} is a number from 1 to {counter}
+				</p>
+			))}
 		</>
 	);
 }
