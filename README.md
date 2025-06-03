@@ -1,24 +1,23 @@
 # Vortex
 
-A modern, reactive JavaScript framework with fine-grained reactivity and JSX support.
+A framework that cares about the details.
 
 ## Overview
 
-Vortex is a lightweight reactive framework that provides:
+Here's why Vortex is cool.
 
-- **Fine-grained reactivity** with signals and stores
-- **JSX support** for declarative UI components
-- **DOM rendering** with efficient updates
-- **TypeScript-first** development experience
-- **Bun-optimized** for fast development
+-  🕸️ **Fine-grained reactivity**: We create a graph of data where updates pulse through, minimizing compute.
+-  ⚡ **Fast**: Vortex is designed for speed, with minimal overhead and efficient updates.
+-  🧩 **Composable**: Build complex UIs from simple reactive primitives.
+-  🌐 **Renderer agnostic**: Use Vortex with any renderer. At the moment, we only render to the DOM, but that may change.
+-  🛠️ **Developer-friendly**: Intuitive APIs and TypeScript support make it easy to get started.
 
-## Architecture
+## Packages
 
-Vortex is built as a monorepo with the following packages:
-
-- **`@vortexjs/core`** - Core reactive primitives (signals, stores, effects)
-- **`@vortexjs/dom`** - DOM renderer for web applications
-- **`@vortexjs/bun-example`** - Example application demonstrating usage
+| Package          | Description                                               |
+|------------------|-----------------------------------------------------------|
+| `@vortexjs/core` | Core reactive primitives for Vortex, and rendering engine |
+| `@vortexjs/dom`  | DOM renderer for Vortex applications                      |
 
 ## Quick Start
 
@@ -40,7 +39,7 @@ function App() {
     return (
         <>
             <h1>Counter: {counter}</h1>
-            <button 
+            <button
                 on:click={() => counter.set(getImmediateValue(counter) + 1)}
                 type="button"
             >
@@ -65,7 +64,7 @@ import { useState, useDerived } from "@vortexjs/core";
 function Counter() {
     const count = useState(0);
     const doubled = useDerived((get) => get(count) * 2);
-    
+
     return (
         <div>
             <p>Count: {count}</p>
@@ -84,15 +83,15 @@ import { useEffect, useState } from "@vortexjs/core";
 
 function Timer() {
     const time = useState(new Date());
-    
+
     useEffect((get, { lifetime }) => {
         const interval = setInterval(() => {
             time.set(new Date());
         }, 1000);
-        
+
         lifetime.onClosed(() => clearInterval(interval));
     });
-    
+
     return <p>Current time: {time}</p>;
 }
 ```
@@ -104,7 +103,7 @@ import { when, useDerived } from "@vortexjs/core";
 
 function ConditionalExample() {
     const showMessage = useState(false);
-    
+
     return (
         <>
             <button on:click={() => showMessage.set(!showMessage.get())}>
@@ -123,7 +122,7 @@ import { list, useState } from "@vortexjs/core";
 
 function TodoList() {
     const todos = useState(['Learn Vortex', 'Build app']);
-    
+
     return (
         <ul>
             {list(todos).show((todo, index) => (
@@ -139,7 +138,7 @@ function TodoList() {
 ```tsx
 function InputExample() {
     const name = useState("");
-    
+
     return (
         <div>
             <input type="text" bind:value={name} />
@@ -149,71 +148,50 @@ function InputExample() {
 }
 ```
 
-## Development
+## Setup
 
-This project uses:
+1. **Install dependencies**
 
-- **Bun** as the package manager and runtime
-- **Turbo** for monorepo task orchestration
-- **Biome** for code formatting and linting
-- **Changesets** for version management
+    Use Bun to install the core and DOM renderer packages:
 
-### Commands
+    ```bash
+    bun add @vortexjs/core @vortexjs/dom
+    ```
 
-```bash
-# Install dependencies
-bun install
+2. **Setup your `tsconfig.json`**
 
-# Start development server
-bun dev
+    To use Vortex with TypeScript, configure your `tsconfig.json`:
 
-# Format code
-bun run fmt
+    ```json
+    {
+        "compilerOptions": {
+            "jsx": "react-jsx",
+            "jsxImportSource": "@vortexjs/core"
+        }
+    }
+    ```
 
-# Build packages
-turbo build
+3. **Create your entry point**
 
-# Create a changeset
-bun run change
+    Create an entry point file (e.g., `index.tsx`) and import the necessary modules:
 
-# Release packages
-bun run release
-```
+    ```tsx
+    import { render, html } from "@vortexjs/dom";
+    import { App } from "./App";
 
-### Running the Example
+    render(html(), document.getElementById("root"), <App />);
+    ```
 
-```bash
-cd packages/example
-bun dev
-```
-
-## TypeScript Configuration
-
-To use Vortex with TypeScript, configure your `tsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "@vortexjs/core"
-  }
-}
-```
+4. *Profit.*
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Run `bun run fmt` to format code
-6. Create a changeset with `bun run change`
-7. Submit a pull request
+2. Make your changes
+3. Run `bun fmt` to format code
+4. Create a changeset with `bun change`
+5. Submit a pull request
 
 ## License
 
-This project is open source. Check the repository for license details.
-
-## Repository
-
-https://github.com/andylovescode/vortex
+This project is open source to everybody except fascists. See the [LICENSE](LICENSE) file for details.
