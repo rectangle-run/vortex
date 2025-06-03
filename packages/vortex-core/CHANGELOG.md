@@ -1,5 +1,12 @@
 # @vortexjs/core
 
+## 2.3.0
+
+### Minor Changes
+
+- e5dbe4a: Introduce use hooks
+- 7a9c31e: std: add clocks
+
 ## 2.2.0
 
 ### Minor Changes
