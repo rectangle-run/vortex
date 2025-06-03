@@ -1,6 +1,9 @@
 {
 	"name": "@vortexjs/dom",
 	"type": "module",
+	"repository": {
+		"url": "https://github.com/andylovescode/vortex"
+	},
 	"devDependencies": {
 		"@types/bun": "latest"
 	},
