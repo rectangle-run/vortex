@@ -1,5 +1,19 @@
 # @vortexjs/bun-example
 
+## 1.4.0
+
+### Minor Changes
+
+- e5dbe4a: Introduce use hooks
+
+### Patch Changes
+
+- Updated dependencies [e5dbe4a]
+- Updated dependencies [e5dbe4a]
+- Updated dependencies [7a9c31e]
+  - @vortexjs/core@2.3.0
+  - @vortexjs/dom@1.2.0
+
 ## 1.3.0
 
 ### Minor Changes
