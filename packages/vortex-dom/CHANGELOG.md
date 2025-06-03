@@ -1,5 +1,19 @@
 # @vortexjs/dom
 
+## 1.1.0
+
+### Minor Changes
+
+- d2e99ab: Add support for bindings
+- d2e99ab: Add support for event handlers
+
+### Patch Changes
+
+- Updated dependencies [d2e99ab]
+- Updated dependencies [d2e99ab]
+- Updated dependencies [1fde5eb]
+  - @vortexjs/core@2.1.0
+
 ## 1.0.5
 
 ### Patch Changes
