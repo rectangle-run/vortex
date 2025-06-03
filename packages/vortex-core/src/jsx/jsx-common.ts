@@ -53,17 +53,17 @@ export interface JSXDynamic extends JSXSource {
 }
 
 export interface JSXRuntimeProps {
-	children?: JSXNode | JSXNode[];
+	children?: JSXChildren;
 	[key: string]: any;
 }
 
 export const Fragment = Symbol("Fragment");
 
-export type JSXChildren =
-	| (JSXNode | string | number | boolean | undefined)
-	| (JSXNode | string | number | boolean | undefined)[]
-	| Signal<JSXNode>
-	| undefined;
+export type JSXNonSignalChild = JSXNode | string | number | boolean | undefined;
+
+export type JSXChild = JSXNonSignalChild | Signal<JSXNonSignalChild>;
+
+export type JSXChildren = JSXChild | JSXChild[];
 
 export function normalizeChildren(children: JSXChildren): JSXNode[] {
 	if (children === undefined) {
@@ -102,7 +102,7 @@ export function createTextNode(value: any, source?: JSXSource): JSXNode {
 export function createElementInternal(
 	type: string,
 	props: Record<string, any>,
-	children: JSXNode | JSXNode[] | undefined,
+	children: JSXChildren,
 	source?: JSXSource,
 ): JSXNode {
 	const normalizedChildren = normalizeChildren(children).map((child) => {

@@ -1,4 +1,4 @@
-import type { Signal, Store } from "@vortexjs/core";
+import type { JSXNode, Signal, Store } from "@vortexjs/core";
 import type { JSXChildren } from "@vortexjs/core/jsx-common";
 
 export type BindableProps<T extends HTMLElement> = T extends HTMLInputElement
@@ -16,13 +16,17 @@ export type BindableProps<T extends HTMLElement> = T extends HTMLInputElement
 			: // biome-ignore lint/complexity/noBannedTypes: it's all good
 				{};
 
-export type ElementProps<T extends HTMLElement> = Partial<
-	{
-		[key in keyof T]: T[key] extends string | number | boolean ? T[key] : never;
-	} & {
-		className: string;
-	}
-> & {
+export type ElementProps<T extends HTMLElement> = {
+	[key in Exclude<keyof T, "children">]?: T[key] extends
+		| string
+		| number
+		| boolean
+		| null
+		| undefined
+		? T[key]
+		: never;
+} & {
+	className?: string;
 	children?: JSXChildren;
 } & {
 	// @ts-ignore: for some reason typescript believes key can be a symbol
@@ -43,9 +47,10 @@ type BaseIntrinsicElements = {
 
 export namespace JSX {
 	export interface IntrinsicElements extends BaseIntrinsicElements {}
-
-	export interface ElementChildrenAttribute {
-		// biome-ignore lint/complexity/noBannedTypes: need to do this jank to make typescript happy, JSX is awful
-		children: {};
+	export interface IntrinsicAttributes {
+		children?: JSXChildren;
 	}
+	export type ElementType = keyof IntrinsicElements | ((props: any) => JSXNode);
+
+	export type Element = JSXNode;
 }
