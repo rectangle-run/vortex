@@ -121,6 +121,12 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 
 			return lt;
 		},
+		setStyle(node, name, value) {
+			if (node instanceof HTMLElement) {
+				//@ts-ignore: This is all dynamic, so types are not strictly enforced
+				node.style[name] = value;
+			}
+		},
 	};
 }
 

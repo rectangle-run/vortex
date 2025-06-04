@@ -1,4 +1,11 @@
-import type { JSXChildren, JSXNode, Signal, Store, Use } from "@vortexjs/core";
+import type {
+	JSXChildren,
+	JSXNode,
+	Signal,
+	SignalOrValue,
+	Store,
+	Use,
+} from "@vortexjs/core";
 
 export type BindableProps<T extends HTMLElement> = T extends HTMLInputElement
 	? {
@@ -16,18 +23,19 @@ export type BindableProps<T extends HTMLElement> = T extends HTMLInputElement
 				{};
 
 export type ElementProps<T extends HTMLElement> = {
-	[key in Exclude<keyof T, "children">]?: T[key] extends
+	[key in Exclude<keyof T, "children" | "style">]?: T[key] extends
 		| string
 		| number
 		| boolean
 		| null
 		| undefined
-		? T[key]
+		? SignalOrValue<T[key]>
 		: never;
 } & {
 	className?: string;
 	children?: JSXChildren;
 	use?: Use<T>;
+	style?: Partial<CSSStyleDeclaration>;
 } & {
 	// @ts-ignore: for some reason typescript believes key can be a symbol
 	[key in keyof BindableProps<T> as `bind:${key}`]?: Store<

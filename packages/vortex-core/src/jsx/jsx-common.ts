@@ -47,6 +47,7 @@ export interface JSXElement extends JSXSource {
 	eventHandlers: Record<string, (event: any) => void>;
 	use: Use<unknown>;
 	children: JSXNode[];
+	styles: Record<string, Signal<string | undefined>>;
 }
 
 export type Use<T> = ((ref: T) => void) | Use<T>[];
@@ -141,6 +142,7 @@ export function createElementInternal(
 	const bindings: Record<string, Store<any>> = {};
 	const eventHandlers: Record<string, (event: any) => void> = {};
 	const use: Use<unknown> = [];
+	const styles: Record<string, Signal<any>> = {};
 
 	for (const [key, value] of Object.entries(props)) {
 		if (value !== undefined) {
@@ -169,6 +171,12 @@ export function createElementInternal(
 					);
 				}
 				use.push(value);
+			} else if (key === "style") {
+				for (const [styleKey, styleValue] of Object.entries(value)) {
+					if (styleValue !== undefined) {
+						styles[styleKey] = toSignal(styleValue);
+					}
+				}
 			} else {
 				const valsig = toSignal(value);
 				properAttributes[key] = useDerived((get) => String(get(valsig)));
@@ -184,5 +192,6 @@ export function createElementInternal(
 		bindings,
 		eventHandlers,
 		use,
+		styles,
 	};
 }

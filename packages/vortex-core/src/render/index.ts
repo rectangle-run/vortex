@@ -26,6 +26,7 @@ export interface Renderer<RendererNode, HydrationContext> {
 		event: (event: any) => void,
 	): Lifetime;
 	bindValue<T>(node: RendererNode, name: string, value: Store<T>): Lifetime;
+	setStyle(node: RendererNode, name: string, value: string | undefined): void;
 }
 
 class Reconciler<RendererNode, HydrationContext> {
@@ -91,6 +92,14 @@ class Reconciler<RendererNode, HydrationContext> {
 				for (const [name, handler] of Object.entries(node.eventHandlers)) {
 					this.renderer
 						.addEventListener(unwrap(element.rendererNode), name, handler)
+						.cascadesFrom(lt);
+				}
+
+				for (const [name, value] of Object.entries(node.styles)) {
+					value
+						.subscribe((next) => {
+							this.renderer.setStyle(unwrap(element.rendererNode), name, next);
+						})
 						.cascadesFrom(lt);
 				}
 
