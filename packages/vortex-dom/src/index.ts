@@ -73,29 +73,7 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 		},
 		setChildren(node: Node, children: Node[]): void {
 			if (node instanceof HTMLElement) {
-				for (
-					let i = 0;
-					i < Math.min(node.children.length, children.length);
-					i++
-				) {
-					const child = unwrap(node.children[i]);
-					const newChild = unwrap(children[i]);
-
-					if (child !== newChild) {
-						child.replaceWith(newChild);
-					}
-				}
-
-				const oldChildrenSet = new Set(Array.from(node.childNodes));
-				const newChildrenSet = new Set(children);
-
-				for (const child of newChildrenSet.difference(oldChildrenSet)) {
-					node.append(child);
-				}
-
-				for (const child of oldChildrenSet.difference(newChildrenSet)) {
-					child.remove();
-				}
+				node.replaceChildren(...children);
 			}
 		},
 		getHydrationContext(node): HTMLHydrationContext {
