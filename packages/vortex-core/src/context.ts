@@ -45,9 +45,6 @@ export class ContextScope {
 	}
 
 	addContext<T>(id: string, value: Signal<T>): void {
-		if (this.contexts[id]) {
-			throw new Error(`Context with id "${id}" already exists.`);
-		}
 		this.contexts[id] = value;
 	}
 
