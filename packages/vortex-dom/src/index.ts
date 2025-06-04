@@ -131,3 +131,4 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 }
 
 export * from "./std";
+export * from "./jsx/intrinsics";
