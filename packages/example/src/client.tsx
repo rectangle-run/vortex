@@ -8,6 +8,11 @@ import {
 	when,
 } from "@vortexjs/core";
 import { html } from "@vortexjs/dom";
+import { Canvas, createThreeComponent } from "@vortexjs/three";
+import * as THREE from "three";
+
+const Mesh = createThreeComponent(THREE.Mesh);
+const PointLight = createThreeComponent(THREE.PointLight);
 
 const TestingContext = createContext<string>("TestingContext");
 
@@ -25,6 +30,10 @@ function App() {
 		const currentCounter = get(counter);
 		return Array.from({ length: currentCounter }, (_, i) => i + 1);
 	});
+
+	const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+
+	camera.position.z = 5;
 
 	return (
 		<>
@@ -60,6 +69,16 @@ function App() {
 					{number} is a number from 1 to {counter}
 				</p>
 			))}
+
+			<div style={{ width: "100%", height: "400px" }}>
+				<Canvas camera={camera}>
+					<Mesh
+						geometry={new THREE.BoxGeometry(1, 1, 1)}
+						material={new THREE.MeshStandardMaterial({ color: 0x00ff00 })}
+					></Mesh>
+					<PointLight position={[10, 10, 10]} intensity={250} />
+				</Canvas>
+			</div>
 		</>
 	);
 }
