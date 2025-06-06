@@ -11,6 +11,22 @@ export interface HTMLHydrationContext {
 	unclaimedNodes: Node[];
 }
 
+export function jsAttributeToHTMLAttribute(name: string) {
+	const substitutions: Record<string, string> = {
+		htmlFor: "for",
+		className: "class",
+		tabIndex: "tabindex",
+	};
+
+	if (name in substitutions) {
+		return unwrap(substitutions[name]);
+	}
+
+	const chunks = name.split(/(?=[A-Z])/);
+
+	return chunks.map((chunk) => chunk.toLowerCase()).join("-");
+}
+
 export function html(): Renderer<Node, HTMLHydrationContext> {
 	function tryClaimNode<T extends Node>(
 		context: HTMLHydrationContext | undefined,
@@ -52,9 +68,9 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 		setAttribute(node: Node, name: string, value: any): void {
 			if (node instanceof HTMLElement) {
 				if (value === undefined || value === null) {
-					node.removeAttribute(name);
+					node.removeAttribute(jsAttributeToHTMLAttribute(name));
 				} else {
-					node.setAttribute(name, String(value));
+					node.setAttribute(jsAttributeToHTMLAttribute(name), String(value));
 				}
 			}
 		},
