@@ -35,7 +35,9 @@ export type ElementProps<T extends HTMLElement> = {
 	className?: SignalOrValue<string>;
 	children?: JSXChildren;
 	use?: Use<T>;
-	style?: Partial<CSSStyleDeclaration>;
+	style?: Partial<{
+		[key in keyof CSSStyleDeclaration]: SignalOrValue<CSSStyleDeclaration[key]>;
+	}>;
 } & {
 	// @ts-ignore: for some reason typescript believes key can be a symbol
 	[key in keyof BindableProps<T> as `bind:${key}`]?: Store<
