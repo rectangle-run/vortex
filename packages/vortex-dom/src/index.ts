@@ -135,6 +135,17 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 				lt.onClosed(() => node.removeEventListener("input", inputHandler));
 			}
 
+			if (name === "checked") {
+				function changeHandler() {
+					// @ts-ignore: This is all dynamic, so types are not strictly enforced
+					value.set(node[name]);
+				}
+
+				node.addEventListener("change", changeHandler);
+
+				lt.onClosed(() => node.removeEventListener("change", changeHandler));
+			}
+
 			return lt;
 		},
 		setStyle(node, name, value) {

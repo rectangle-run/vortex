@@ -10,6 +10,7 @@ import type {
 export type BindableProps<T extends HTMLElement> = T extends HTMLInputElement
 	? {
 			value: string | number | boolean;
+			checked: boolean;
 		}
 	: T extends HTMLTextAreaElement
 		? {
