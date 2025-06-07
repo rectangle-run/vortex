@@ -1,5 +1,17 @@
 # @vortexjs/core
 
+## 2.4.0
+
+### Minor Changes
+
+- 1ec724f: Introduce Contexts API
+- 7127487: Improve attribute typings and add styles
+
+### Patch Changes
+
+- c486c10: Contexts: allow nested contexts
+- 14ec38f: Switch README to use that of the main repository
+
 ## 2.3.0
 
 ### Minor Changes
