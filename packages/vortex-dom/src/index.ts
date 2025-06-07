@@ -16,6 +16,7 @@ export function jsAttributeToHTMLAttribute(name: string) {
 		htmlFor: "for",
 		className: "class",
 		tabIndex: "tabindex",
+		ariaDescribedBy: "aria-describedby",
 	};
 
 	if (name in substitutions) {
