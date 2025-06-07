@@ -1,5 +1,40 @@
 # @vortexjs/dom
 
+## 2.0.0
+
+### Major Changes
+
+- 33c8802: breaking: change attribute names from JS form to HTML form
+
+  - WHAT:
+    - Classes are now auto-hypenhyphenated, e.g. `ariaLabel` becomes `aria-label`, `dataTestId` becomes `data-test-id`, etc.\
+    - Certain classes get replace if they're an edge case, `className` becomes `class`, `htmlFor` becomes `for`, etc.
+    - If you relied on the legacy behavior, you unfortunately have to use a `use` callback to set the legacy attribute yourself.
+  - WHY:
+    - This change is to align with the HTML standard and allows one to use hyphenated attributes like `aria-label` and `data-test-id` directly in the JSX without needing to convert them manually.
+  - HOW:
+    - If you need to use the legacy behavior, you can use a `use` callback to set the attribute manually, e.g. `<div use={elm => elm.setAttribute("dontHyphenateMe", "value")}}></div>`.
+
+### Minor Changes
+
+- d7f180a: Bindings: Allow checked bindings
+- ca3e0dd: Export intrinsic types
+- 7127487: Improve attribute typings and add styles
+
+### Patch Changes
+
+- 074a934: Fix setChildren
+- 2b1657e: Allow dynamic classnames
+- d6017d6: Add aria-describedby type
+- 5180529: Allow data attributes
+- 14ec38f: Switch README to use that of the main repository
+- a4b686e: Fix types to allow dynamic styles
+- Updated dependencies [c486c10]
+- Updated dependencies [1ec724f]
+- Updated dependencies [14ec38f]
+- Updated dependencies [7127487]
+  - @vortexjs/core@2.4.0
+
 ## 1.2.0
 
 ### Minor Changes
