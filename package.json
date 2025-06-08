@@ -11,9 +11,8 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
-		"inquirer": "^12.6.3",
-		"turbo": "^2.5.4",
-		"@changesets/cli": "^2.29.4"
+		"@changesets/cli": "^2.29.4",
+		"turbo": "^2.5.4"
 	},
 	"trustedDependencies": ["@biomejs/biome", "esbuild"],
 	"packageManager": "bun@1.2.15"
