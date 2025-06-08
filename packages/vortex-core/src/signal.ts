@@ -47,7 +47,10 @@ export function equals<T>(a: T, b: T): boolean {
 
 export interface Signal<T> {
 	[SignalGetter](): T;
-	subscribe(callback: (value: T) => void): Lifetime;
+	subscribe(
+		callback: (value: T) => void,
+		props?: { callInitially?: boolean },
+	): Lifetime;
 }
 
 export interface Store<T> extends Signal<T> {
@@ -71,10 +74,13 @@ export function store<T>(initialValue: T): Store<T> {
 		[SignalGetter]() {
 			return value;
 		},
-		subscribe(callback: (value: T) => void): Lifetime {
+		subscribe(callback: (value: T) => void, props): Lifetime {
 			subscribers.push(callback);
 			debugSignals && console.trace(`[${id}]: subscribed with `, callback);
-			callback(value);
+
+			if (props?.callInitially !== false) {
+				callback(value);
+			}
 
 			return new Lifetime().onClosed(() => {
 				subscribers.splice(subscribers.indexOf(callback), 1);
@@ -153,9 +159,12 @@ export function derived<T>(
 			const toAdd = newDependencies.difference(currentDependencies);
 
 			for (const dep of toAdd) {
-				const subscription = dep.subscribe(() => {
-					invalidate();
-				});
+				const subscription = dep.subscribe(
+					() => {
+						invalidate();
+					},
+					{ callInitially: false },
+				);
 				dependencies.push(dep);
 				subscriptions.push(subscription);
 			}
@@ -166,9 +175,12 @@ export function derived<T>(
 
 	const subscriptions = dependencies.map((dep) => {
 		return dep
-			.subscribe(() => {
-				invalidate();
-			})
+			.subscribe(
+				() => {
+					invalidate();
+				},
+				{ callInitially: false },
+			)
 			.cascadesFrom(signalLifetime);
 	});
 
@@ -242,9 +254,12 @@ export function effect(
 			const toAdd = newDependencies.difference(currentDependencies);
 
 			for (const dep of toAdd) {
-				const subscription = dep.subscribe(() => {
-					invalidate();
-				});
+				const subscription = dep.subscribe(
+					() => {
+						invalidate();
+					},
+					{ callInitially: false },
+				);
 				dependencies.push(dep);
 				subscriptions.push(subscription);
 			}
@@ -261,9 +276,12 @@ export function effect(
 
 	const subscriptions = dependencies.map((dep) => {
 		return dep
-			.subscribe(() => {
-				invalidate();
-			})
+			.subscribe(
+				() => {
+					invalidate();
+				},
+				{ callInitially: false },
+			)
 			.cascadesFrom(outerLifetime);
 	});
 }
