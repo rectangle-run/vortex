@@ -28,11 +28,11 @@ export function equals<T>(a: T, b: T): boolean {
 		a !== null &&
 		b !== null
 	) {
-		const keysA = new Set(Object.keys(a));
-		const keysB = new Set(Object.keys(b));
-
-		if (keysA.intersection(keysB).isSupersetOf(keysA)) {
-			for (const key of keysA) {
+		if (
+			Object.keys(a).toSorted().join(",") ===
+			Object.keys(b).toSorted().join(",")
+		) {
+			for (const key in a) {
 				//@ts-ignore It's fine, this is dynamic code, of course there's no type safety here :^)
 				if (!equals(a[key], b[key])) {
 					return false;
