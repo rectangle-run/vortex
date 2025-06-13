@@ -1,11 +1,14 @@
 {
 	"name": "vortex",
 	"private": true,
-	"workspaces": ["packages/*"],
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
 		"fmt": "biome check --write && turbo fmt",
 		"change": "changeset",
 		"release": "npm run fmt && turbo build && changeset publish",
+		"build": "turbo build",
 		"version": "changeset version",
 		"dev": "turbo dev"
 	},
@@ -14,6 +17,9 @@
 		"@changesets/cli": "^2.29.4",
 		"turbo": "^2.5.4"
 	},
-	"trustedDependencies": ["@biomejs/biome", "esbuild"],
+	"trustedDependencies": [
+		"@biomejs/biome",
+		"esbuild"
+	],
 	"packageManager": "bun@1.2.15"
 }
