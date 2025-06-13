@@ -72,7 +72,7 @@ jobs:
               if: ${{ matrix.settings.setup }}
               shell: bash
             - name: Install dependencies
-              run: yarn install
+              run: bun install
             - name: Build in docker
               uses: addnab/docker-run-action@v3
               if: ${{ matrix.settings.docker }}
