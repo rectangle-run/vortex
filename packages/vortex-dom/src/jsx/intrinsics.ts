@@ -1,7 +1,6 @@
 import type {
 	JSXChildren,
 	JSXNode,
-	Signal,
 	SignalOrValue,
 	Store,
 	Use,

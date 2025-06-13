@@ -5,6 +5,11 @@
 			"outputs": ["dist/**"],
 			"dependsOn": ["^build"]
 		},
+		"fmt": {
+			"persistent": true,
+			"cache": false,
+			"dependsOn": ["^fmt"]
+		},
 		"dev": {
 			"persistent": true,
 			"cache": false,

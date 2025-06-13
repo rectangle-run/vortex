@@ -3,7 +3,6 @@ import {
 	type Store,
 	getImmediateValue,
 	useDerived,
-	useState,
 } from "@vortexjs/core";
 
 /**
@@ -342,8 +341,6 @@ export function useToggle({
 		} as { props: Record<string, unknown> },
 	};
 }
-
-import type { ElementProps } from "@vortexjs/dom";
 import { useId } from "./id";
 
 /**

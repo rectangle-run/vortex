@@ -1,0 +1,40 @@
+{
+	"name": "@vortexjs/discovery",
+	"version": "0.0.0",
+	"main": "index.js",
+	"types": "index.d.ts",
+	"napi": {
+		"name": "discovery",
+		"targets": [
+			"aarch64-apple-darwin",
+			"wasm32-unknown-unknown",
+			"x86_64-apple-darwin",
+			"x86_64-unknown-linux-gnu",
+			"x86_64-pc-windows-msvc"
+		]
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@napi-rs/cli": "^3.0.0-alpha.89"
+	},
+	"ava": {
+		"timeout": "3m"
+	},
+	"engines": {
+		"node": ">= 10"
+	},
+	"scripts": {
+		"artifacts": "napi artifacts",
+		"build": "napi build --platform --release",
+		"prepublishOnly": "napi prepublish -t npm",
+		"universal": "napi universal",
+		"fmt": "cargo clippy --fix --allow-dirty && cargo fmt",
+		"version": "napi version",
+		"test": "bun test"
+	},
+	"optionalDependencies": {
+		"@vortexjs/discovery-win32-x64-msvc": "0.0.0",
+		"@vortexjs/discovery-darwin-x64": "0.0.0",
+		"@vortexjs/discovery-linux-x64-gnu": "0.0.0"
+	}
+}

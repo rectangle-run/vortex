@@ -1,11 +1,5 @@
 import type { JSXNode } from "../jsx/jsx-common";
-import type { Lifetime } from "../lifetime";
-import {
-	type Signal,
-	type SignalOrValue,
-	type Store,
-	toSignal,
-} from "../signal";
+import { type SignalOrValue, toSignal } from "../signal";
 
 export function list<T>(items: SignalOrValue<T[]>) {
 	const data = toSignal(items);

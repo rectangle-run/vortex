@@ -1,5 +1,4 @@
 import { Lifetime, useHookLifetime } from "./lifetime";
-import { unwrap } from "./utils";
 
 export type Informant = ((signal: Signal<unknown>) => void) | null;
 

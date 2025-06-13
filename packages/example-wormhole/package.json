@@ -1,0 +1,20 @@
+{
+	"name": "@vortexjs/example-wormhole",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"dependencies": {
+		"@vortexjs/wormhole": "workspace:*",
+		"@vortexjs/core": "workspace:*",
+		"@vortexjs/dom": "workspace:*"
+	},
+	"scripts": {
+		"dev": "wormhole dev"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}

@@ -1,7 +1,6 @@
 import {
 	type Signal,
 	type Store,
-	derived,
 	isSignal,
 	toSignal,
 	useDerived,

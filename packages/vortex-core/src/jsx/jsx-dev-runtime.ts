@@ -1,11 +1,8 @@
-import { type Signal, derived, toSignal, useDerived } from "../signal";
 import {
-	type JSXChildren,
 	type JSXNode,
 	type JSXRuntimeProps,
 	type JSXSource,
 	createElementInternal,
-	createTextNode,
 	normalizeChildren,
 } from "./jsx-common";
 

@@ -1,4 +1,4 @@
-import type { JSXChildren, JSXNode } from "./jsx/jsx-common";
+import type { JSXNode } from "./jsx/jsx-common";
 import { type Signal, type SignalOrValue, toSignal } from "./signal";
 import { unwrap } from "./utils";
 

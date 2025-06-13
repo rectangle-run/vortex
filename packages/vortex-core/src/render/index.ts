@@ -1,7 +1,7 @@
 import { ContextScope } from "../context";
 import type { JSXNode } from "../jsx/jsx-common";
 import { Lifetime } from "../lifetime";
-import { type Store, effect, getImmediateValue, store } from "../signal";
+import { type Store, effect, store } from "../signal";
 import { trace, unreachable, unwrap } from "../utils";
 import {
 	FLElement,

@@ -1,9 +1,4 @@
-import {
-	type Store,
-	getImmediateValue,
-	useDerived,
-	useState,
-} from "@vortexjs/core";
+import { type Store, useDerived } from "@vortexjs/core";
 import type { ElementProps } from "@vortexjs/dom";
 import { useId } from "./id";
 

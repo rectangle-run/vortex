@@ -2,7 +2,7 @@
 //   FL: Fragment Layer
 
 import type { Renderer } from ".";
-import { trace, unwrap } from "../utils";
+import { unwrap } from "../utils";
 
 export abstract class FLNode<RendererNode> {
 	_children: FLNode<RendererNode>[] = [];

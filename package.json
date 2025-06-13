@@ -3,7 +3,7 @@
 	"private": true,
 	"workspaces": ["packages/*"],
 	"scripts": {
-		"fmt": "biome check --write",
+		"fmt": "biome check --write && turbo fmt",
 		"change": "changeset",
 		"release": "npm run fmt && turbo build && changeset publish",
 		"version": "changeset version",

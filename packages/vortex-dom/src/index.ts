@@ -1,7 +1,6 @@
 import {
 	Lifetime,
 	type Renderer,
-	type Signal,
 	type Store,
 	getImmediateValue,
 } from "@vortexjs/core";

@@ -33,6 +33,20 @@
 				"noUnusedTemplateLiteral": {
 					"fix": "safe",
 					"level": "warn"
+				},
+				"useNodejsImportProtocol": {
+					"fix": "safe",
+					"level": "warn"
+				},
+				"useTemplate": {
+					"fix": "safe",
+					"level": "warn"
+				}
+			},
+			"correctness": {
+				"noUnusedImports": {
+					"fix": "safe",
+					"level": "warn"
 				}
 			},
 			"suspicious": {

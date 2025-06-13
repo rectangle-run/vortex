@@ -5,12 +5,7 @@
  * elements such as accordions and collapsibles using Vortex.
  */
 
-import {
-	type Store,
-	getImmediateValue,
-	useDerived,
-	useState,
-} from "@vortexjs/core";
+import { type Store, getImmediateValue, useDerived } from "@vortexjs/core";
 import type { ElementProps } from "@vortexjs/dom";
 import { useId } from "./id";
 
