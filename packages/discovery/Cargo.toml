@@ -8,8 +8,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 napi = { version = "3.0.0-beta.0", default-features = false, features = [
-    "napi10",
-    "experimental",
+	"napi10",
+	"experimental",
 ] }
 napi-derive = "3.0.0-beta.0"
 oxc = { features = ["semantic", "codegen"], version = "0.72.3" }
