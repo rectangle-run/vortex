@@ -26,6 +26,11 @@ jobs:
             - name: Install Dependencies
               run: bun install
 
+            - name: Setup Rust Toolchain
+              uses: actions-rust-lang/setup-rust-toolchain@v1
+              with:
+                  target: aarch64-apple-darwin, wasm32-unknown-unknown, x86_64-apple-darwin, x86_64-unknown-linux-gnu, x86_64-pc-windows-msvc
+
             - name: Build Project
               run: bun run build
 
