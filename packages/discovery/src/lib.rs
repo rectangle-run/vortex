@@ -1,4 +1,3 @@
-use napi::bindgen_prelude::ToNapiValue;
 use oxc::{
     allocator::Allocator,
     ast::ast::{
@@ -13,7 +12,9 @@ use oxc::{
 };
 use oxc_traverse::{traverse_mut, Traverse, TraverseCtx};
 
-use crate::state::{CompilerState, Discovery, ImportName, MagicFunction, Target};
+use crate::state::{
+    CompilerState, Discovery, ImportName, MagicFunction, NapiCompilerDiagnostic, Target,
+};
 
 #[macro_use]
 extern crate napi_derive;
@@ -54,7 +55,7 @@ impl<'a> DiscoveryTraverser<'a, '_> {
 }
 
 impl<'a> Traverse<'a> for DiscoveryTraverser<'a, '_> {
-    fn exit_program(&mut self, node: &mut Program<'a>, ctx: &mut TraverseCtx<'a>) {
+    fn exit_program(&mut self, node: &mut Program<'a>, _ctx: &mut TraverseCtx<'a>) {
         while let Some(declaration) = self.declarations_to_add.pop() {
             node.body.push(declaration);
         }
@@ -114,6 +115,7 @@ impl<'a> Traverse<'a> for DiscoveryTraverser<'a, '_> {
 pub struct CompileResult {
     pub source: String,
     pub discoveries: Vec<Discovery>,
+    pub diagnostics: Vec<NapiCompilerDiagnostic>,
 }
 
 fn compile(source: &str, language: SourceType) -> CompileResult {
@@ -142,6 +144,7 @@ fn compile(source: &str, language: SourceType) -> CompileResult {
 
     CompileResult {
         source: code,
+        diagnostics: state.get_diagnostics(),
         discoveries: state.discoveries,
     }
 }

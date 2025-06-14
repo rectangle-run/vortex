@@ -5,12 +5,12 @@
 		"packages/*"
 	],
 	"scripts": {
-		"fmt": "biome check --write && turbo fmt",
 		"change": "changeset",
 		"release": "npm run fmt && turbo build && changeset publish",
 		"build": "turbo build",
 		"version": "changeset version",
-		"dev": "turbo dev"
+		"dev": "turbo dev",
+		"fmt": "turbo fmt"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",

@@ -12,7 +12,8 @@
 		"@vortexjs/dom": "workspace:*"
 	},
 	"scripts": {
-		"dev": "wormhole dev"
+		"dev": "wormhole dev",
+		"fmt": "biome check --write"
 	},
 	"peerDependencies": {
 		"typescript": "^5"

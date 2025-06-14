@@ -114,6 +114,26 @@ impl<'a> CompilerState<'a> {
         }
     }
 
+    pub fn get_diagnostics(&self) -> Vec<NapiCompilerDiagnostic> {
+        let mut diagnostics = vec![];
+
+        for error in &self.errors {
+            let mut generator = CompilerDiagnosticGenerator::default();
+            generator.format_error(error);
+            diagnostics.extend(generator.diagnostics);
+        }
+
+        diagnostics
+            .into_iter()
+            .map(|d| NapiCompilerDiagnostic {
+                message: d.message,
+                span: (d.span.start, d.span.end),
+                tier: d.tier,
+                id: d.id,
+            })
+            .collect()
+    }
+
     pub fn debug_log_errors(&self) {
         let mut diagnostics = vec![];
 
@@ -153,11 +173,12 @@ impl<'a> CompilerState<'a> {
 }
 
 #[derive(Copy, Clone)]
-pub struct DiagnosticId(u64);
+#[napi(object)]
+pub struct DiagnosticId(pub u32);
 
 macro_rules! diagnostic_id {
     () => {
-        DiagnosticId(random::<u64>())
+        DiagnosticId(random::<u32>())
     };
 }
 
@@ -253,6 +274,15 @@ pub struct CompilerDiagnostic {
     pub id: DiagnosticId,
 }
 
+#[napi(object)]
+pub struct NapiCompilerDiagnostic {
+    pub message: String,
+    pub span: (u32, u32),
+    pub tier: CompilerDiagnosticTier,
+    pub id: DiagnosticId,
+}
+
+#[napi(string_enum = "camelCase")]
 pub enum CompilerDiagnosticTier {
     Error,
     Related(DiagnosticId),

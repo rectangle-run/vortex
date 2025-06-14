@@ -15,7 +15,8 @@ developmentServer(lt, config);
 
 const errorCollector = createErrorCollector();
 
-const { discoveries, source } = compileScript(`import test from "@vortexjs/wormhole/route";
+const { discoveries, source } = compileScript(
+	`import test from "@vortexjs/wormhole/route";
 	test("/", {
 		page() {
 			return (
@@ -25,6 +26,8 @@ const { discoveries, source } = compileScript(`import test from "@vortexjs/wormh
 				</>
 			);
 		},
-	});`, "text.tsx");
+	});`,
+	"text.tsx",
+);
 
 console.log({ discoveries, source });

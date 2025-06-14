@@ -16,7 +16,8 @@
 		"typescript": "^5"
 	},
 	"scripts": {
-		"build": "tsup ./src/index.ts --format esm,cjs --dts --out-dir dist"
+		"build": "tsup ./src/index.ts --format esm,cjs --dts --out-dir dist",
+		"fmt": "biome check --write"
 	},
 	"exports": {
 		".": {

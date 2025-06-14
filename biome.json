@@ -15,7 +15,8 @@
 			"**/.changeset",
 			"**/.vscode",
 			"**/.idea",
-			"**/.DS_Store"
+			"**/.DS_Store",
+			"packages/discovery/index.*"
 		]
 	},
 	"formatter": {
@@ -39,6 +40,12 @@
 					"level": "warn"
 				},
 				"useTemplate": {
+					"fix": "safe",
+					"level": "warn"
+				}
+			},
+			"complexity": {
+				"useOptionalChain": {
 					"fix": "safe",
 					"level": "warn"
 				}
