@@ -11,7 +11,8 @@
 			"passThroughEnv": [
 				"RUSTUP_HOME",
 				"RUSTUP_TOOLCHAIN"
-			]
+			],
+			"outputLogs": "new-only"
 		},
 		"fmt": {
 			"persistent": true,
