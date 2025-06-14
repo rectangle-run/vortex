@@ -2,18 +2,30 @@
 	"$schema": "https://turborepo.com/schema.json",
 	"tasks": {
 		"build": {
-			"outputs": ["dist/**"],
-			"dependsOn": ["^build"]
+			"outputs": [
+				"dist/**"
+			],
+			"dependsOn": [
+				"^build"
+			],
+			"passThroughEnv": [
+				"RUSTUP_HOME",
+				"RUSTUP_TOOLCHAIN"
+			]
 		},
 		"fmt": {
 			"persistent": true,
 			"cache": false,
-			"dependsOn": ["^fmt"]
+			"dependsOn": [
+				"^fmt"
+			]
 		},
 		"dev": {
 			"persistent": true,
 			"cache": false,
-			"dependsOn": ["^build"]
+			"dependsOn": [
+				"^build"
+			]
 		}
 	}
 }
