@@ -1,4 +1,4 @@
-import { unwrap } from "../shared/utils";
+import { unwrap } from "@vortexjs/common";
 
 export interface LocatedError {
 	message: DevMarkup;

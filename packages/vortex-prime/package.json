@@ -10,13 +10,14 @@
 	"dependencies": {
 		"@vortexjs/core": "workspace:*",
 		"tsup": "^8.5.0",
-		"@vortexjs/dom": "workspace:*"
+		"@vortexjs/dom": "workspace:*",
+		"@vortexjs/common": "workspace:*"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
 	},
 	"scripts": {
-		"build": "tsup ./src/index.ts --format esm,cjs --dts --out-dir dist",
+		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
 		"fmt": "biome check --write"
 	},
 	"exports": {

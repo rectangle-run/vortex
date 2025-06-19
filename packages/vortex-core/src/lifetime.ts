@@ -1,36 +1,38 @@
-export class Lifetime {
-	private closeSubscribers: (() => void)[] = [];
+import { getUltraglobalReference } from "@vortexjs/common";
 
-	static hookLifetime: Lifetime | null = null;
+class InternalLifetime {
+	#closeSubscribers: (() => void)[] = [];
 
-	static changeHookLifetime(lifetime: Lifetime | null) {
-		const prev = Lifetime.hookLifetime;
+	static hookLifetime: InternalLifetime | null = null;
 
-		Lifetime.hookLifetime = lifetime;
+	static changeHookLifetime(lifetime: InternalLifetime | null) {
+		const prev = InternalLifetime.hookLifetime;
+
+		InternalLifetime.hookLifetime = lifetime;
 
 		return {
 			reset() {
-				Lifetime.hookLifetime = prev;
+				InternalLifetime.hookLifetime = prev;
 			},
 			[Symbol.dispose]() {
-				Lifetime.hookLifetime = prev;
+				InternalLifetime.hookLifetime = prev;
 			},
 		};
 	}
 
 	close() {
-		for (const subscriber of this.closeSubscribers) {
+		for (const subscriber of this.#closeSubscribers) {
 			subscriber();
 		}
-		this.closeSubscribers = [];
+		this.#closeSubscribers = [];
 	}
 
 	onClosed(callback: () => void) {
-		this.closeSubscribers.push(callback);
+		this.#closeSubscribers.push(callback);
 		return this;
 	}
 
-	cascadesFrom(lifetime: Lifetime) {
+	cascadesFrom(lifetime: InternalLifetime) {
 		lifetime.onClosed(() => {
 			this.close();
 		});
@@ -39,6 +41,14 @@ export class Lifetime {
 
 	[Symbol.dispose] = this.close;
 }
+
+export class Lifetime extends getUltraglobalReference(
+	{
+		package: "@vortexjs/core",
+		name: "Lifetime",
+	},
+	InternalLifetime,
+) {}
 
 export function useHookLifetime(): Lifetime {
 	if (Lifetime.hookLifetime === null) {

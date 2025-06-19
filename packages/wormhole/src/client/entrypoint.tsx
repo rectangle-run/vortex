@@ -1,0 +1,64 @@
+import {
+	type JSXNode,
+	Lifetime,
+	awaited,
+	render,
+	useDerived,
+} from "@vortexjs/core";
+import { type JSX, html } from "@vortexjs/dom";
+import { type ImportHash, type RouterNode, matchRoute } from "../shared/router";
+import { initializeClientSideRouting, usePathname } from "./csr";
+
+export interface ClientProps {
+	load<T>(hashKey: string): Promise<T>;
+	routes: RouterNode<ImportHash>;
+}
+
+function createFrameLoader<T extends JSX.IntrinsicAttributes>(
+	frame: ImportHash,
+	props: ClientProps,
+) {
+	const loaded = awaited(props.load(frame));
+
+	return (props: T) => {
+		return (
+			<>
+				{useDerived((get) => {
+					const Loaded = get(loaded) as (props: T) => JSXNode;
+
+					return Loaded ? <Loaded {...props} /> : <></>;
+				})}
+			</>
+		);
+	};
+}
+
+export async function INTERNAL_loadClient(props: ClientProps) {
+	using _hlt = Lifetime.changeHookLifetime(new Lifetime());
+	initializeClientSideRouting();
+
+	const pathname = usePathname();
+
+	const routeMatch = useDerived((get) =>
+		matchRoute(get(pathname), props.routes),
+	);
+	const hierarchy = useDerived((get) => {
+		const rm = get(routeMatch);
+
+		let node: JSXNode = undefined;
+
+		for (const frame of rm.frames.toReversed()) {
+			const Frame = createFrameLoader(frame, props);
+			node = (
+				<Frame {...rm.slugs} {...rm.spreads}>
+					{node}
+				</Frame>
+			);
+		}
+
+		return node;
+	});
+
+	// biome-ignore lint/complexity/noUselessFragments: neccessary to make dynamic
+	render(html(), document.documentElement, <>{hierarchy}</>);
+}

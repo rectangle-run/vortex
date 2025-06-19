@@ -1,14 +1,35 @@
-import type { JSXNode } from "@vortexjs/core";
 import route from "@vortexjs/wormhole/route";
 
 route("/", {
 	page() {
 		return (
 			<>
-				<h1>Welcome to Wormhole</h1>
-				<p>This is an example app</p>
+				<h1>Welcome to Wormhole, {Object.entries(globalThis).length}</h1>
+				<p>
+					This is an example app, go to the <a href="/docs/tada">docs</a>
+				</p>
 			</>
 		);
 	},
-	layout({ children }: { children: JSXNode }) {},
+	layout({ children }) {
+		return (
+			<>
+				<head>
+					<title>Wormhole Example</title>
+				</head>
+				<body>{children}</body>
+			</>
+		);
+	},
+});
+
+route("/docs/[page]", {
+	page({ page }) {
+		return (
+			<>
+				<h1>Documentation for {page}</h1>
+				<p>This is the documentation page for {page}.</p>
+			</>
+		);
+	},
 });

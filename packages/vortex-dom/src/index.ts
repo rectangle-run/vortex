@@ -1,10 +1,10 @@
+import { unwrap } from "@vortexjs/common";
 import {
 	Lifetime,
 	type Renderer,
 	type Store,
 	getImmediateValue,
 } from "@vortexjs/core";
-import { unwrap } from "./utils";
 
 export interface HTMLHydrationContext {
 	unclaimedNodes: Node[];

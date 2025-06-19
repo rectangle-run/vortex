@@ -1,8 +1,8 @@
 // Terminology
 //   FL: Fragment Layer
 
+import { unwrap } from "@vortexjs/common";
 import type { Renderer } from ".";
-import { unwrap } from "../utils";
 
 export abstract class FLNode<RendererNode> {
 	_children: FLNode<RendererNode>[] = [];

@@ -16,6 +16,7 @@
 			"**/.vscode",
 			"**/.idea",
 			"**/.DS_Store",
+			"**/.wormhole",
 			"packages/discovery/index.*"
 		]
 	},

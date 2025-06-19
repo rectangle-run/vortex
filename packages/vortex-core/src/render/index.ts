@@ -1,8 +1,8 @@
+import { trace, unreachable, unwrap } from "@vortexjs/common";
 import { ContextScope } from "../context";
 import type { JSXNode } from "../jsx/jsx-common";
 import { Lifetime } from "../lifetime";
 import { type Store, effect, store } from "../signal";
-import { trace, unreachable, unwrap } from "../utils";
 import {
 	FLElement,
 	FLFragment,
@@ -55,7 +55,7 @@ class Reconciler<RendererNode, HydrationContext> {
 			}
 			case "text": {
 				return new FLText<RendererNode, HydrationContext>(
-					node.value,
+					node.value.toString(),
 					this.renderer,
 					hydration,
 				);
@@ -221,7 +221,7 @@ export function render<RendererNode, HydrationContext>(
 	renderer: Renderer<RendererNode, HydrationContext>,
 	root: RendererNode,
 	component: JSXNode,
-): void {
+): Lifetime {
 	using _trace = trace("Initial page render");
 
 	const reconciler = new Reconciler(renderer, root);
@@ -237,4 +237,6 @@ export function render<RendererNode, HydrationContext>(
 	const portal = new FLPortal(root, renderer);
 
 	portal.children = [flNode];
+
+	return lt;
 }

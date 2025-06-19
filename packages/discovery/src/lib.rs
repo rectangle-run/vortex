@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use oxc::{
     allocator::Allocator,
     ast::ast::{
@@ -5,7 +7,7 @@ use oxc::{
         ImportDeclarationSpecifier, Program, Statement, TSTypeAnnotation,
         TSTypeParameterDeclaration,
     },
-    codegen::Codegen,
+    codegen::{Codegen, CodegenOptions, LegalComment},
     parser::Parser,
     semantic::SemanticBuilder,
     span::{SourceType, Span},
@@ -13,7 +15,8 @@ use oxc::{
 use oxc_traverse::{traverse_mut, Traverse, TraverseCtx};
 
 use crate::state::{
-    CompilerState, Discovery, ImportName, MagicFunction, NapiCompilerDiagnostic, Target,
+    CompilerError, CompilerState, Discovery, ImportName, MagicFunction, NapiCompilerDiagnostic,
+    Target,
 };
 
 #[macro_use]
@@ -121,12 +124,17 @@ pub struct CompileResult {
 fn compile(source: &str, language: SourceType) -> CompileResult {
     let allocator = Allocator::new();
     let parser = Parser::new(&allocator, source, language);
-    let mut program = parser.parse().program;
+    let parsed = parser.parse();
+    let mut program = parsed.program;
     let scoping = SemanticBuilder::new()
         .build(&program)
         .semantic
         .into_scoping();
     let mut state = CompilerState::new(Target::Client, source);
+
+    for error in parsed.errors {
+        state.add_error(CompilerError::OxcParsingError { data: error });
+    }
 
     traverse_mut(
         &mut DiscoveryTraverser {
@@ -138,9 +146,26 @@ fn compile(source: &str, language: SourceType) -> CompileResult {
         scoping,
     );
 
-    let codegen = Codegen::new().build(&program);
+    let source_map_path = Path::new("[smp]");
+
+    let codegen = Codegen::new()
+        .with_source_text(source)
+        .with_options(CodegenOptions {
+            single_quote: true,
+            minify: true,
+            comments: true,
+            annotation_comments: true,
+            legal_comments: LegalComment::Inline,
+            source_map_path: Some(source_map_path.to_path_buf()),
+        })
+        .build(&program);
 
     let code = codegen.code;
+
+    let code = code.replace(
+        source_map_path.to_str().unwrap(),
+        &codegen.map.unwrap().to_data_url(),
+    );
 
     CompileResult {
         source: code,

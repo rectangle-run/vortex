@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use oxc::{
     ast::ast::{Expression, ObjectPropertyKind, PropertyKey},
+    diagnostics::OxcDiagnostic,
     semantic::SymbolId,
     span::{GetSpan, Span},
 };
@@ -263,6 +264,24 @@ impl CompilerDiagnosticGenerator {
                     tier: CompilerDiagnosticTier::Error,
                 });
             }
+            CompilerError::OxcParsingError { data } => {
+                self.diagnostics.push(CompilerDiagnostic {
+                    id: diagnostic_id!(),
+                    message: format!("parsing error: {}", data.message),
+                    span: data
+                        .labels
+                        .as_ref()
+                        .and_then(|x| x.first())
+                        .map(|x| {
+                            Span::new(
+                                x.inner().offset() as u32,
+                                (x.inner().offset() + x.inner().len()) as u32,
+                            )
+                        })
+                        .unwrap_or(Span::new(0, 0)),
+                    tier: CompilerDiagnosticTier::Error,
+                });
+            }
         }
     }
 }
@@ -309,5 +328,8 @@ pub enum CompilerError {
     },
     ExpectedStringLiteral {
         at: Span,
+    },
+    OxcParsingError {
+        data: OxcDiagnostic,
     },
 }

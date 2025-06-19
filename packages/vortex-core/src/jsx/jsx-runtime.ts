@@ -31,8 +31,7 @@ export function jsx(type: any, props: JSXRuntimeProps | null): JSXNode {
 		return {
 			type: "component",
 			impl: type,
-			props: props || {},
-			children: normalizeChildren(children),
+			props: { ...(props ?? {}), children: normalizeChildren(children) },
 		};
 	}
 

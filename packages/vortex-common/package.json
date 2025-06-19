@@ -1,0 +1,28 @@
+{
+	"name": "@vortexjs/common",
+	"type": "module",
+	"repository": {
+		"url": "https://github.com/andylovescode/vortex"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"dependencies": {
+		"tsup": "^8.5.0"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"scripts": {
+		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
+		"fmt": "biome check --write"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"version": "0.0.0"
+}

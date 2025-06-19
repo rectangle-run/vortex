@@ -1,3 +1,7 @@
+export function unreachable(value: never): never {
+	throw new Error("Unreachable state.");
+}
+
 export function unwrap<T>(value: T | undefined | null, message?: string): T {
 	if (value === undefined || value === null) {
 		throw new Error(message ?? "Value is undefined or null");
@@ -5,8 +9,4 @@ export function unwrap<T>(value: T | undefined | null, message?: string): T {
 	return value;
 }
 
-export type EvaluateType<T> = T extends object
-	? {
-			[key in keyof T]: EvaluateType<T[key]>;
-		}
-	: T;
+export type Brand<T, B extends string> = T & { __brand: B };

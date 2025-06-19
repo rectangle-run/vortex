@@ -13,12 +13,17 @@
       "name": "@vortexjs/discovery",
       "version": "0.0.0",
       "devDependencies": {
-        "@napi-rs/cli": "3.0.0-alpha.89",
+        "@napi-rs/cli": "^3.0.0-alpha.89",
+      },
+      "optionalDependencies": {
+        "@vortexjs/discovery-darwin-x64": "0.0.0",
+        "@vortexjs/discovery-linux-x64-gnu": "0.0.0",
+        "@vortexjs/discovery-win32-x64-msvc": "0.0.0",
       },
     },
     "packages/example": {
       "name": "@vortexjs/bun-example",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "dependencies": {
         "@vortexjs/core": "workspace:*",
         "@vortexjs/dom": "workspace:*",
@@ -44,9 +49,24 @@
         "typescript": "^5",
       },
     },
-    "packages/vortex-core": {
-      "name": "@vortexjs/core",
-      "version": "2.3.0",
+    "packages/locounter": {
+      "name": "@vortexjs/locounter",
+      "bin": {
+        "locounter": "./src/index.ts",
+      },
+      "dependencies": {
+        "@vortexjs/common": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/bun": "latest",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
+      },
+    },
+    "packages/vortex-common": {
+      "name": "@vortexjs/common",
+      "version": "0.0.0",
       "dependencies": {
         "tsup": "^8.5.0",
       },
@@ -57,10 +77,25 @@
         "typescript": "^5",
       },
     },
+    "packages/vortex-core": {
+      "name": "@vortexjs/core",
+      "version": "2.4.0",
+      "dependencies": {
+        "@vortexjs/common": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/bun": "latest",
+        "tsup": "^8.5.0",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
+      },
+    },
     "packages/vortex-dom": {
       "name": "@vortexjs/dom",
-      "version": "1.2.0",
+      "version": "2.0.0",
       "dependencies": {
+        "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
         "tsup": "^8.5.0",
       },
@@ -73,14 +108,31 @@
     },
     "packages/vortex-prime": {
       "name": "@vortexjs/prime",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "dependencies": {
+        "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
         "@vortexjs/dom": "workspace:*",
         "tsup": "^8.5.0",
       },
       "devDependencies": {
         "@types/bun": "latest",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
+      },
+    },
+    "packages/vortex-ssr": {
+      "name": "@vortexjs/ssr",
+      "version": "0.0.0",
+      "dependencies": {
+        "@vortexjs/common": "workspace:*",
+        "@vortexjs/core": "workspace:*",
+        "tsup": "^8.5.0",
+      },
+      "devDependencies": {
+        "@types/bun": "latest",
+        "@vortexjs/dom": "workspace:*",
       },
       "peerDependencies": {
         "typescript": "^5",
@@ -94,8 +146,14 @@
         "wh": "./dist/cli.js",
       },
       "dependencies": {
+        "@speed-highlight/core": "^1.2.7",
+        "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
+        "@vortexjs/discovery": "workspace:*",
+        "@vortexjs/dom": "workspace:*",
+        "@vortexjs/ssr": "workspace:*",
         "astring": "^1.9.0",
+        "chalk": "^5.4.1",
         "oxc-parser": "^0.72.3",
         "tsup": "^8.5.0",
       },
@@ -472,6 +530,8 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.41.1", "", { "os": "win32", "cpu": "x64" }, "sha512-Wq2zpapRYLfi4aKxf2Xff0tN+7slj2d4R87WEzqw7ZLsVvO5zwYCIuEGSZYiK41+GlwUo1HiR+GdkLEJnCKTCw=="],
 
+    "@speed-highlight/core": ["@speed-highlight/core@1.2.7", "", {}, "sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g=="],
+
     "@tybys/wasm-util": ["@tybys/wasm-util@0.9.0", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw=="],
 
     "@types/bun": ["@types/bun@1.2.15", "", { "dependencies": { "bun-types": "1.2.15" } }, "sha512-U1ljPdBEphF0nw1MIk0hI7kPg7dFdPyM7EenHsp6W5loNHl7zqy6JQf/RKCgnUn2KDzUpkBwHPnEJEjII594bA=="],
@@ -482,6 +542,8 @@
 
     "@vortexjs/bun-example": ["@vortexjs/bun-example@workspace:packages/example"],
 
+    "@vortexjs/common": ["@vortexjs/common@workspace:packages/vortex-common"],
+
     "@vortexjs/core": ["@vortexjs/core@workspace:packages/vortex-core"],
 
     "@vortexjs/discovery": ["@vortexjs/discovery@workspace:packages/discovery"],
@@ -490,7 +552,11 @@
 
     "@vortexjs/example-wormhole": ["@vortexjs/example-wormhole@workspace:packages/example-wormhole"],
 
+    "@vortexjs/locounter": ["@vortexjs/locounter@workspace:packages/locounter"],
+
     "@vortexjs/prime": ["@vortexjs/prime@workspace:packages/vortex-prime"],
+
+    "@vortexjs/ssr": ["@vortexjs/ssr@workspace:packages/vortex-ssr"],
 
     "@vortexjs/wormhole": ["@vortexjs/wormhole@workspace:packages/wormhole"],
 
@@ -527,6 +593,8 @@
     "bundle-require": ["bundle-require@5.1.0", "", { "dependencies": { "load-tsconfig": "^0.2.3" }, "peerDependencies": { "esbuild": ">=0.18" } }, "sha512-3WrrOuZiyaaZPWiEt4G3+IffISVC9HYlWueJEBWED4ZH4aIAC2PnkdnuRrR94M+w6yGWn4AglWtJtBI8YqvgoA=="],
 
     "cac": ["cac@6.7.14", "", {}, "sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ=="],
+
+    "chalk": ["chalk@5.4.1", "", {}, "sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w=="],
 
     "chardet": ["chardet@0.7.0", "", {}, "sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA=="],
 
@@ -842,6 +910,20 @@
 
     "@manypkg/get-packages/fs-extra": ["fs-extra@8.1.0", "", { "dependencies": { "graceful-fs": "^4.2.0", "jsonfile": "^4.0.0", "universalify": "^0.1.0" } }, "sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g=="],
 
+    "@vortexjs/common/@types/bun": ["@types/bun@1.2.16", "", { "dependencies": { "bun-types": "1.2.16" } }, "sha512-1aCZJ/6nSiViw339RsaNhkNoEloLaPzZhxMOYEa7OzRzO41IGg5n/7I43/ZIAW/c+Q6cT12Vf7fOZOoVIzb5BQ=="],
+
+    "@vortexjs/core/@types/bun": ["@types/bun@1.2.16", "", { "dependencies": { "bun-types": "1.2.16" } }, "sha512-1aCZJ/6nSiViw339RsaNhkNoEloLaPzZhxMOYEa7OzRzO41IGg5n/7I43/ZIAW/c+Q6cT12Vf7fOZOoVIzb5BQ=="],
+
+    "@vortexjs/dom/@types/bun": ["@types/bun@1.2.16", "", { "dependencies": { "bun-types": "1.2.16" } }, "sha512-1aCZJ/6nSiViw339RsaNhkNoEloLaPzZhxMOYEa7OzRzO41IGg5n/7I43/ZIAW/c+Q6cT12Vf7fOZOoVIzb5BQ=="],
+
+    "@vortexjs/locounter/@types/bun": ["@types/bun@1.2.16", "", { "dependencies": { "bun-types": "1.2.16" } }, "sha512-1aCZJ/6nSiViw339RsaNhkNoEloLaPzZhxMOYEa7OzRzO41IGg5n/7I43/ZIAW/c+Q6cT12Vf7fOZOoVIzb5BQ=="],
+
+    "@vortexjs/prime/@types/bun": ["@types/bun@1.2.16", "", { "dependencies": { "bun-types": "1.2.16" } }, "sha512-1aCZJ/6nSiViw339RsaNhkNoEloLaPzZhxMOYEa7OzRzO41IGg5n/7I43/ZIAW/c+Q6cT12Vf7fOZOoVIzb5BQ=="],
+
+    "@vortexjs/ssr/@types/bun": ["@types/bun@1.2.16", "", { "dependencies": { "bun-types": "1.2.16" } }, "sha512-1aCZJ/6nSiViw339RsaNhkNoEloLaPzZhxMOYEa7OzRzO41IGg5n/7I43/ZIAW/c+Q6cT12Vf7fOZOoVIzb5BQ=="],
+
+    "@vortexjs/wormhole/@types/bun": ["@types/bun@1.2.16", "", { "dependencies": { "bun-types": "1.2.16" } }, "sha512-1aCZJ/6nSiViw339RsaNhkNoEloLaPzZhxMOYEa7OzRzO41IGg5n/7I43/ZIAW/c+Q6cT12Vf7fOZOoVIzb5BQ=="],
+
     "micromatch/picomatch": ["picomatch@2.3.1", "", {}, "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="],
 
     "read-yaml-file/js-yaml": ["js-yaml@3.14.1", "", { "dependencies": { "argparse": "^1.0.7", "esprima": "^4.0.0" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g=="],
@@ -859,6 +941,20 @@
     "@isaacs/cliui/strip-ansi/ansi-regex": ["ansi-regex@6.1.0", "", {}, "sha512-7HSX4QQb4CspciLpVFwyRe79O3xsIZDDLER21kERQ71oaPodF8jL725AgJMFAYbooIqolJoRLuM81SpeUkpkvA=="],
 
     "@isaacs/cliui/wrap-ansi/ansi-styles": ["ansi-styles@6.2.1", "", {}, "sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug=="],
+
+    "@vortexjs/common/@types/bun/bun-types": ["bun-types@1.2.16", "", { "dependencies": { "@types/node": "*" } }, "sha512-ciXLrHV4PXax9vHvUrkvun9VPVGOVwbbbBF/Ev1cXz12lyEZMoJpIJABOfPcN9gDJRaiKF9MVbSygLg4NXu3/A=="],
+
+    "@vortexjs/core/@types/bun/bun-types": ["bun-types@1.2.16", "", { "dependencies": { "@types/node": "*" } }, "sha512-ciXLrHV4PXax9vHvUrkvun9VPVGOVwbbbBF/Ev1cXz12lyEZMoJpIJABOfPcN9gDJRaiKF9MVbSygLg4NXu3/A=="],
+
+    "@vortexjs/dom/@types/bun/bun-types": ["bun-types@1.2.16", "", { "dependencies": { "@types/node": "*" } }, "sha512-ciXLrHV4PXax9vHvUrkvun9VPVGOVwbbbBF/Ev1cXz12lyEZMoJpIJABOfPcN9gDJRaiKF9MVbSygLg4NXu3/A=="],
+
+    "@vortexjs/locounter/@types/bun/bun-types": ["bun-types@1.2.16", "", { "dependencies": { "@types/node": "*" } }, "sha512-ciXLrHV4PXax9vHvUrkvun9VPVGOVwbbbBF/Ev1cXz12lyEZMoJpIJABOfPcN9gDJRaiKF9MVbSygLg4NXu3/A=="],
+
+    "@vortexjs/prime/@types/bun/bun-types": ["bun-types@1.2.16", "", { "dependencies": { "@types/node": "*" } }, "sha512-ciXLrHV4PXax9vHvUrkvun9VPVGOVwbbbBF/Ev1cXz12lyEZMoJpIJABOfPcN9gDJRaiKF9MVbSygLg4NXu3/A=="],
+
+    "@vortexjs/ssr/@types/bun/bun-types": ["bun-types@1.2.16", "", { "dependencies": { "@types/node": "*" } }, "sha512-ciXLrHV4PXax9vHvUrkvun9VPVGOVwbbbBF/Ev1cXz12lyEZMoJpIJABOfPcN9gDJRaiKF9MVbSygLg4NXu3/A=="],
+
+    "@vortexjs/wormhole/@types/bun/bun-types": ["bun-types@1.2.16", "", { "dependencies": { "@types/node": "*" } }, "sha512-ciXLrHV4PXax9vHvUrkvun9VPVGOVwbbbBF/Ev1cXz12lyEZMoJpIJABOfPcN9gDJRaiKF9MVbSygLg4NXu3/A=="],
 
     "read-yaml-file/js-yaml/argparse": ["argparse@1.0.10", "", { "dependencies": { "sprintf-js": "~1.0.2" } }, "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg=="],
 

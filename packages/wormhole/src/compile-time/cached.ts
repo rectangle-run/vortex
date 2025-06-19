@@ -1,5 +1,5 @@
-import { paths } from "../dev/paths";
-import { unwrap } from "../shared/utils";
+import { unwrap } from "@vortexjs/common";
+import { paths } from "./paths";
 
 export interface Cache<This, Args extends any[], Return> {
 	(this: This, ...args: Args): Promise<Return>;

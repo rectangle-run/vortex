@@ -2,7 +2,7 @@
 //   Serializer
 //
 
-import { unwrap } from "./utils";
+import { unwrap } from "@vortexjs/common";
 
 export interface Serializer {
 	internalBuffer: DataView;

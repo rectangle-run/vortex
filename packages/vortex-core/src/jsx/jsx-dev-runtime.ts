@@ -40,8 +40,7 @@ export function jsxDEV(
 		return {
 			type: "component",
 			impl: type,
-			props: props || {},
-			children: normalizeChildren(children),
+			props: { ...(props ?? {}), children: normalizeChildren(children) },
 			...source,
 		};
 	}

@@ -32,7 +32,6 @@ export function when(
 					if (typeof value === "function") {
 						return {
 							type: "component",
-							children: [],
 							impl: value,
 							props: {},
 						} satisfies JSXNode;

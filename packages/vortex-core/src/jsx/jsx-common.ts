@@ -55,7 +55,6 @@ export interface JSXComponent<Props> extends JSXSource {
 	type: "component";
 	impl: (props: Props) => JSXNode;
 	props: Props;
-	children: JSXNode[];
 }
 
 export interface JSXFragment extends JSXSource {
