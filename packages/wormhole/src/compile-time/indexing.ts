@@ -19,7 +19,7 @@ export function checkForCues(contents: string): boolean {
 }
 
 function checkPathValidity(path: string) {
-	return !path.includes(".wormhole");
+	return !path.includes(".wormhole") && !path.includes("node_modules");
 }
 
 export type TaggedDiscovery = Discovery & {
@@ -68,14 +68,16 @@ export function indexDirectory(path: string, lt: Lifetime): Index {
 			const fullPath = join(dir, entry);
 			const stat = await Bun.file(fullPath).stat();
 
+			if (!checkPathValidity(fullPath)) {
+				continue;
+			}
+
 			if (stat.isDirectory()) {
 				firstPassIndex(fullPath); // await intentionally omitted to allow parallel indexing
 			}
 
 			if (stat.isFile()) {
-				if (checkPathValidity(fullPath)) {
-					revalidate(fullPath);
-				}
+				revalidate(fullPath);
 			}
 		}
 	}
