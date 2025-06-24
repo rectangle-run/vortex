@@ -5,9 +5,7 @@
 		"url": "https://github.com/andylovescode/vortex"
 	},
 	"devDependencies": {
-		"@types/bun": "latest"
-	},
-	"dependencies": {
+		"@types/bun": "latest",
 		"tsup": "^8.5.0"
 	},
 	"peerDependencies": {

@@ -9,7 +9,8 @@
 		"wh": "./dist/cli.js"
 	},
 	"devDependencies": {
-		"@types/bun": "latest"
+		"@types/bun": "latest",
+		"tsup": "^8.5.0"
 	},
 	"dependencies": {
 		"@speed-highlight/core": "^1.2.7",
@@ -19,8 +20,7 @@
 		"@vortexjs/dom": "workspace:*",
 		"@vortexjs/ssr": "workspace:*",
 		"bun-plugin-tailwind": "^0.0.15",
-		"chalk": "^5.4.1",
-		"tsup": "^8.5.0"
+		"chalk": "^5.4.1"
 	},
 	"peerDependencies": {
 		"typescript": "^5"

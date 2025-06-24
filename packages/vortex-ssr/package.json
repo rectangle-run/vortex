@@ -6,11 +6,11 @@
 	},
 	"devDependencies": {
 		"@types/bun": "latest",
-		"@vortexjs/dom": "workspace:*"
+		"@vortexjs/dom": "workspace:*",
+		"tsup": "^8.5.0"
 	},
 	"dependencies": {
 		"@vortexjs/core": "workspace:*",
-		"tsup": "^8.5.0",
 		"@vortexjs/common": "workspace:*"
 	},
 	"peerDependencies": {
