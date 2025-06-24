@@ -18,10 +18,8 @@
 		"@vortexjs/discovery": "workspace:*",
 		"@vortexjs/dom": "workspace:*",
 		"@vortexjs/ssr": "workspace:*",
-		"astring": "^1.9.0",
 		"bun-plugin-tailwind": "^0.0.15",
 		"chalk": "^5.4.1",
-		"oxc-parser": "^0.72.3",
 		"tsup": "^8.5.0"
 	},
 	"peerDependencies": {
