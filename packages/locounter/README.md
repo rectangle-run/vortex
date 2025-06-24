@@ -1,15 +1,15 @@
 # locounter
 
-To install dependencies:
+Locounter is a lightweight line counter designed for Vortex.
+
+## Installation
 
 ```bash
-bun install
+bun install -g @vortexjs/locounter
 ```
 
-To run:
+## Usage
 
 ```bash
-bun run index.ts
+locounter # counts the files in the directory containing the highest package.json
 ```
-
-This project was created using `bun init` in bun v1.2.15. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

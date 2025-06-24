@@ -11,5 +11,3 @@ Vortex Prime does not come with styles, it only provides helpers you can use to 
 ```bash
 bun add @vortexjs/prime
 ```
-
-## Usage
