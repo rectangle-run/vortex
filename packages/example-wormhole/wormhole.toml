@@ -1,1 +1,2 @@
 dev.port = 3141
+tailwind.configPath = "./src/tw.css"

@@ -61,6 +61,7 @@ export async function developmentServer(
 		const { serverBundle } = await buildClient({
 			routes: routerTree,
 			dev: true,
+			config: get(config),
 		});
 
 		serverEntryPath = serverBundle;
@@ -110,6 +111,15 @@ export async function developmentServer(
 						attributes: {
 							type: "module",
 							src: "/dist/client.js",
+						},
+						children: [],
+					});
+
+					vroot.children.push({
+						tagName: "link",
+						attributes: {
+							rel: "stylesheet",
+							href: "/dist/styles.css",
 						},
 						children: [],
 					});

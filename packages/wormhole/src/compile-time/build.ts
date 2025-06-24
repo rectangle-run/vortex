@@ -1,10 +1,13 @@
 import { join } from "node:path/posix";
 import { unwrap } from "@vortexjs/common";
+import type { BunPlugin } from "bun";
+import bunPluginTailwind from "bun-plugin-tailwind";
 import {
 	type ImportNamed,
 	type RouterNode,
 	hashImports,
 } from "../shared/router";
+import type { Config } from "./config";
 import { discoveryPlugin } from "./discovery-plugin";
 import { getLoadKey } from "./load-key";
 import { paths } from "./paths";
@@ -13,11 +16,13 @@ import { addTask } from "./tasks";
 export interface BuildResult {
 	clientBundle: string;
 	serverBundle: string;
+	cssBundle: string;
 }
 
 export interface BuildProps {
 	routes: RouterNode<ImportNamed>;
 	dev: boolean;
+	config: Config;
 }
 
 export async function buildClient(props: BuildProps): Promise<BuildResult> {
@@ -67,7 +72,7 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 		// Client entrypoint
 		let codegen = "";
 
-		codegen += `import { INTERNAL_loadClient } from "@vortexjs/wormhole";`;
+		codegen += `import { INTERNAL_loadClient } from "@vortexjs/wormhole";\n`;
 
 		codegen += "const importCache = {};";
 
@@ -135,11 +140,40 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 		entrypoints.push(serverEntryPath);
 	}
 
+	const plugins: BunPlugin[] = [];
+
+	{
+		// CSS entrypoint
+		const pkgJson = await Bun.file(join(paths().root, "package.json")).json();
+
+		const appCssPath = join(paths().root, "src", "app.css");
+
+		if (pkgJson.dependencies?.tailwindcss) {
+			plugins.push(bunPluginTailwind);
+		}
+
+		const cssEntryPath = join(
+			paths().wormhole.buildBox.codegenned.path,
+			"styles.css",
+		);
+		let cssContent = "";
+
+		if (await Bun.file(appCssPath).exists()) {
+			cssContent += `@import url(${JSON.stringify(appCssPath)});\n`;
+		}
+
+		await Bun.write(cssEntryPath, cssContent);
+
+		entrypoints.push(cssEntryPath);
+	}
+
+	plugins.push(discoveryPlugin);
+
 	await Bun.build({
 		splitting: true,
 		entrypoints,
 		outdir: paths().wormhole.buildBox.output.path,
-		plugins: [discoveryPlugin],
+		plugins,
 		minify: !props.dev,
 		banner: "// happy hacking :3\n",
 		sourcemap: props.dev ? "inline" : "none",
@@ -148,5 +182,6 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 	return {
 		clientBundle: join(paths().wormhole.buildBox.output.path, "client.js"),
 		serverBundle: join(paths().wormhole.buildBox.output.path, "server.js"),
+		cssBundle: join(paths().wormhole.buildBox.output.path, "styles.css"),
 	};
 }

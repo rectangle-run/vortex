@@ -376,5 +376,6 @@ if (!nativeBinding) {
 }
 
 module.exports = nativeBinding
+module.exports.bunPluginRegister = nativeBinding.bunPluginRegister
 module.exports.compileScript = nativeBinding.compileScript
 module.exports.RouteFrame = nativeBinding.RouteFrame

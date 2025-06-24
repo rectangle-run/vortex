@@ -154,7 +154,7 @@ impl<'a> CompilerState<'a> {
 
         for diagnostic in diagnostics {
             let line_number = self.get_line(diagnostic.span.start as usize) + 1;
-            let line_number_str = format!("{:>line_number_width$}", line_number);
+            let line_number_str = format!("{line_number:>line_number_width$}");
             let message = diagnostic.message;
             let line = self.line_content(line_number - 1);
 

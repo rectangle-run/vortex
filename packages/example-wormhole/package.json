@@ -7,9 +7,10 @@
 		"@types/bun": "latest"
 	},
 	"dependencies": {
-		"@vortexjs/wormhole": "workspace:*",
 		"@vortexjs/core": "workspace:*",
-		"@vortexjs/dom": "workspace:*"
+		"@vortexjs/dom": "workspace:*",
+		"@vortexjs/wormhole": "workspace:*",
+		"tailwindcss": "^4.1.10"
 	},
 	"scripts": {
 		"dev": "wormhole dev",

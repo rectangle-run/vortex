@@ -59,6 +59,12 @@ export async function INTERNAL_loadClient(props: ClientProps) {
 		return node;
 	});
 
-	// biome-ignore lint/complexity/noUselessFragments: neccessary to make dynamic
-	render(html(), document.documentElement, <>{hierarchy}</>);
+	render(
+		html(),
+		document.documentElement,
+		<>
+			{hierarchy}
+			<link rel="stylesheet" href="/dist/styles.css" />
+		</>,
+	);
 }

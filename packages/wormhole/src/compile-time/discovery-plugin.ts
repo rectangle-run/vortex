@@ -1,25 +1,15 @@
-import { compileScript } from "@vortexjs/discovery";
-import type { BunPlugin, Loader } from "bun";
-import { checkForCues } from "./indexing";
+import discovery from "@vortexjs/discovery";
+import type { BunPlugin } from "bun";
 
 export const discoveryPlugin: BunPlugin = {
 	name: "Discovery",
 	setup(plugin) {
-		plugin.onLoad({ filter: /.*/, namespace: "file" }, async (args) => {
-			const overrided: Loader[] = ["js", "jsx", "ts", "tsx"];
-
-			if (!overrided.includes(args.loader)) return;
-
-			const contents = await Bun.file(args.path).text();
-
-			if (!checkForCues(contents)) return;
-
-			const { source } = compileScript(contents, args.path);
-
-			return {
-				contents: source,
-				loader: args.loader,
-			};
-		});
+		plugin.onBeforeParse(
+			{ filter: /.*/ },
+			{
+				symbol: "replace_discovery_imports",
+				napiModule: discovery,
+			},
+		);
 	},
 };
