@@ -6,11 +6,11 @@
 		"url": "https://github.com/andylovescode/vortex"
 	},
 	"devDependencies": {
-		"@types/bun": "latest",
-		"tsup": "^8.5.0"
+		"@types/bun": "catalog:",
+		"tsup": "catalog:"
 	},
 	"peerDependencies": {
-		"typescript": "^5"
+		"typescript": "catalog:"
 	},
 	"scripts": {
 		"build": "tsup ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts --format esm --dts --out-dir dist",

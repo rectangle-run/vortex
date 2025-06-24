@@ -4,19 +4,19 @@
 	"type": "module",
 	"private": true,
 	"devDependencies": {
-		"@types/bun": "latest"
+		"@types/bun": "catalog:"
 	},
 	"dependencies": {
 		"@vortexjs/core": "workspace:*",
 		"@vortexjs/dom": "workspace:*",
 		"@vortexjs/wormhole": "workspace:*",
-		"tailwindcss": "^4.1.10"
+		"tailwindcss": "catalog:"
 	},
 	"scripts": {
 		"dev": "wormhole dev",
 		"fmt": "biome check --write"
 	},
 	"peerDependencies": {
-		"typescript": "^5"
+		"typescript": "catalog:"
 	}
 }

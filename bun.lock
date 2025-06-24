@@ -4,21 +4,37 @@
     "": {
       "name": "vortex",
       "devDependencies": {
-        "@biomejs/biome": "1.9.4",
-        "@changesets/cli": "^2.29.4",
-        "turbo": "^2.5.4",
+        "@biomejs/biome": "catalog:",
+        "@changesets/cli": "catalog:",
+        "turbo": "catalog:",
+      },
+    },
+    "packages/cataloger": {
+      "name": "@vortexjs/cataloger",
+      "bin": {
+        "cataloger": "./src/index.ts",
+      },
+      "dependencies": {
+        "@inquirer/prompts": "catalog:",
+        "@vortexjs/common": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/bun": "catalog:",
+      },
+      "peerDependencies": {
+        "typescript": "catalog:",
       },
     },
     "packages/discovery": {
       "name": "@vortexjs/discovery",
       "version": "0.0.0",
       "devDependencies": {
-        "@napi-rs/cli": "^3.0.0-alpha.89",
+        "@napi-rs/cli": "catalog:",
       },
       "optionalDependencies": {
-        "@vortexjs/discovery-darwin-x64": "0.0.0",
-        "@vortexjs/discovery-linux-x64-gnu": "0.0.0",
-        "@vortexjs/discovery-win32-x64-msvc": "0.0.0",
+        "@vortexjs/discovery-darwin-x64": "catalog:",
+        "@vortexjs/discovery-linux-x64-gnu": "catalog:",
+        "@vortexjs/discovery-win32-x64-msvc": "catalog:",
       },
     },
     "packages/example": {
@@ -29,10 +45,10 @@
         "@vortexjs/dom": "workspace:*",
       },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
     "packages/example-wormhole": {
@@ -41,13 +57,13 @@
         "@vortexjs/core": "workspace:*",
         "@vortexjs/dom": "workspace:*",
         "@vortexjs/wormhole": "workspace:*",
-        "tailwindcss": "^4.1.10",
+        "tailwindcss": "catalog:",
       },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
     "packages/locounter": {
@@ -59,23 +75,21 @@
         "@vortexjs/common": "workspace:*",
       },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
     "packages/vortex-common": {
       "name": "@vortexjs/common",
       "version": "0.0.0",
-      "dependencies": {
-        "tsup": "^8.5.0",
-      },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "catalog:",
+        "tsup": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
     "packages/vortex-core": {
@@ -85,11 +99,11 @@
         "@vortexjs/common": "workspace:*",
       },
       "devDependencies": {
-        "@types/bun": "latest",
-        "tsup": "^8.5.0",
+        "@types/bun": "catalog:",
+        "tsup": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
     "packages/vortex-dom": {
@@ -98,13 +112,13 @@
       "dependencies": {
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
-        "tsup": "^8.5.0",
       },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "catalog:",
+        "tsup": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
     "packages/vortex-prime": {
@@ -114,13 +128,13 @@
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
         "@vortexjs/dom": "workspace:*",
-        "tsup": "^8.5.0",
       },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "catalog:",
+        "tsup": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
     "packages/vortex-ssr": {
@@ -129,14 +143,14 @@
       "dependencies": {
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
-        "tsup": "^8.5.0",
       },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "catalog:",
         "@vortexjs/dom": "workspace:*",
+        "tsup": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
     "packages/wormhole": {
@@ -147,21 +161,21 @@
         "wh": "./dist/cli.js",
       },
       "dependencies": {
-        "@speed-highlight/core": "^1.2.7",
+        "@speed-highlight/core": "catalog:",
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
         "@vortexjs/discovery": "workspace:*",
         "@vortexjs/dom": "workspace:*",
         "@vortexjs/ssr": "workspace:*",
-        "bun-plugin-tailwind": "^0.0.15",
-        "chalk": "^5.4.1",
-        "tsup": "^8.5.0",
+        "bun-plugin-tailwind": "catalog:",
+        "chalk": "catalog:",
       },
       "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "catalog:",
+        "tsup": "catalog:",
       },
       "peerDependencies": {
-        "typescript": "^5",
+        "typescript": "catalog:",
       },
     },
   },
@@ -169,6 +183,23 @@
     "esbuild",
     "@biomejs/biome",
   ],
+  "catalog": {
+    "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "^2.29.4",
+    "@inquirer/prompts": "^7.5.3",
+    "@napi-rs/cli": "^3.0.0-alpha.89",
+    "@speed-highlight/core": "^1.2.7",
+    "@types/bun": "latest",
+    "@vortexjs/discovery-darwin-x64": "0.0.0",
+    "@vortexjs/discovery-linux-x64-gnu": "0.0.0",
+    "@vortexjs/discovery-win32-x64-msvc": "0.0.0",
+    "bun-plugin-tailwind": "^0.0.15",
+    "chalk": "^5.4.1",
+    "tailwindcss": "^4.1.10",
+    "tsup": "^8.5.0",
+    "turbo": "^2.5.4",
+    "typescript": "^5",
+  },
   "packages": {
     "@babel/runtime": ["@babel/runtime@7.27.4", "", {}, "sha512-t3yaEOuGu9NlIZ+hIeGbBjFtZT7j2cb2tg0fuaJKeGotchRjjLfrBA9Kwf8quhpP1EUuxModQg04q/mBwyg8uA=="],
 
@@ -504,13 +535,15 @@
 
     "@tybys/wasm-util": ["@tybys/wasm-util@0.9.0", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw=="],
 
-    "@types/bun": ["@types/bun@1.2.16", "", { "dependencies": { "bun-types": "1.2.16" } }, "sha512-1aCZJ/6nSiViw339RsaNhkNoEloLaPzZhxMOYEa7OzRzO41IGg5n/7I43/ZIAW/c+Q6cT12Vf7fOZOoVIzb5BQ=="],
+    "@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
 
     "@types/estree": ["@types/estree@1.0.7", "", {}, "sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ=="],
 
     "@types/node": ["@types/node@22.15.21", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-EV/37Td6c+MgKAbkcLG6vqZ2zEYHD7bvSrzqqs2RIhbA6w3x+Dqz8MZM3sP6kGTeLrdoOgKZe+Xja7tUB2DNkQ=="],
 
     "@vortexjs/bun-example": ["@vortexjs/bun-example@workspace:packages/example"],
+
+    "@vortexjs/cataloger": ["@vortexjs/cataloger@workspace:packages/cataloger"],
 
     "@vortexjs/common": ["@vortexjs/common@workspace:packages/vortex-common"],
 
@@ -558,7 +591,7 @@
 
     "bun-plugin-tailwind": ["bun-plugin-tailwind@0.0.15", "", { "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-qtAXMNGG4R0UGGI8zWrqm2B7BdXqx48vunJXBPzfDOHPA5WkRUZdTSbE7TFwO4jLhYqSE23YMWsM9NhE6ovobw=="],
 
-    "bun-types": ["bun-types@1.2.16", "", { "dependencies": { "@types/node": "*" } }, "sha512-ciXLrHV4PXax9vHvUrkvun9VPVGOVwbbbBF/Ev1cXz12lyEZMoJpIJABOfPcN9gDJRaiKF9MVbSygLg4NXu3/A=="],
+    "bun-types": ["bun-types@1.2.17", "", { "dependencies": { "@types/node": "*" } }, "sha512-ElC7ItwT3SCQwYZDYoAH+q6KT4Fxjl8DtZ6qDulUFBmXA8YB4xo+l54J9ZJN+k2pphfn9vk7kfubeSd5QfTVJQ=="],
 
     "bundle-require": ["bundle-require@5.1.0", "", { "dependencies": { "load-tsconfig": "^0.2.3" }, "peerDependencies": { "esbuild": ">=0.18" } }, "sha512-3WrrOuZiyaaZPWiEt4G3+IffISVC9HYlWueJEBWED4ZH4aIAC2PnkdnuRrR94M+w6yGWn4AglWtJtBI8YqvgoA=="],
 
@@ -600,7 +633,7 @@
 
     "emnapi": ["emnapi@1.4.3", "", { "peerDependencies": { "node-addon-api": ">= 6.1.0" }, "optionalPeers": ["node-addon-api"] }, "sha512-qeLT07Xt4xNjlDJYtwtO664e44HXDaHnja7vWIy/g3xzZiNOcQh02gNblR6tkqnDzPPhc+dUeSYWbt6PoiYZKQ=="],
 
-    "emoji-regex": ["emoji-regex@9.2.2", "", {}, "sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg=="],
+    "emoji-regex": ["emoji-regex@8.0.0", "", {}, "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="],
 
     "enquirer": ["enquirer@2.4.1", "", { "dependencies": { "ansi-colors": "^4.1.1", "strip-ansi": "^6.0.1" } }, "sha512-rRqJg/6gd538VHvR3PSrdRBb/1Vy2YfzHqzvbhGIQpDRKIa4FgV/54b5Q1xYSxOOwKvjXweS26E0Q+nAMwp2pQ=="],
 
@@ -792,7 +825,7 @@
 
     "sprintf-js": ["sprintf-js@1.0.3", "", {}, "sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g=="],
 
-    "string-width": ["string-width@5.1.2", "", { "dependencies": { "eastasianwidth": "^0.2.0", "emoji-regex": "^9.2.2", "strip-ansi": "^7.0.1" } }, "sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA=="],
+    "string-width": ["string-width@4.2.3", "", { "dependencies": { "emoji-regex": "^8.0.0", "is-fullwidth-code-point": "^3.0.0", "strip-ansi": "^6.0.1" } }, "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="],
 
     "string-width-cjs": ["string-width@4.2.3", "", { "dependencies": { "emoji-regex": "^8.0.0", "is-fullwidth-code-point": "^3.0.0", "strip-ansi": "^6.0.1" } }, "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="],
 
@@ -878,6 +911,8 @@
 
     "@changesets/parse/js-yaml": ["js-yaml@3.14.1", "", { "dependencies": { "argparse": "^1.0.7", "esprima": "^4.0.0" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g=="],
 
+    "@isaacs/cliui/string-width": ["string-width@5.1.2", "", { "dependencies": { "eastasianwidth": "^0.2.0", "emoji-regex": "^9.2.2", "strip-ansi": "^7.0.1" } }, "sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA=="],
+
     "@isaacs/cliui/strip-ansi": ["strip-ansi@7.1.0", "", { "dependencies": { "ansi-regex": "^6.0.1" } }, "sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ=="],
 
     "@isaacs/cliui/wrap-ansi": ["wrap-ansi@8.1.0", "", { "dependencies": { "ansi-styles": "^6.1.0", "string-width": "^5.0.1", "strip-ansi": "^7.0.1" } }, "sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ=="],
@@ -890,50 +925,18 @@
 
     "@manypkg/get-packages/fs-extra": ["fs-extra@8.1.0", "", { "dependencies": { "graceful-fs": "^4.2.0", "jsonfile": "^4.0.0", "universalify": "^0.1.0" } }, "sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g=="],
 
-    "@vortexjs/common/@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
-
-    "@vortexjs/core/@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
-
-    "@vortexjs/dom/@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
-
-    "@vortexjs/ssr/@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
-
-    "@vortexjs/wormhole/@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
-
     "micromatch/picomatch": ["picomatch@2.3.1", "", {}, "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="],
 
     "read-yaml-file/js-yaml": ["js-yaml@3.14.1", "", { "dependencies": { "argparse": "^1.0.7", "esprima": "^4.0.0" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g=="],
 
-    "string-width/strip-ansi": ["strip-ansi@7.1.0", "", { "dependencies": { "ansi-regex": "^6.0.1" } }, "sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ=="],
-
-    "string-width-cjs/emoji-regex": ["emoji-regex@8.0.0", "", {}, "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="],
-
-    "wrap-ansi/string-width": ["string-width@4.2.3", "", { "dependencies": { "emoji-regex": "^8.0.0", "is-fullwidth-code-point": "^3.0.0", "strip-ansi": "^6.0.1" } }, "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="],
-
-    "wrap-ansi-cjs/string-width": ["string-width@4.2.3", "", { "dependencies": { "emoji-regex": "^8.0.0", "is-fullwidth-code-point": "^3.0.0", "strip-ansi": "^6.0.1" } }, "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="],
-
     "@changesets/parse/js-yaml/argparse": ["argparse@1.0.10", "", { "dependencies": { "sprintf-js": "~1.0.2" } }, "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg=="],
+
+    "@isaacs/cliui/string-width/emoji-regex": ["emoji-regex@9.2.2", "", {}, "sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg=="],
 
     "@isaacs/cliui/strip-ansi/ansi-regex": ["ansi-regex@6.1.0", "", {}, "sha512-7HSX4QQb4CspciLpVFwyRe79O3xsIZDDLER21kERQ71oaPodF8jL725AgJMFAYbooIqolJoRLuM81SpeUkpkvA=="],
 
     "@isaacs/cliui/wrap-ansi/ansi-styles": ["ansi-styles@6.2.1", "", {}, "sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug=="],
 
-    "@vortexjs/common/@types/bun/bun-types": ["bun-types@1.2.17", "", { "dependencies": { "@types/node": "*" } }, "sha512-ElC7ItwT3SCQwYZDYoAH+q6KT4Fxjl8DtZ6qDulUFBmXA8YB4xo+l54J9ZJN+k2pphfn9vk7kfubeSd5QfTVJQ=="],
-
-    "@vortexjs/core/@types/bun/bun-types": ["bun-types@1.2.17", "", { "dependencies": { "@types/node": "*" } }, "sha512-ElC7ItwT3SCQwYZDYoAH+q6KT4Fxjl8DtZ6qDulUFBmXA8YB4xo+l54J9ZJN+k2pphfn9vk7kfubeSd5QfTVJQ=="],
-
-    "@vortexjs/dom/@types/bun/bun-types": ["bun-types@1.2.17", "", { "dependencies": { "@types/node": "*" } }, "sha512-ElC7ItwT3SCQwYZDYoAH+q6KT4Fxjl8DtZ6qDulUFBmXA8YB4xo+l54J9ZJN+k2pphfn9vk7kfubeSd5QfTVJQ=="],
-
-    "@vortexjs/ssr/@types/bun/bun-types": ["bun-types@1.2.17", "", { "dependencies": { "@types/node": "*" } }, "sha512-ElC7ItwT3SCQwYZDYoAH+q6KT4Fxjl8DtZ6qDulUFBmXA8YB4xo+l54J9ZJN+k2pphfn9vk7kfubeSd5QfTVJQ=="],
-
-    "@vortexjs/wormhole/@types/bun/bun-types": ["bun-types@1.2.17", "", { "dependencies": { "@types/node": "*" } }, "sha512-ElC7ItwT3SCQwYZDYoAH+q6KT4Fxjl8DtZ6qDulUFBmXA8YB4xo+l54J9ZJN+k2pphfn9vk7kfubeSd5QfTVJQ=="],
-
     "read-yaml-file/js-yaml/argparse": ["argparse@1.0.10", "", { "dependencies": { "sprintf-js": "~1.0.2" } }, "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg=="],
-
-    "string-width/strip-ansi/ansi-regex": ["ansi-regex@6.1.0", "", {}, "sha512-7HSX4QQb4CspciLpVFwyRe79O3xsIZDDLER21kERQ71oaPodF8jL725AgJMFAYbooIqolJoRLuM81SpeUkpkvA=="],
-
-    "wrap-ansi-cjs/string-width/emoji-regex": ["emoji-regex@8.0.0", "", {}, "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="],
-
-    "wrap-ansi/string-width/emoji-regex": ["emoji-regex@8.0.0", "", {}, "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="],
   }
 }

@@ -9,21 +9,21 @@
 		"wh": "./dist/cli.js"
 	},
 	"devDependencies": {
-		"@types/bun": "latest",
-		"tsup": "^8.5.0"
+		"@types/bun": "catalog:",
+		"tsup": "catalog:"
 	},
 	"dependencies": {
-		"@speed-highlight/core": "^1.2.7",
+		"@speed-highlight/core": "catalog:",
 		"@vortexjs/common": "workspace:*",
 		"@vortexjs/core": "workspace:*",
 		"@vortexjs/discovery": "workspace:*",
 		"@vortexjs/dom": "workspace:*",
 		"@vortexjs/ssr": "workspace:*",
-		"bun-plugin-tailwind": "^0.0.15",
-		"chalk": "^5.4.1"
+		"bun-plugin-tailwind": "catalog:",
+		"chalk": "catalog:"
 	},
 	"peerDependencies": {
-		"typescript": "^5"
+		"typescript": "catalog:"
 	},
 	"scripts": {
 		"build": "tsup ./src/index.ts ./src/cli.ts ./src/virt/route.ts --format esm --dts --out-dir dist --external bun",

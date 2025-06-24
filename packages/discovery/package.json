@@ -15,7 +15,7 @@
 	},
 	"license": "MIT",
 	"devDependencies": {
-		"@napi-rs/cli": "^3.0.0-alpha.89"
+		"@napi-rs/cli": "catalog:"
 	},
 	"ava": {
 		"timeout": "3m"
@@ -35,8 +35,8 @@
 		"test": "bun test"
 	},
 	"optionalDependencies": {
-		"@vortexjs/discovery-win32-x64-msvc": "0.0.0",
-		"@vortexjs/discovery-darwin-x64": "0.0.0",
-		"@vortexjs/discovery-linux-x64-gnu": "0.0.0"
+		"@vortexjs/discovery-win32-x64-msvc": "catalog:",
+		"@vortexjs/discovery-darwin-x64": "catalog:",
+		"@vortexjs/discovery-linux-x64-gnu": "catalog:"
 	}
 }
