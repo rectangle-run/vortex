@@ -2,16 +2,16 @@ import { join, parse, sep } from "node:path";
 
 export type EvaluateType<T> = T extends object
 	? {
-			[key in keyof T]: EvaluateType<T[key]>;
-		}
+		[key in keyof T]: EvaluateType<T[key]>;
+	}
 	: T;
 
 export type DeepPartial<T> = {
 	[P in keyof T]?: T[P] extends (infer U)[]
-		? DeepPartial<U>[]
-		: T[P] extends object
-			? DeepPartial<T[P]>
-			: T[P];
+	? DeepPartial<U>[]
+	: T[P] extends object
+	? DeepPartial<T[P]>
+	: T[P];
 };
 
 export function TODO(whatToDo: string): never {
@@ -39,8 +39,6 @@ export async function findTopLevelProject(cwd: string): Promise<string> {
 	for (const part of parts.slice(1)) {
 		currentPath = join(currentPath, part);
 		const packageJsonPath = join(currentPath, "package.json");
-
-		console.log(packageJsonPath);
 
 		if (await Bun.file(packageJsonPath).exists()) {
 			return currentPath;
