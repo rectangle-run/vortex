@@ -1,5 +1,13 @@
 # @vortexjs/core
 
+## 2.4.2
+
+### Patch Changes
+
+- c7656c7: Increment version to trigger CI rebuild
+- Updated dependencies [c7656c7]
+  - @vortexjs/common@0.0.2
+
 ## 2.4.1
 
 ### Patch Changes
