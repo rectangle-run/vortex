@@ -2,6 +2,7 @@
 	"name": "@vortexjs/example-wormhole",
 	"module": "index.ts",
 	"type": "module",
+	"license": "MIT",
 	"private": true,
 	"devDependencies": {
 		"@types/bun": "catalog:"

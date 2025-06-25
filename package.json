@@ -1,44 +1,45 @@
 {
-	"name": "vortex",
-	"private": true,
-	"workspaces": {
-		"packages": [
-			"packages/*"
-		],
-		"catalog": {
-			"@biomejs/biome": "1.9.4",
-			"@changesets/cli": "^2.29.4",
-			"turbo": "^2.5.4",
-			"@speed-highlight/core": "^1.2.7",
-			"bun-plugin-tailwind": "^0.0.15",
-			"chalk": "^5.4.1",
-			"@types/bun": "latest",
-			"tsup": "^8.5.0",
-			"typescript": "^5",
-			"@napi-rs/cli": "^3.0.0-alpha.89",
-			"@vortexjs/discovery-win32-x64-msvc": "0.0.0",
-			"@vortexjs/discovery-darwin-x64": "0.0.0",
-			"@vortexjs/discovery-linux-x64-gnu": "0.0.0",
-			"tailwindcss": "^4.1.10",
-			"@inquirer/prompts": "^7.5.3"
-		}
-	},
-	"scripts": {
-		"change": "changeset",
-		"release": "npm run fmt && turbo build && changeset publish",
-		"build": "turbo build",
-		"version": "changeset version",
-		"dev": "turbo dev",
-		"fmt": "turbo fmt"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "catalog:",
-		"@changesets/cli": "catalog:",
-		"turbo": "catalog:"
-	},
-	"trustedDependencies": [
-		"@biomejs/biome",
-		"esbuild"
-	],
-	"packageManager": "bun@1.2.15"
+    "name": "vortex",
+    "private": true,
+    "license": "MIT",
+    "workspaces": {
+        "packages": [
+            "packages/*"
+        ],
+        "catalog": {
+            "@biomejs/biome": "1.9.4",
+            "@changesets/cli": "^2.29.4",
+            "turbo": "^2.5.4",
+            "@speed-highlight/core": "^1.2.7",
+            "bun-plugin-tailwind": "^0.0.15",
+            "chalk": "^5.4.1",
+            "@types/bun": "latest",
+            "tsup": "^8.5.0",
+            "typescript": "^5",
+            "@napi-rs/cli": "^3.0.0-alpha.89",
+            "@vortexjs/discovery-win32-x64-msvc": "0.0.0",
+            "@vortexjs/discovery-darwin-x64": "0.0.0",
+            "@vortexjs/discovery-linux-x64-gnu": "0.0.0",
+            "tailwindcss": "^4.1.10",
+            "@inquirer/prompts": "^7.5.3"
+        }
+    },
+    "scripts": {
+        "change": "changeset",
+        "release": "npm run fmt && turbo build && changeset publish",
+        "build": "turbo build",
+        "version": "changeset version",
+        "dev": "turbo dev",
+        "fmt": "turbo fmt"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@changesets/cli": "catalog:",
+        "turbo": "catalog:"
+    },
+    "trustedDependencies": [
+        "@biomejs/biome",
+        "esbuild"
+    ],
+    "packageManager": "bun@1.2.15"
 }
