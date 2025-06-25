@@ -1,5 +1,17 @@
 # @vortexjs/wormhole
 
+## 0.1.2
+
+### Patch Changes
+
+- 49f6d4f: Release .dist files
+- Updated dependencies [49f6d4f]
+  - @vortexjs/discovery@0.1.2
+  - @vortexjs/common@0.0.3
+  - @vortexjs/core@2.4.3
+  - @vortexjs/dom@2.0.3
+  - @vortexjs/ssr@0.0.3
+
 ## 0.1.1
 
 ### Patch Changes

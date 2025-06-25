@@ -1,5 +1,11 @@
 # @vortexjs/discovery
 
+## 0.1.2
+
+### Patch Changes
+
+- 49f6d4f: Release .dist files
+
 ## 0.1.1
 
 ### Patch Changes

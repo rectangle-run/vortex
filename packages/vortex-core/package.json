@@ -34,7 +34,7 @@
             "require": "./dist/jsx/jsx-dev-runtime.cjs"
         }
     },
-    "version": "2.4.2",
+    "version": "2.4.3",
     "dependencies": {
         "@vortexjs/common": "workspace:*"
     }
