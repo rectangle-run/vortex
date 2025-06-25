@@ -1,5 +1,24 @@
 # @vortexjs/core
 
+## 2.4.1
+
+### Patch Changes
+
+- d9db531: Remove unused children field in JSXComponent, as it's already in the props, and is never set
+- 9360b7e: Switch to MIT-0 license over anti-fascist unlicense, as fascists don't care about licenses. Unlicense was original choice, but had no SPDLX identifier.
+- d9db531: Introduce new dependency on vortex common
+- d9db531: Make Lifetime an ultraglobal reference
+- 2d4f40a: Fix signal equality check returning true for signals with different keys
+- 29523e6: Switch to catalog based versions
+- ab7aa14: Fix needless initial invalidation in derive and effect
+- Updated dependencies [135e33e]
+- Updated dependencies [b789f53]
+- Updated dependencies [9360b7e]
+- Updated dependencies [bf31e90]
+- Updated dependencies [14b01be]
+- Updated dependencies [29523e6]
+  - @vortexjs/common@0.0.1
+
 ## 2.4.0
 
 ### Minor Changes

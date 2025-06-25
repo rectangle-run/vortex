@@ -1,5 +1,23 @@
 # @vortexjs/bun-example
 
+## 1.5.1
+
+### Patch Changes
+
+- 9360b7e: Switch to MIT-0 license over anti-fascist unlicense, as fascists don't care about licenses. Unlicense was original choice, but had no SPDLX identifier.
+- 29523e6: Switch to catalog based versions
+- Updated dependencies [135e33e]
+- Updated dependencies [b789f53]
+- Updated dependencies [d9db531]
+- Updated dependencies [9360b7e]
+- Updated dependencies [d9db531]
+- Updated dependencies [d9db531]
+- Updated dependencies [2d4f40a]
+- Updated dependencies [29523e6]
+- Updated dependencies [ab7aa14]
+  - @vortexjs/dom@2.0.1
+  - @vortexjs/core@2.4.1
+
 ## 1.5.0
 
 ### Minor Changes

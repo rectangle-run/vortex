@@ -1,5 +1,28 @@
 # @vortexjs/dom
 
+## 2.0.1
+
+### Patch Changes
+
+- 135e33e: Write proper README.md's
+- b789f53: Greatly decreate bundle size by making tsup a dev dependency
+- 9360b7e: Switch to MIT-0 license over anti-fascist unlicense, as fascists don't care about licenses. Unlicense was original choice, but had no SPDLX identifier.
+- d9db531: Introduce new dependency on vortex common
+- 29523e6: Switch to catalog based versions
+- Updated dependencies [135e33e]
+- Updated dependencies [b789f53]
+- Updated dependencies [d9db531]
+- Updated dependencies [9360b7e]
+- Updated dependencies [d9db531]
+- Updated dependencies [bf31e90]
+- Updated dependencies [14b01be]
+- Updated dependencies [d9db531]
+- Updated dependencies [2d4f40a]
+- Updated dependencies [29523e6]
+- Updated dependencies [ab7aa14]
+  - @vortexjs/common@0.0.1
+  - @vortexjs/core@2.4.1
+
 ## 2.0.0
 
 ### Major Changes
