@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.0.2
+
+### Patch Changes
+
+- c7656c7: Increment version to trigger CI rebuild
+
 ## 0.0.1
 
 ### Patch Changes
