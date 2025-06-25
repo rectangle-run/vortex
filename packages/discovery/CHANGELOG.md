@@ -1,0 +1,13 @@
+# @vortexjs/discovery
+
+## 0.1.0
+
+### Minor Changes
+
+- 4aeddfa: Add styling support
+
+### Patch Changes
+
+- d9db531: Introduce new dependency on vortex common
+- 4aeddfa: Make discovery a native plugin
+- 29523e6: Switch to catalog based versions
