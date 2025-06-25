@@ -8,4 +8,4 @@
 "@vortexjs/bun-example": patch
 ---
 
-Switch to MIT license over anti-fascist unlicense, as fascists don't care about licenses. Unlicense was original choice, but had no SPDLX identifier.
+Switch to MIT-0 license over anti-fascist unlicense, as fascists don't care about licenses. Unlicense was original choice, but had no SPDLX identifier.

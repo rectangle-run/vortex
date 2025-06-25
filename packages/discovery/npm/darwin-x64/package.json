@@ -1,12 +1,18 @@
 {
-	"name": "@vortexjs/discovery-darwin-x64",
-	"version": "0.0.0",
-	"os": ["darwin"],
-	"cpu": ["x64"],
-	"main": "discovery.darwin-x64.node",
-	"files": ["discovery.darwin-x64.node"],
-	"license": "MIT",
-	"engines": {
-		"node": ">= 10"
-	}
+    "name": "@vortexjs/discovery-darwin-x64",
+    "version": "0.0.0",
+    "os": [
+        "darwin"
+    ],
+    "cpu": [
+        "x64"
+    ],
+    "main": "discovery.darwin-x64.node",
+    "files": [
+        "discovery.darwin-x64.node"
+    ],
+    "license": "MIT-0",
+    "engines": {
+        "node": ">= 10"
+    }
 }

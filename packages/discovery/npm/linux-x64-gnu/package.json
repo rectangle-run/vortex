@@ -1,13 +1,21 @@
 {
-	"name": "@vortexjs/discovery-linux-x64-gnu",
-	"version": "0.0.0",
-	"os": ["linux"],
-	"cpu": ["x64"],
-	"main": "discovery.linux-x64-gnu.node",
-	"files": ["discovery.linux-x64-gnu.node"],
-	"license": "MIT",
-	"engines": {
-		"node": ">= 10"
-	},
-	"libc": ["glibc"]
+    "name": "@vortexjs/discovery-linux-x64-gnu",
+    "version": "0.0.0",
+    "os": [
+        "linux"
+    ],
+    "cpu": [
+        "x64"
+    ],
+    "main": "discovery.linux-x64-gnu.node",
+    "files": [
+        "discovery.linux-x64-gnu.node"
+    ],
+    "license": "MIT-0",
+    "engines": {
+        "node": ">= 10"
+    },
+    "libc": [
+        "glibc"
+    ]
 }

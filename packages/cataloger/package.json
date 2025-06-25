@@ -15,7 +15,7 @@
         "run": "bun run ./src/index.ts"
     },
     "type": "module",
-    "license": "MIT",
+    "license": "MIT-0",
     "dependencies": {
         "@inquirer/prompts": "catalog:",
         "@vortexjs/common": "workspace:*"
