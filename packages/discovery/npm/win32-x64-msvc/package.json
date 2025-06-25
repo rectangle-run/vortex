@@ -11,6 +11,9 @@
     "files": [
         "discovery.win32-x64-msvc.node"
     ],
+    "repository": {
+        "url": "https://github.com/andylovescode/vortex"
+    },
     "license": "MIT-0",
     "engines": {
         "node": ">= 10"

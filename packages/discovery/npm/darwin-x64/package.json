@@ -7,6 +7,9 @@
     "cpu": [
         "x64"
     ],
+    "repository": {
+        "url": "https://github.com/andylovescode/vortex"
+    },
     "main": "discovery.darwin-x64.node",
     "files": [
         "discovery.darwin-x64.node"

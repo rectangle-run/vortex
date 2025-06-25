@@ -11,6 +11,9 @@
     "files": [
         "discovery.linux-x64-gnu.node"
     ],
+    "repository": {
+        "url": "https://github.com/andylovescode/vortex"
+    },
     "license": "MIT-0",
     "engines": {
         "node": ">= 10"

@@ -26,7 +26,7 @@
     },
     "scripts": {
         "change": "changeset",
-        "release": "npm run fmt && turbo build && changeset publish",
+        "release": "changeset publish",
         "build": "turbo build",
         "version": "changeset version",
         "dev": "turbo dev",
