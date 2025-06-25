@@ -1,5 +1,14 @@
 # @vortexjs/bun-example
 
+## 1.5.3
+
+### Patch Changes
+
+- 49f6d4f: Release .dist files
+- Updated dependencies [49f6d4f]
+  - @vortexjs/core@2.4.3
+  - @vortexjs/dom@2.0.3
+
 ## 1.5.2
 
 ### Patch Changes
