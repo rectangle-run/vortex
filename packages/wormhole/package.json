@@ -20,7 +20,7 @@
         "@vortexjs/discovery": "workspace:*",
         "@vortexjs/dom": "workspace:*",
         "@vortexjs/ssr": "workspace:*",
-        "bun-plugin-tailwind": "catalog:",
+        "@vortexjs/pippin-plugin-tailwind": "workspace:",
         "chalk": "catalog:"
     },
     "peerDependencies": {
