@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.0.3
+
+### Patch Changes
+
+- 49f6d4f: Release .dist files
+
 ## 0.0.2
 
 ### Patch Changes

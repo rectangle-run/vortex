@@ -1,5 +1,13 @@
 # @vortexjs/core
 
+## 2.4.3
+
+### Patch Changes
+
+- 49f6d4f: Release .dist files
+- Updated dependencies [49f6d4f]
+  - @vortexjs/common@0.0.3
+
 ## 2.4.2
 
 ### Patch Changes

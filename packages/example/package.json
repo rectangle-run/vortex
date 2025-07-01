@@ -1,28 +1,28 @@
 {
-	"name": "@vortexjs/bun-example",
-	"version": "1.5.2",
-	"private": true,
-	"type": "module",
-	"license": "MIT-0",
-	"main": "src/index.ts",
-	"repository": {
-		"url": "https://github.com/andylovescode/vortex"
-	},
-	"module": "src/index.ts",
-	"scripts": {
-		"dev": "bun --hot src/index.ts",
-		"build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
-		"start": "NODE_ENV=production bun src/index.ts",
-		"fmt": "biome check --write"
-	},
-	"dependencies": {
-		"@vortexjs/core": "workspace:*",
-		"@vortexjs/dom": "workspace:*"
-	},
-	"devDependencies": {
-		"@types/bun": "catalog:"
-	},
-	"peerDependencies": {
-		"typescript": "catalog:"
-	}
+    "name": "@vortexjs/bun-example",
+    "version": "1.5.3",
+    "private": true,
+    "type": "module",
+    "license": "MIT-0",
+    "main": "src/index.ts",
+    "repository": {
+        "url": "https://github.com/andylovescode/vortex"
+    },
+    "module": "src/index.ts",
+    "scripts": {
+        "dev": "bun --hot src/index.ts",
+        "build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
+        "start": "NODE_ENV=production bun src/index.ts",
+        "fmt": "biome check --write"
+    },
+    "dependencies": {
+        "@vortexjs/core": "workspace:*",
+        "@vortexjs/dom": "workspace:*"
+    },
+    "devDependencies": {
+        "@types/bun": "catalog:"
+    },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    }
 }
