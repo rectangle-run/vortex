@@ -210,7 +210,9 @@ export function diffInto(from: VNode, to: VNode, codegen: CodegenStream) {
 				codegen.write(
 					`${getIdent(from, codegen)}[${codegen.getIndexerShorthand("removeChild")}](${getIdent(toRemove, codegen)});`,
 				);
-				from.children = from.children.filter((child) => child !== toRemove);
+				from.children = from.children.filter(
+					(child) => child !== toRemove,
+				);
 
 				fromCount--;
 			}

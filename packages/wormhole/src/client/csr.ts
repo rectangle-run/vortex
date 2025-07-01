@@ -29,7 +29,10 @@ export function initializeClientSideRouting() {
 		const link = ancestry.find((el) => el instanceof HTMLAnchorElement);
 
 		if (link?.href) {
-			const url = new URL(link.href, getImmediateValue(clientSidePathname));
+			const url = new URL(
+				link.href,
+				getImmediateValue(clientSidePathname),
+			);
 
 			if (url.origin !== window.location.origin) return; // ignore external links
 

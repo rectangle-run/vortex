@@ -78,10 +78,13 @@ export function generateRouterTree(routes: InputRoute[]) {
 
 		for (const segment of parsed) {
 			if (segment.type === "static") {
-				currentNode = currentNode.cases[segment.match] ??= makeBlankNode();
+				currentNode = currentNode.cases[segment.match] ??=
+					makeBlankNode();
 			} else if (segment.type === "slug") {
 				if (currentNode.epsilon) {
-					console.warn(`Route "${route.path}" has multiple slug segments.`);
+					console.warn(
+						`Route "${route.path}" has multiple slug segments.`,
+					);
 				}
 
 				currentNode.epsilon = {
@@ -91,7 +94,9 @@ export function generateRouterTree(routes: InputRoute[]) {
 				currentNode = currentNode.epsilon.node;
 			} else if (segment.type === "spread") {
 				if (currentNode.epsilon) {
-					console.warn(`Route "${route.path}" has multiple slug segments.`);
+					console.warn(
+						`Route "${route.path}" has multiple slug segments.`,
+					);
 				}
 
 				currentNode.epsilon = {
@@ -111,7 +116,9 @@ export function generateRouterTree(routes: InputRoute[]) {
 			currentNode.page = route.frame;
 		} else if (route.frameType === "layout") {
 			if (currentNode.layout) {
-				console.warn(`Route "${route.path}" has multiple layout frames.`);
+				console.warn(
+					`Route "${route.path}" has multiple layout frames.`,
+				);
 			}
 
 			currentNode.layout = route.frame;
@@ -229,7 +236,9 @@ export function matchRoute<Specifier extends ImportNamed | ImportHash>(
 			if (currentNode.layout) {
 				currentFrames.push(currentNode.layout);
 				if (routeDebugging) {
-					console.log("Added layout to frames for epsilon transition");
+					console.log(
+						"Added layout to frames for epsilon transition",
+					);
 				}
 			}
 
@@ -283,7 +292,9 @@ export function hashImports(
 		cases: {},
 		layout: node.layout ? getLoadKey(node.layout) : undefined,
 		page: node.page ? getLoadKey(node.page) : undefined,
-		notFoundPage: node.notFoundPage ? getLoadKey(node.notFoundPage) : undefined,
+		notFoundPage: node.notFoundPage
+			? getLoadKey(node.notFoundPage)
+			: undefined,
 		epsilon: node.epsilon
 			? {
 					node: hashImports(node.epsilon.node),

@@ -189,7 +189,8 @@ const tabWidth = 4;
 export function formatRichText(text: RichChar[]): string {
 	return text
 		.map((char) => {
-			const niceText = char.text === "\t" ? " ".repeat(tabWidth) : char.text;
+			const niceText =
+				char.text === "\t" ? " ".repeat(tabWidth) : char.text;
 
 			if (char.color === "default") {
 				return niceText;
@@ -234,7 +235,9 @@ export function diagram(props: DiagramProps): string {
 
 	function getLineNumber(index: number): number {
 		return props.text.findIndex((line) =>
-			line.chars.some((char) => char.id === props.logicalLocations[index]),
+			line.chars.some(
+				(char) => char.id === props.logicalLocations[index],
+			),
 		);
 	}
 
@@ -291,7 +294,10 @@ export function diagram(props: DiagramProps): string {
 
 				for (const pos of diagnosticPositions) {
 					if (
-						pos.x < diagnostic.message.length + diagnostic.offsetInLine + 2 &&
+						pos.x <
+							diagnostic.message.length +
+								diagnostic.offsetInLine +
+								2 &&
 						pos.y === y
 					) {
 						collides = true;

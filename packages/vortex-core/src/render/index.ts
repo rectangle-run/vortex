@@ -89,21 +89,33 @@ class Reconciler<RendererNode, HydrationContext> {
 						.cascadesFrom(lt);
 				}
 
-				for (const [name, handler] of Object.entries(node.eventHandlers)) {
+				for (const [name, handler] of Object.entries(
+					node.eventHandlers,
+				)) {
 					this.renderer
-						.addEventListener(unwrap(element.rendererNode), name, handler)
+						.addEventListener(
+							unwrap(element.rendererNode),
+							name,
+							handler,
+						)
 						.cascadesFrom(lt);
 				}
 
 				for (const [name, value] of Object.entries(node.styles)) {
 					value
 						.subscribe((next) => {
-							this.renderer.setStyle(unwrap(element.rendererNode), name, next);
+							this.renderer.setStyle(
+								unwrap(element.rendererNode),
+								name,
+								next,
+							);
 						})
 						.cascadesFrom(lt);
 				}
 
-				const users = [node.use].flat() as ((ref: RendererNode) => void)[];
+				const users = [node.use].flat() as ((
+					ref: RendererNode,
+				) => void)[];
 
 				for (const user of users) {
 					user(unwrap(element.rendererNode));
@@ -157,7 +169,9 @@ class Reconciler<RendererNode, HydrationContext> {
 
 				effect((get) => {
 					const items = get(node.items);
-					const newKeys = items.map((item, idx) => node.getKey(item, idx));
+					const newKeys = items.map((item, idx) =>
+						node.getKey(item, idx),
+					);
 
 					for (const key of renderMap.keys()) {
 						if (!newKeys.includes(key)) {
@@ -172,7 +186,8 @@ class Reconciler<RendererNode, HydrationContext> {
 							const item = items[newKeys.indexOf(key)];
 							const itemStore = store(item);
 							const itemLifetime = new Lifetime();
-							using _hl = Lifetime.changeHookLifetime(itemLifetime);
+							using _hl =
+								Lifetime.changeHookLifetime(itemLifetime);
 
 							const renderedItem = this.render(
 								node.renderItem(item, newKeys.indexOf(key)),
@@ -210,8 +225,10 @@ class Reconciler<RendererNode, HydrationContext> {
 				return this.render(node.children, hydration, lt, forked);
 			}
 			default: {
-				console.log(node);
-				unreachable(node);
+				unreachable(
+					node,
+					`No rendering implementation for ${JSON.stringify(node)}`,
+				);
 			}
 		}
 	}

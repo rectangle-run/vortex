@@ -1,5 +1,5 @@
 {
-	"name": "@vortexjs/common",
+	"name": "@vortexjs/pippin",
 	"type": "module",
 	"license": "MIT-0",
 	"repository": {
@@ -8,6 +8,9 @@
 	"devDependencies": {
 		"@types/bun": "catalog:",
 		"tsup": "catalog:"
+	},
+	"dependencies": {
+		"@vortexjs/common": "workspace:*"
 	},
 	"peerDependencies": {
 		"typescript": "catalog:"
@@ -24,5 +27,5 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"version": "0.0.2"
+	"version": "0.0.0"
 }

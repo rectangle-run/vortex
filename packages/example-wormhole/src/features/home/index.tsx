@@ -8,7 +8,8 @@ route("/", {
 					Welcome to Wormhole, {Object.entries(globalThis).length}
 				</h1>
 				<p>
-					This is an example app, go to the <a href="/docs/tada">docs</a>
+					This is an example app, go to the{" "}
+					<a href="/docs/tada">docs</a>
 				</p>
 			</>
 		);

@@ -1,7 +1,7 @@
 import { join } from "node:path/posix";
 import { unwrap } from "@vortexjs/common";
-import type { BunPlugin } from "bun";
-import bunPluginTailwind from "bun-plugin-tailwind";
+import { type PippinPlugin, pippin } from "@vortexjs/pippin";
+import { pippinPluginTailwind } from "@vortexjs/pippin-plugin-tailwind";
 import {
 	type ImportNamed,
 	type RouterNode,
@@ -140,16 +140,18 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 		entrypoints.push(serverEntryPath);
 	}
 
-	const plugins: BunPlugin[] = [];
+	const plugins: PippinPlugin[] = [];
 
 	{
 		// CSS entrypoint
-		const pkgJson = await Bun.file(join(paths().root, "package.json")).json();
+		const pkgJson = await Bun.file(
+			join(paths().root, "package.json"),
+		).json();
 
 		const appCssPath = join(paths().root, "src", "app.css");
 
 		if (pkgJson.dependencies?.tailwindcss) {
-			plugins.push(bunPluginTailwind);
+			plugins.push(pippinPluginTailwind());
 		}
 
 		const cssEntryPath = join(
@@ -173,7 +175,7 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 		splitting: true,
 		entrypoints,
 		outdir: paths().wormhole.buildBox.output.path,
-		plugins,
+		plugins: [pippin().add(...plugins)],
 		minify: !props.dev,
 		banner: "// happy hacking :3\n",
 		sourcemap: props.dev ? "inline" : "none",

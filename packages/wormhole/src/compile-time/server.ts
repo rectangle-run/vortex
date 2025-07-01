@@ -74,7 +74,9 @@ export async function developmentServer(
 			routes: {
 				"/*": async (req) => {
 					if (!routerTree) {
-						return new Response("Router tree not ready", { status: 503 });
+						return new Response("Router tree not ready", {
+							status: 503,
+						});
 					}
 
 					const route = new URL(req.url).pathname;
@@ -85,7 +87,9 @@ export async function developmentServer(
 					const { load } = await import(serverEntryPath);
 
 					for (const frame of matched.frames.toReversed()) {
-						const component = (await load(getLoadKey(frame))) as () => JSXNode;
+						const component = (await load(
+							getLoadKey(frame),
+						)) as () => JSXNode;
 
 						if (!component) {
 							console.warn("Failed to load component ", frame);
@@ -134,7 +138,10 @@ export async function developmentServer(
 				},
 				"/dist/*": async (req) => {
 					const path = unwrap(req.url.split("dist/")[1]);
-					const filePath = join(paths().wormhole.buildBox.output.path, path);
+					const filePath = join(
+						paths().wormhole.buildBox.output.path,
+						path,
+					);
 
 					return new Response(Bun.file(filePath));
 				},

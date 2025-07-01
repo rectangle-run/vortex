@@ -53,7 +53,10 @@ export function when(
 			return this;
 		},
 		otherwise(value) {
-			conditions.set([...getImmediateValue(conditions), [store(true), value]]);
+			conditions.set([
+				...getImmediateValue(conditions),
+				[store(true), value],
+			]);
 
 			return result as Signal<JSXNode>;
 		},

@@ -211,7 +211,9 @@ export function useDropdownMenu({ open }: { open: Store<boolean> }) {
 				},
 				type: "button",
 				ariaHasPopup: "menu",
-				ariaExpanded: useDerived((get) => (get(open) ? "true" : "false")),
+				ariaExpanded: useDerived((get) =>
+					get(open) ? "true" : "false",
+				),
 			} as ElementProps<HTMLButtonElement>,
 		},
 		menu: {

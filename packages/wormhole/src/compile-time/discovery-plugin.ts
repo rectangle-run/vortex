@@ -1,15 +1,26 @@
-import discovery from "@vortexjs/discovery";
-import type { BunPlugin } from "bun";
+import { compileScript } from "@vortexjs/discovery";
+import type { PippinPlugin } from "@vortexjs/pippin";
+import { checkForCues } from "./indexing";
 
-export const discoveryPlugin: BunPlugin = {
+export const discoveryPlugin: PippinPlugin = {
 	name: "Discovery",
-	setup(plugin) {
-		plugin.onBeforeParse(
-			{ filter: /.*/ },
-			{
-				symbol: "replace_discovery_imports",
-				napiModule: discovery,
+	description: "Plugin to transpile discovery syntax into standard syntax",
+	transformers: [
+		{
+			async transform(props) {
+				if (props.format.type !== "ecma") {
+					return;
+				}
+
+				if (!checkForCues(props.source)) return;
+
+				const result = compileScript(props.source, props.path);
+
+				return {
+					source: result.source,
+					format: props.format,
+				};
 			},
-		);
-	},
+		},
+	],
 };

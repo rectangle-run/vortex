@@ -70,7 +70,10 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 				if (value === undefined || value === null) {
 					node.removeAttribute(jsAttributeToHTMLAttribute(name));
 				} else {
-					node.setAttribute(jsAttributeToHTMLAttribute(name), String(value));
+					node.setAttribute(
+						jsAttributeToHTMLAttribute(name),
+						String(value),
+					);
 				}
 			}
 		},
@@ -132,7 +135,9 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 
 				node.addEventListener("input", inputHandler);
 
-				lt.onClosed(() => node.removeEventListener("input", inputHandler));
+				lt.onClosed(() =>
+					node.removeEventListener("input", inputHandler),
+				);
 			}
 
 			if (name === "checked") {
@@ -143,7 +148,9 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 
 				node.addEventListener("change", changeHandler);
 
-				lt.onClosed(() => node.removeEventListener("change", changeHandler));
+				lt.onClosed(() =>
+					node.removeEventListener("change", changeHandler),
+				);
 			}
 
 			return lt;

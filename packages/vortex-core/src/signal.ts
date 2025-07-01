@@ -75,7 +75,8 @@ export function store<T>(initialValue: T): Store<T> {
 		},
 		subscribe(callback: (value: T) => void, props): Lifetime {
 			subscribers.push(callback);
-			debugSignals && console.trace(`[${id}]: subscribed with `, callback);
+			debugSignals &&
+				console.trace(`[${id}]: subscribed with `, callback);
 
 			if (props?.callInitially !== false) {
 				callback(value);
@@ -88,7 +89,12 @@ export function store<T>(initialValue: T): Store<T> {
 		},
 		set(newValue: T) {
 			debugSignals &&
-				console.log(`[${id}]: trying to switch from `, value, " -> ", newValue);
+				console.log(
+					`[${id}]: trying to switch from `,
+					value,
+					" -> ",
+					newValue,
+				);
 
 			if (!equals(value, newValue)) {
 				value = newValue;

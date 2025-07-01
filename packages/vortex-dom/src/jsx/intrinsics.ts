@@ -36,7 +36,9 @@ export type ElementProps<T extends HTMLElement> = {
 	children?: JSXChildren;
 	use?: Use<T>;
 	style?: Partial<{
-		[key in keyof CSSStyleDeclaration]: SignalOrValue<CSSStyleDeclaration[key]>;
+		[key in keyof CSSStyleDeclaration]: SignalOrValue<
+			CSSStyleDeclaration[key]
+		>;
 	}>;
 	ariaDescribedBy?: SignalOrValue<string>;
 } & {
@@ -63,7 +65,9 @@ export namespace JSX {
 	export interface IntrinsicAttributes {
 		children?: JSXChildren;
 	}
-	export type ElementType = keyof IntrinsicElements | ((props: any) => JSXNode);
+	export type ElementType =
+		| keyof IntrinsicElements
+		| ((props: any) => JSXNode);
 
 	export type Element = JSXNode;
 }

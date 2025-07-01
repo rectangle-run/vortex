@@ -93,7 +93,9 @@ export function normalizeChildren(children: JSXChildren): JSXNode[] {
 		.flat()
 		.filter((child) => child !== null && child !== undefined)
 		.map((x) =>
-			typeof x === "string" || typeof x === "number" || typeof x === "boolean"
+			typeof x === "string" ||
+			typeof x === "number" ||
+			typeof x === "boolean"
 				? createTextNode(x)
 				: isSignal(x)
 					? {
@@ -177,7 +179,9 @@ export function createElementInternal(
 				}
 			} else {
 				const valsig = toSignal(value);
-				properAttributes[key] = useDerived((get) => String(get(valsig)));
+				properAttributes[key] = useDerived((get) =>
+					String(get(valsig)),
+				);
 			}
 		}
 	}

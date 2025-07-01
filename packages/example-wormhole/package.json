@@ -1,23 +1,23 @@
 {
-    "name": "@vortexjs/example-wormhole",
-    "module": "index.ts",
-    "type": "module",
-    "license": "MIT-0",
-    "private": true,
-    "devDependencies": {
-        "@types/bun": "catalog:"
-    },
-    "dependencies": {
-        "@vortexjs/core": "workspace:*",
-        "@vortexjs/dom": "workspace:*",
-        "@vortexjs/wormhole": "workspace:*",
-        "tailwindcss": "catalog:"
-    },
-    "scripts": {
-        "dev": "wormhole dev",
-        "fmt": "biome check --write"
-    },
-    "peerDependencies": {
-        "typescript": "catalog:"
-    }
+	"name": "@vortexjs/example-wormhole",
+	"module": "index.ts",
+	"type": "module",
+	"license": "MIT-0",
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "catalog:"
+	},
+	"dependencies": {
+		"@vortexjs/core": "workspace:*",
+		"@vortexjs/dom": "workspace:*",
+		"@vortexjs/wormhole": "workspace:*",
+		"tailwindcss": "catalog:"
+	},
+	"scripts": {
+		"dev": "wormhole dev",
+		"fmt": "biome check --write"
+	},
+	"peerDependencies": {
+		"typescript": "catalog:"
+	}
 }

@@ -1,5 +1,8 @@
-export function unreachable(value: never): never {
-	throw new Error("Unreachable state.");
+export function unreachable(
+	value: never,
+	message = "Unreachable state",
+): never {
+	throw new Error(message);
 }
 
 export function unwrap<T>(value: T | undefined | null, message?: string): T {

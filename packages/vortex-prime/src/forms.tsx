@@ -124,7 +124,9 @@ export function useSwitch({
 				role: "switch",
 				tabIndex: 0,
 				id: switchId,
-				ariaChecked: useDerived((get) => (get(checked) ? "true" : "false")),
+				ariaChecked: useDerived((get) =>
+					get(checked) ? "true" : "false",
+				),
 			},
 		} as { props: Record<string, unknown> },
 	};
@@ -333,7 +335,9 @@ export function useToggle({
 				role: "button",
 				tabIndex: 0,
 				children: label,
-				ariaPressed: useDerived((get) => (get(pressed) ? "true" : "false")),
+				ariaPressed: useDerived((get) =>
+					get(pressed) ? "true" : "false",
+				),
 				"on:click": () => {
 					pressed.set(!getImmediateValue(pressed));
 				},

@@ -25,7 +25,9 @@ function createPrinter() {
 			};
 		},
 		group(heading: string, styled = true) {
-			this.log(styled ? chalk.hex("#34d399").bold(`# ${heading}`) : heading);
+			this.log(
+				styled ? chalk.hex("#34d399").bold(`# ${heading}`) : heading,
+			);
 
 			return this.indent();
 		},
