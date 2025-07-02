@@ -1,4 +1,5 @@
 import type { BunPlugin } from "bun";
+import { pullTheThread } from "./threadpull";
 
 export type PippinFileFormat =
 	| {
@@ -76,12 +77,25 @@ export function bunFormatToPippinFormat(format: Bun.Loader): PippinFileFormat {
 	}
 }
 
+export interface PippinError {
+	from: number;
+	to: number;
+	message: string;
+	hints: {
+		from: number;
+		to: number;
+		message: string;
+	}[];
+	path: string;
+}
+
 export interface PippinTransformer {
 	transform(props: {
 		source: string;
 		format: PippinFileFormat;
 		path: string;
 		namespace: string;
+		logError(props: Omit<PippinError, "path">): Promise<void>;
 	}): Promise<
 		| {
 				source: string;
@@ -107,7 +121,9 @@ export interface Pippin extends BunPlugin {
 	}): Promise<{
 		source: string;
 		format: PippinFileFormat;
+		errors: PippinError[];
 	}>;
+	errors: PippinError[];
 
 	add(...plugin: PippinPlugin[]): Pippin;
 }
@@ -214,22 +230,49 @@ export function pippin(): Pippin {
 
 	const self: Pippin = {
 		name: "pippin",
+		errors: [],
 		transform: async (props) => {
-			const state = props;
-			let transforms = 0;
+			const state = {
+				...props,
+				errors: [] as PippinError[],
+			};
 
 			for (const plugin of plugins) {
 				for (const transformer of plugin.transformers) {
 					const result = await transformer.transform({
 						...state,
 						path: props.path,
+						async logError(err) {
+							const resolve = async (pos: number) => {
+								return (
+									await pullTheThread({
+										position: pos,
+										source: state.source,
+									})
+								).position;
+							};
+
+							const error: PippinError = {
+								...err,
+								path: state.path,
+								from: await resolve(err.from),
+								to: await resolve(err.to),
+								hints: await Promise.all(
+									err.hints.map(async (hint) => ({
+										...hint,
+										from: await resolve(hint.from),
+										to: await resolve(hint.to),
+									})),
+								),
+							};
+
+							state.errors.push(error);
+						},
 					});
 
 					if (result) {
 						state.source = result.source;
 						state.format = result.format;
-
-						transforms++;
 					}
 				}
 			}
@@ -244,6 +287,8 @@ export function pippin(): Pippin {
 					namespace: props.namespace,
 					format: bunFormatToPippinFormat(props.loader),
 				});
+
+				self.errors.push(...result.errors);
 
 				return {
 					loader: pippinToBunLoader(result.format),

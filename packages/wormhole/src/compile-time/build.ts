@@ -9,6 +9,7 @@ import {
 } from "../shared/router";
 import type { Config } from "./config";
 import { discoveryPlugin } from "./discovery-plugin";
+import type { UpdatableErrorCollection, WormholeError } from "./errors";
 import { getLoadKey } from "./load-key";
 import { paths } from "./paths";
 import { addTask } from "./tasks";
@@ -23,6 +24,7 @@ export interface BuildProps {
 	routes: RouterNode<ImportNamed>;
 	dev: boolean;
 	config: Config;
+	errors: UpdatableErrorCollection;
 }
 
 export async function buildClient(props: BuildProps): Promise<BuildResult> {
@@ -171,15 +173,25 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 
 	plugins.push(discoveryPlugin);
 
+	const pp = pippin().add(...plugins);
+
 	await Bun.build({
 		splitting: true,
 		entrypoints,
 		outdir: paths().wormhole.buildBox.output.path,
-		plugins: [pippin().add(...plugins)],
+		plugins: [pp],
 		minify: !props.dev,
 		banner: "// happy hacking :3\n",
 		sourcemap: props.dev ? "inline" : "none",
 	});
+
+	const errors: WormholeError[] = [];
+
+	for (const err of pp.errors) {
+		errors.push(err);
+	}
+
+	props.errors.update(errors);
 
 	return {
 		clientBundle: join(paths().wormhole.buildBox.output.path, "client.js"),

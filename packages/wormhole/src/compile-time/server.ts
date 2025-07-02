@@ -19,6 +19,7 @@ import {
 } from "../shared/router";
 import { buildClient } from "./build";
 import { getConfig } from "./config";
+import { ErrorCollection, showErrors } from "./errors";
 import { indexDirectory } from "./indexing";
 import { getLoadKey } from "./load-key";
 import { paths } from "./paths";
@@ -37,6 +38,10 @@ export async function developmentServer(
 
 	const index = indexDirectory(projectDir, lt);
 	const config = await getConfig(lt, projectDir);
+	const buildErrors = ErrorCollection.updatable();
+
+	const errors = ErrorCollection.composite(lt, buildErrors);
+
 	let routerTree: RouterNode<ImportNamed> | undefined = undefined;
 	let serverEntryPath = "";
 
@@ -62,6 +67,7 @@ export async function developmentServer(
 			routes: routerTree,
 			dev: true,
 			config: get(config),
+			errors: buildErrors,
 		});
 
 		serverEntryPath = serverBundle;
@@ -149,6 +155,12 @@ export async function developmentServer(
 			port: get(port),
 			reusePort: true,
 			development: true,
+		});
+
+		useEffect((get) => {
+			get(errors.errors);
+
+			showErrors(errors);
 		});
 
 		const task = addTask({

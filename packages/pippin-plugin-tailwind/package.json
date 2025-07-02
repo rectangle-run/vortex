@@ -1,38 +1,35 @@
 {
-    "name": "@vortexjs/pippin-plugin-tailwind",
-    "type": "module",
-    "license": "MIT-0",
-    "contributors": [
-        "andylovescode",
-        "TailwindCSS Developers"
-    ],
-    "repository": {
-        "url": "https://github.com/andylovescode/vortex"
-    },
-    "devDependencies": {
-        "@types/bun": "catalog:",
-        "tsup": "catalog:"
-    },
-    "dependencies": {
-        "@tailwindcss/node": "^4.1.11",
-        "@tailwindcss/oxide": "^4.1.11",
-        "@vortexjs/common": "workspace:*",
-        "@vortexjs/pippin": "workspace:*"
-    },
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
-    "scripts": {
-        "build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
-        "fmt": "biome check --write",
-        "test": "bun test"
-    },
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
-        }
-    },
-    "version": "0.0.0"
+	"name": "@vortexjs/pippin-plugin-tailwind",
+	"type": "module",
+	"license": "MIT-0",
+	"contributors": ["andylovescode", "TailwindCSS Developers"],
+	"repository": {
+		"url": "https://github.com/andylovescode/vortex"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"tsup": "catalog:"
+	},
+	"dependencies": {
+		"@tailwindcss/node": "^4.1.11",
+		"@tailwindcss/oxide": "^4.1.11",
+		"@vortexjs/common": "workspace:*",
+		"@vortexjs/pippin": "workspace:*"
+	},
+	"peerDependencies": {
+		"typescript": "catalog:"
+	},
+	"scripts": {
+		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
+		"fmt": "biome check --write",
+		"test": "bun test"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"version": "0.0.0"
 }
