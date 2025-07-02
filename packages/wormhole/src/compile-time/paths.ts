@@ -1,8 +1,6 @@
 import { join } from "node:path";
-import process from "node:process";
 
-export function paths() {
-	const root = join(process.cwd());
+export function paths(root: string) {
 	const wormholeFolder = join(root, ".wormhole");
 	const wormholeCache = join(wormholeFolder, "cache");
 	const buildBox = join(wormholeFolder, "build-box");

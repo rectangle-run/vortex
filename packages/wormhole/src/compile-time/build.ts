@@ -7,11 +7,10 @@ import {
 	type RouterNode,
 	hashImports,
 } from "../shared/router";
-import type { Config } from "./config";
+import type { State } from "../state";
 import { discoveryPlugin } from "./discovery-plugin";
-import type { UpdatableErrorCollection, WormholeError } from "./errors";
+import type { WormholeError } from "./errors";
 import { getLoadKey } from "./load-key";
-import { paths } from "./paths";
 import { addTask } from "./tasks";
 
 export interface BuildResult {
@@ -23,12 +22,14 @@ export interface BuildResult {
 export interface BuildProps {
 	routes: RouterNode<ImportNamed>;
 	dev: boolean;
-	config: Config;
-	errors: UpdatableErrorCollection;
+	state: State;
 }
 
 export async function buildClient(props: BuildProps): Promise<BuildResult> {
 	using _task = addTask({ name: "Building client" });
+
+	const state = props.state;
+	const paths = state.paths;
 
 	const routeExports: {
 		filePath: string;
@@ -99,7 +100,7 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 		codegen += `INTERNAL_loadClient({ load, routes: ${JSON.stringify(hashImports(props.routes))} });`;
 
 		const clientEntryPath = join(
-			paths().wormhole.buildBox.codegenned.path,
+			paths.wormhole.buildBox.codegenned.path,
 			"client.ts",
 		);
 
@@ -133,7 +134,7 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 		codegen += "}";
 
 		const serverEntryPath = join(
-			paths().wormhole.buildBox.codegenned.path,
+			paths.wormhole.buildBox.codegenned.path,
 			"server.ts",
 		);
 
@@ -146,18 +147,16 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 
 	{
 		// CSS entrypoint
-		const pkgJson = await Bun.file(
-			join(paths().root, "package.json"),
-		).json();
+		const pkgJson = await Bun.file(join(paths.root, "package.json")).json();
 
-		const appCssPath = join(paths().root, "src", "app.css");
+		const appCssPath = join(paths.root, "src", "app.css");
 
 		if (pkgJson.dependencies?.tailwindcss) {
 			plugins.push(pippinPluginTailwind());
 		}
 
 		const cssEntryPath = join(
-			paths().wormhole.buildBox.codegenned.path,
+			paths.wormhole.buildBox.codegenned.path,
 			"styles.css",
 		);
 		let cssContent = "";
@@ -178,7 +177,7 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 	await Bun.build({
 		splitting: true,
 		entrypoints,
-		outdir: paths().wormhole.buildBox.output.path,
+		outdir: paths.wormhole.buildBox.output.path,
 		plugins: [pp],
 		minify: !props.dev,
 		banner: "// happy hacking :3\n",
@@ -191,11 +190,11 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 		errors.push(err);
 	}
 
-	props.errors.update(errors);
+	state.buildErrors.update(errors);
 
 	return {
-		clientBundle: join(paths().wormhole.buildBox.output.path, "client.js"),
-		serverBundle: join(paths().wormhole.buildBox.output.path, "server.js"),
-		cssBundle: join(paths().wormhole.buildBox.output.path, "styles.css"),
+		clientBundle: join(paths.wormhole.buildBox.output.path, "client.js"),
+		serverBundle: join(paths.wormhole.buildBox.output.path, "server.js"),
+		cssBundle: join(paths.wormhole.buildBox.output.path, "styles.css"),
 	};
 }

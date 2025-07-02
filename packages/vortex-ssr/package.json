@@ -1,33 +1,33 @@
 {
-    "name": "@vortexjs/ssr",
-    "type": "module",
-    "license": "MIT-0",
-    "repository": {
-        "url": "https://github.com/andylovescode/vortex"
-    },
-    "devDependencies": {
-        "@types/bun": "catalog:",
-        "@vortexjs/dom": "workspace:*",
-        "tsup": "catalog:"
-    },
-    "dependencies": {
-        "@vortexjs/core": "workspace:*",
-        "@vortexjs/common": "workspace:*"
-    },
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
-    "scripts": {
-        "build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
-        "fmt": "biome check --write",
-        "test": "bun test"
-    },
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
-        }
-    },
-    "version": "0.0.3"
+	"name": "@vortexjs/ssr",
+	"type": "module",
+	"license": "MIT-0",
+	"repository": {
+		"url": "https://github.com/andylovescode/vortex"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"@vortexjs/dom": "workspace:*",
+		"tsup": "catalog:"
+	},
+	"dependencies": {
+		"@vortexjs/core": "workspace:*",
+		"@vortexjs/common": "workspace:*"
+	},
+	"peerDependencies": {
+		"typescript": "catalog:"
+	},
+	"scripts": {
+		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
+		"fmt": "biome check --write",
+		"test": "bun test"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"version": "0.0.3"
 }

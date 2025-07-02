@@ -24,6 +24,7 @@ import { indexDirectory } from "./indexing";
 import { getLoadKey } from "./load-key";
 import { paths } from "./paths";
 import { addTask } from "./tasks";
+import type { State } from "../state";
 
 export interface DevServer {
 	readonly type: "DevServer";
@@ -31,16 +32,14 @@ export interface DevServer {
 }
 
 export async function developmentServer(
-	lt: Lifetime,
-	projectDir: string,
+	state: State
 ): Promise<DevServer> {
+	const lt = state.lt;
+
 	using _hlt = Lifetime.changeHookLifetime(lt);
 
-	const index = indexDirectory(projectDir, lt);
-	const config = await getConfig(lt, projectDir);
-	const buildErrors = ErrorCollection.updatable();
-
-	const errors = ErrorCollection.composite(lt, buildErrors);
+	const index = state.index.instance;
+	const config = await state.config.instance;
 
 	let routerTree: RouterNode<ImportNamed> | undefined = undefined;
 	let serverEntryPath = "";
@@ -66,8 +65,7 @@ export async function developmentServer(
 		const { serverBundle } = await buildClient({
 			routes: routerTree,
 			dev: true,
-			config: get(config),
-			errors: buildErrors,
+			state,
 		});
 
 		serverEntryPath = serverBundle;
@@ -145,7 +143,7 @@ export async function developmentServer(
 				"/dist/*": async (req) => {
 					const path = unwrap(req.url.split("dist/")[1]);
 					const filePath = join(
-						paths().wormhole.buildBox.output.path,
+						state.paths.wormhole.buildBox.output.path,
 						path,
 					);
 
@@ -158,9 +156,9 @@ export async function developmentServer(
 		});
 
 		useEffect((get) => {
-			get(errors.errors);
+			get(state.errors);
 
-			showErrors(errors);
+			showErrors(state);
 		});
 
 		const task = addTask({
