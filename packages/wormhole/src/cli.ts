@@ -9,8 +9,7 @@ const projectDir = process.cwd();
 
 const lt = new Lifetime();
 
-informationBoard(lt);
-
 const state = new State(projectDir, lt);
 
 developmentServer(state);
+informationBoard(state);

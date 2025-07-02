@@ -1,6 +1,7 @@
 import { unwrap } from "@vortexjs/common";
 import {
 	type Lifetime,
+	type Signal,
 	type Store,
 	getImmediateValue,
 	useDerived,
@@ -31,7 +32,21 @@ export class State implements ErrorCollection {
 		public lt: Lifetime,
 	) {
 		this.paths = paths(this.projectDir);
+		this.errors = useDerived(
+			(get) => {
+				let errors: WormholeError[] = [];
+				for (const collection of get(this.errorCollections)) {
+					errors = errors.concat(get(collection.errors));
+				}
+				return errors;
+			},
+			{ dynamic: true },
+			this.lt,
+		);
+		this.addErrorCollection(this.buildErrors);
 	}
+
+	errors: Signal<WormholeError[]>;
 
 	errorCollections: Store<ErrorCollection[]> = useState([]);
 
@@ -40,17 +55,6 @@ export class State implements ErrorCollection {
 			getImmediateValue(this.errorCollections).concat(collection),
 		);
 	}
-
-	errors = useDerived(
-		(get) => {
-			let errors: WormholeError[] = [];
-			for (const collection of get(this.errorCollections)) {
-				errors = errors.concat(get(collection.errors));
-			}
-			return errors;
-		},
-		{ dynamic: true },
-	);
 
 	server = service(() => developmentServer(this));
 	index = service(() => indexDirectory(this.projectDir, this.lt));

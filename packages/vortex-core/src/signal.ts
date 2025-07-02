@@ -4,12 +4,22 @@ export type Informant = ((signal: Signal<unknown>) => void) | null;
 
 export const SignalGetter = "@vortex-get-internal" as const;
 
+function isPromise(value: unknown): value is Promise<unknown> {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		typeof (value as Promise<unknown>).then === "function"
+	);
+}
+
 export function equals<T>(a: T, b: T): boolean {
 	if (a === b) return true;
 
 	if (typeof a !== typeof b) return false;
 
 	if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+	if (isPromise(a) || isPromise(b)) return false;
 
 	if (Array.isArray(a) && Array.isArray(b)) {
 		if (a.length !== b.length) return false;
@@ -203,6 +213,7 @@ export function effect(
 	) => void,
 	props?: {
 		dynamic?: boolean;
+		incremental?: boolean;
 	},
 	outerLifetime: Lifetime = useHookLifetime(),
 ) {
@@ -308,3 +319,27 @@ export const useEffect = effect;
 
 export type SignalOrValue<T> = T | Signal<T>;
 export type GetSignal<T> = T extends Signal<infer U> ? U : T;
+
+export type SignalStack<T> = T | Signal<SignalStack<T>>;
+
+export function flatten<T>(
+	signal: SignalStack<T>,
+	lt: Lifetime = useHookLifetime(),
+): Signal<T> {
+	return derived(
+		(get) => {
+			function evaluate<T>(signal: SignalStack<T>): T {
+				if (isSignal(signal)) {
+					return evaluate(get(signal));
+				}
+				return signal;
+			}
+
+			return evaluate(signal);
+		},
+		{ dynamic: true },
+		lt,
+	);
+}
+
+export const useFlatten = flatten;

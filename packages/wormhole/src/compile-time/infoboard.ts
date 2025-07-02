@@ -1,52 +1,28 @@
-import { Lifetime, useEffect } from "@vortexjs/core";
+import {
+	Lifetime,
+	awaited,
+	flatten,
+	useDerived,
+	useEffect,
+} from "@vortexjs/core";
 import chalk from "chalk";
+import { createPrinter } from "../cli/printer";
+import type { State } from "../state";
+import { showErrors } from "./errors";
 import { tasks } from "./tasks";
 
-function createPrinter() {
-	const indent: string[] = [];
-
-	return {
-		log(text: string) {
-			for (const line of text.split("\n")) {
-				const indentedLine = indent.join("") + line;
-				console.log(indentedLine);
-			}
-		},
-		indent() {
-			indent.push("    ");
-
-			return {
-				close() {
-					indent.pop();
-				},
-				[Symbol.dispose]() {
-					this.close();
-				},
-			};
-		},
-		group(heading: string, styled = true) {
-			this.log(
-				styled ? chalk.hex("#34d399").bold(`# ${heading}`) : heading,
-			);
-
-			return this.indent();
-		},
-	};
-}
-
-export function informationBoard(lt: Lifetime) {
+export function informationBoard(state: State) {
+	const lt = state.lt;
 	using _hlt = Lifetime.changeHookLifetime(lt);
 
-	useEffect((get) => {
-		//console.clear();
-
+	const lines = useDerived(async (get) => {
 		const printer = createPrinter();
 
 		using _p = printer.indent();
 
-		printer.log("");
+		printer.gap();
 		printer.log(chalk.hex("#3b82f6")("wormhole"));
-		printer.log("");
+		printer.gap();
 
 		{
 			using _g = printer.group("Tasks");
@@ -59,6 +35,30 @@ export function informationBoard(lt: Lifetime) {
 					printer.log(`- ${task.name}`);
 				}
 			}
+		}
+
+		const errors = get(state.errors);
+
+		if (errors.length > 0) {
+			using _g = printer.group(`${errors.length} Errors`);
+
+			await showErrors(state, printer);
+		}
+
+		return printer.lines;
+	});
+
+	const awaitedLines = flatten(useDerived((get) => awaited(get(lines))));
+
+	useEffect((get) => {
+		const lines = get(awaitedLines);
+
+		if (!lines) return;
+
+		console.clear();
+
+		for (const line of lines) {
+			console.log(line);
 		}
 	});
 }

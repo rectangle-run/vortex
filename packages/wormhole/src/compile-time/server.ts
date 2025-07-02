@@ -17,23 +17,17 @@ import {
 	generateRouterTree,
 	matchRoute,
 } from "../shared/router";
-import { buildClient } from "./build";
-import { getConfig } from "./config";
-import { ErrorCollection, showErrors } from "./errors";
-import { indexDirectory } from "./indexing";
-import { getLoadKey } from "./load-key";
-import { paths } from "./paths";
-import { addTask } from "./tasks";
 import type { State } from "../state";
+import { buildClient } from "./build";
+import { getLoadKey } from "./load-key";
+import { addTask } from "./tasks";
 
 export interface DevServer {
 	readonly type: "DevServer";
 	readonly port: Signal<number>;
 }
 
-export async function developmentServer(
-	state: State
-): Promise<DevServer> {
+export async function developmentServer(state: State): Promise<DevServer> {
 	const lt = state.lt;
 
 	using _hlt = Lifetime.changeHookLifetime(lt);
@@ -153,12 +147,6 @@ export async function developmentServer(
 			port: get(port),
 			reusePort: true,
 			development: true,
-		});
-
-		useEffect((get) => {
-			get(state.errors);
-
-			showErrors(state);
 		});
 
 		const task = addTask({

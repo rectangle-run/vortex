@@ -6,8 +6,8 @@ import {
 	getImmediateValue,
 	useState,
 } from "@vortexjs/core";
-import chalk from "chalk";
 import { diagram, importRichText } from "../cli/diagram";
+import type { Printer } from "../cli/printer";
 
 export interface WormholeError {
 	message: string;
@@ -60,15 +60,15 @@ export namespace ErrorCollection {
 	}
 }
 
-export async function showErrors(collection: ErrorCollection) {
+export async function showErrors(
+	collection: ErrorCollection,
+	printer: Printer,
+) {
 	const errors = getImmediateValue(collection.errors);
 
 	if (errors.length === 0) {
 		return;
 	}
-
-	console.error(chalk.hex("#ef4444")(`${errors.length} errors`));
-	console.error();
 
 	const involvedFiles = new Set<string>();
 
@@ -109,16 +109,18 @@ export async function showErrors(collection: ErrorCollection) {
 
 		const highlighted = await importRichText(content);
 
-		console.error();
+		printer.gap();
 
-		console.error(`${" ".repeat(7) + file}\n`);
+		printer.log(`${" ".repeat(7) + file}\n`);
 
-		console.error(
+		printer.log(
 			diagram({
 				diagnostics: diagnostics,
 				text: highlighted.text,
 				logicalLocations: highlighted.logicalLocations,
 			}),
 		);
+
+		printer.gap();
 	}
 }
