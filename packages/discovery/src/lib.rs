@@ -1,6 +1,5 @@
 use std::path::Path;
 
-use bun_native_plugin::{bun, define_bun_plugin, Result};
 use oxc::{
     allocator::Allocator,
     ast::ast::{
@@ -180,19 +179,4 @@ fn compile(source: &str, language: SourceType) -> CompileResult {
 fn compile_script(source: String, file_name: String) -> CompileResult {
     let language = SourceType::from_path(file_name).unwrap_or(SourceType::tsx());
     compile(&source, language)
-}
-
-define_bun_plugin!("replace-discovery-imports");
-
-#[bun]
-pub fn replace_discovery_imports(handle: &mut OnBeforeParse) -> Result<()> {
-    let input_source_code = handle.input_source_code()?;
-
-    let loader = handle.output_loader();
-
-    let output = compile_script(input_source_code.to_string(), handle.path()?.to_string());
-
-    handle.set_output_source_code(output.source, loader);
-
-    Ok(())
 }
