@@ -1,45 +1,34 @@
 {
 	"name": "@vortexjs/discovery",
-	"version": "0.1.2",
-	"main": "index.js",
-	"types": "index.d.ts",
+	"type": "module",
+	"license": "MIT-0",
 	"repository": {
 		"url": "https://github.com/andylovescode/vortex"
 	},
-	"napi": {
-		"name": "discovery",
-		"targets": [
-			"aarch64-apple-darwin",
-			"wasm32-unknown-unknown",
-			"x86_64-apple-darwin",
-			"x86_64-unknown-linux-gnu",
-			"x86_64-pc-windows-msvc"
-		]
-	},
-	"license": "MIT-0",
 	"devDependencies": {
-		"@napi-rs/cli": "catalog:"
+		"@types/bun": "catalog:",
+		"tsup": "catalog:"
 	},
-	"ava": {
-		"timeout": "3m"
+	"dependencies": {
+		"@vortexjs/common": "workspace:*",
+		"@vortexjs/pippin": "workspace:*",
+		"esrap": "https://pkg.pr.new/sveltejs/esrap@76",
+		"oxc-parser": "^0.75.1"
 	},
-	"engines": {
-		"node": ">= 10"
+	"peerDependencies": {
+		"typescript": "catalog:"
 	},
 	"scripts": {
-		"artifacts": "napi artifacts",
-		"build:dev": "napi build --platform --release",
-		"build:many": "napi build --release --target aarch64-apple-darwin && napi build --release --target wasm32-unknown-unknown && napi build --release --target x86_64-apple-darwin && napi build --release --target x86_64-unknown-linux-gnu && napi build --release --target x86_64-pc-windows-msvc",
-		"build": "node -e \"require('child_process').execSync(process.env.GITHUB_ACTIONS ? 'npm run build:many' : 'npm run build:dev', {stdio: 'inherit'})\"",
-		"prepublishOnly": "napi prepublish -t npm",
-		"universal": "napi universal",
-		"fmt": "cargo clippy --fix --allow-dirty && cargo fmt && biome check --write",
-		"version": "napi version",
+		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
+		"fmt": "biome check --write",
 		"test": "bun test"
 	},
-	"optionalDependencies": {
-		"@vortexjs/discovery-win32-x64-msvc": "catalog:",
-		"@vortexjs/discovery-darwin-x64": "catalog:",
-		"@vortexjs/discovery-linux-x64-gnu": "catalog:"
-	}
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"version": "0.1.2"
 }

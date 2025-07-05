@@ -1,5 +1,6 @@
 import { join } from "node:path/posix";
 import { unwrap } from "@vortexjs/common";
+import { pippinPluginDiscovery } from "@vortexjs/discovery";
 import { type PippinPlugin, pippin } from "@vortexjs/pippin";
 import { pippinPluginTailwind } from "@vortexjs/pippin-plugin-tailwind";
 import {
@@ -8,7 +9,6 @@ import {
 	hashImports,
 } from "../shared/router";
 import type { State } from "../state";
-import { discoveryPlugin } from "./discovery-plugin";
 import type { WormholeError } from "./errors";
 import { getLoadKey } from "./load-key";
 import { addTask } from "./tasks";
@@ -170,7 +170,11 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 		entrypoints.push(cssEntryPath);
 	}
 
-	plugins.push(discoveryPlugin);
+	plugins.push(
+		pippinPluginDiscovery({
+			target: "client",
+		}),
+	);
 
 	const pp = pippin().add(...plugins);
 

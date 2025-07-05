@@ -42,15 +42,15 @@ export async function developmentServer(state: State): Promise<DevServer> {
 		const routes: InputRoute[] = [];
 
 		for (const discovery of get(index.discoveries)) {
-			if (discovery.type !== "Route") return;
+			if (discovery.type !== "route_frame") return;
 
 			routes.push({
 				path: discovery.path,
 				frame: {
 					filePath: discovery.filePath,
-					exportId: discovery.export,
+					exportId: discovery.exported,
 				},
-				frameType: discovery.frame,
+				frameType: discovery.frameType,
 			});
 		}
 

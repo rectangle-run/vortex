@@ -1,22 +1,6 @@
 {
     "$schema": "https://turborepo.com/schema.json",
     "tasks": {
-        "@vortexjs/discovery#build": {
-            "outputs": [
-                "index.js",
-                "index.d.ts",
-                "*.node"
-            ],
-            "inputs": [
-                "src/**",
-                "Cargo.toml"
-            ],
-            "passThroughEnv": [
-                "RUSTUP_HOME",
-                "RUSTUP_TOOLCHAIN"
-            ],
-            "outputLogs": "new-only"
-        },
         "build": {
             "outputs": [
                 "dist/**"
@@ -25,19 +9,6 @@
                 "^build"
             ],
             "outputLogs": "new-only"
-        },
-        "@vortexjs/discovery#fmt": {
-            "persistent": false,
-            "cache": true,
-            "passThroughEnv": [
-                "RUSTUP_HOME",
-                "RUSTUP_TOOLCHAIN"
-            ],
-            "outputLogs": "new-only",
-            "inputs": [
-                "src/**",
-                "Cargo.toml"
-            ]
         },
         "fmt": {
             "persistent": false,

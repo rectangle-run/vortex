@@ -1,6 +1,6 @@
 import { watch } from "node:fs";
 import { exists, readdir } from "node:fs/promises";
-import { basename, join, resolve } from "node:path";
+import { basename, extname, join, resolve } from "node:path";
 import {
 	Lifetime,
 	type Signal,
@@ -9,7 +9,7 @@ import {
 	useDerived,
 	useState,
 } from "@vortexjs/core";
-import { type Discovery, compileScript } from "@vortexjs/discovery";
+import { type Discovery, discoveryCompile } from "@vortexjs/discovery";
 import { addTask } from "./tasks";
 
 const discoveryCompilerCues = ["@vortexjs/wormhole/route"];
@@ -46,7 +46,15 @@ export function indexDirectory(path: string, lt: Lifetime): Index {
 
 		if (!checkForCues(contents)) return;
 
-		const { discoveries } = compileScript(contents, basename(fullPath));
+		const ext = extname(fullPath);
+
+		const { discoveries } = await discoveryCompile({
+			source: contents,
+			fileName: basename(fullPath),
+			jsx: ext === ".jsx" || ext === ".tsx",
+			typescript: ext === ".ts" || ext === ".tsx",
+			target: "client",
+		});
 
 		fileDiscoveries.set({
 			...getImmediateValue(fileDiscoveries),

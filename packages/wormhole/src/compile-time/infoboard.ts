@@ -55,7 +55,7 @@ export function informationBoard(state: State) {
 
 		if (!lines) return;
 
-		console.clear();
+		//console.clear();
 
 		for (const line of lines) {
 			console.log(line);
