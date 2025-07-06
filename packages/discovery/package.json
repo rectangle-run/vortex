@@ -12,8 +12,8 @@
 	"dependencies": {
 		"@vortexjs/common": "workspace:*",
 		"@vortexjs/pippin": "workspace:*",
-		"esrap": "https://pkg.pr.new/sveltejs/esrap@76",
-		"oxc-parser": "^0.75.1"
+		"esrap": "catalog:",
+		"oxc-parser": "catalog:"
 	},
 	"peerDependencies": {
 		"typescript": "catalog:"

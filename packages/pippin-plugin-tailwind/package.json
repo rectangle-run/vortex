@@ -11,8 +11,8 @@
 		"tsup": "catalog:"
 	},
 	"dependencies": {
-		"@tailwindcss/node": "^4.1.11",
-		"@tailwindcss/oxide": "^4.1.11",
+		"@tailwindcss/node": "catalog:",
+		"@tailwindcss/oxide": "catalog:",
 		"@vortexjs/common": "workspace:*",
 		"@vortexjs/pippin": "workspace:*"
 	},

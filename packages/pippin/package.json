@@ -10,7 +10,7 @@
 		"tsup": "catalog:"
 	},
 	"dependencies": {
-		"@jridgewell/source-map": "^0.3.10",
+		"@jridgewell/source-map": "catalog:",
 		"@vortexjs/common": "workspace:*"
 	},
 	"peerDependencies": {
