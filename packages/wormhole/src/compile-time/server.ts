@@ -3,19 +3,19 @@ import { unwrap } from "@vortexjs/common";
 import {
 	type JSXNode,
 	Lifetime,
-	type Signal,
 	render,
+	type Signal,
 	useDerived,
 	useEffect,
 } from "@vortexjs/core";
 import { createHTMLRoot, printHTML, ssr } from "@vortexjs/ssr";
 import chalk from "chalk";
 import {
+	generateRouterTree,
 	type ImportNamed,
 	type InputRoute,
-	type RouterNode,
-	generateRouterTree,
 	matchRoute,
+	type RouterNode,
 } from "../shared/router";
 import type { State } from "../state";
 import { buildClient } from "./build";
@@ -35,7 +35,7 @@ export async function developmentServer(state: State): Promise<DevServer> {
 	const index = state.index.instance;
 	const config = await state.config.instance;
 
-	let routerTree: RouterNode<ImportNamed> | undefined = undefined;
+	let routerTree: RouterNode<ImportNamed> | undefined;
 	let serverEntryPath = "";
 
 	useEffect(async (get) => {
@@ -80,7 +80,7 @@ export async function developmentServer(state: State): Promise<DevServer> {
 					const route = new URL(req.url).pathname;
 					const matched = matchRoute(route, routerTree);
 
-					let node: JSXNode = undefined;
+					let node: JSXNode;
 
 					const { load } = await import(serverEntryPath);
 

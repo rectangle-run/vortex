@@ -1,9 +1,9 @@
 import { describe, expect, it } from "bun:test";
 import { unwrap } from "@vortexjs/common";
 import {
+	generateRouterTree,
 	type ImportNamed,
 	type ParsedRoute,
-	generateRouterTree,
 	parseRoute,
 } from "./router";
 

@@ -2,7 +2,7 @@ import { trace, unreachable, unwrap } from "@vortexjs/common";
 import { ContextScope } from "../context";
 import type { JSXNode } from "../jsx/jsx-common";
 import { Lifetime } from "../lifetime";
-import { type Store, effect, store } from "../signal";
+import { effect, type Store, store } from "../signal";
 import {
 	FLElement,
 	FLFragment,

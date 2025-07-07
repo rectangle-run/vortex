@@ -1,11 +1,10 @@
 import {
+	createElementInternal,
+	Fragment,
 	type JSXNode,
 	type JSXRuntimeProps,
-	createElementInternal,
 	normalizeChildren,
 } from "./jsx-common";
-
-import { Fragment } from "./jsx-common";
 
 export { Fragment };
 

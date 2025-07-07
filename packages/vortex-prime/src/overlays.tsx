@@ -1,8 +1,8 @@
 import {
-	type SignalOrValue,
-	type Store,
 	getImmediateValue,
 	isSignal,
+	type SignalOrValue,
+	type Store,
 	useDerived,
 } from "@vortexjs/core";
 import type { ElementProps } from "@vortexjs/dom";
@@ -149,7 +149,10 @@ export function usePopover({ open }: { open: Store<boolean> }) {
 export function useTooltip({
 	open,
 	label,
-}: { open: Store<boolean>; label: string }) {
+}: {
+	open: Store<boolean>;
+	label: string;
+}) {
 	const tooltipId = useId();
 
 	return {

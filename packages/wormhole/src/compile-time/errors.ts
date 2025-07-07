@@ -1,9 +1,9 @@
 import {
+	derived,
+	getImmediateValue,
 	type Lifetime,
 	type Signal,
 	type Store,
-	derived,
-	getImmediateValue,
 	useState,
 } from "@vortexjs/core";
 import { diagram, importRichText } from "../cli/diagram";

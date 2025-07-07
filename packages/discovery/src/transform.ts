@@ -1,4 +1,6 @@
+import { unwrap } from "@vortexjs/common";
 import type { ModuleDeclaration, Node } from "oxc-parser";
+import { importDeclaration } from "./builders";
 
 export type TransformOperation =
 	| {
@@ -35,7 +37,25 @@ export class Transformer {
 	operations: TransformOperation[] = [];
 	hooks: TransformHook<any>[] = [];
 	declarationsToAdd: ModuleDeclaration[] = [];
+	importIds = new Map<string, string>();
+	importCount = 0;
 	idCount = 0;
+
+	import(module: string, name: string) {
+		const key = `${module}#${name}`;
+
+		if (this.importIds.has(key)) {
+			return unwrap(this.importIds.get(key));
+		}
+
+		const local = `$i_${(this.importCount++).toString(36)}`;
+
+		this.importIds.set(key, local);
+
+		this.addDeclaration(importDeclaration(module, name, local));
+
+		return local;
+	}
 
 	getExportId() {
 		return `$d_${(this.idCount++).toString(36)}`;

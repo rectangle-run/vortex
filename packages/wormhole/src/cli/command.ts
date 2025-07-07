@@ -82,7 +82,7 @@ export function cmd() {
 
 						args[arg.id] = value;
 					} else if (arg.type === "string") {
-						let value: string | undefined = undefined;
+						let value: string | undefined;
 
 						for (const alias of arg.aliases) {
 							if (alias in parser.strings) {

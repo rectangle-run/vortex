@@ -1,7 +1,7 @@
 import {
-	Lifetime,
 	awaited,
 	flatten,
+	Lifetime,
 	useDerived,
 	useEffect,
 } from "@vortexjs/core";

@@ -4,9 +4,9 @@ import { pippinPluginDiscovery } from "@vortexjs/discovery";
 import { type PippinPlugin, pippin } from "@vortexjs/pippin";
 import { pippinPluginTailwind } from "@vortexjs/pippin-plugin-tailwind";
 import {
+	hashImports,
 	type ImportNamed,
 	type RouterNode,
-	hashImports,
 } from "../shared/router";
 import type { State } from "../state";
 import type { WormholeError } from "./errors";

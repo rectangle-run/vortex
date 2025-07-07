@@ -2,10 +2,10 @@ import { watch } from "node:fs";
 import { exists, readdir } from "node:fs/promises";
 import { basename, extname, join, resolve } from "node:path";
 import {
+	getImmediateValue,
 	Lifetime,
 	type Signal,
 	type Store,
-	getImmediateValue,
 	useDerived,
 	useState,
 } from "@vortexjs/core";

@@ -1,9 +1,9 @@
 import { unwrap } from "@vortexjs/common";
 import {
+	getImmediateValue,
 	Lifetime,
 	type Renderer,
 	type Store,
-	getImmediateValue,
 } from "@vortexjs/core";
 
 export interface HTMLHydrationContext {
@@ -164,5 +164,5 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 	};
 }
 
-export * from "./std";
 export * from "./jsx/intrinsics";
+export * from "./std";

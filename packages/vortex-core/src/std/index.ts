@@ -1,4 +1,4 @@
-export * from "./when.tsx";
-export * from "./list";
-export * from "./clock";
 export * from "./awaited";
+export * from "./clock";
+export * from "./list";
+export * from "./when.tsx";

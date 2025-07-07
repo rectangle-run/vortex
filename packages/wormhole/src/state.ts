@@ -1,9 +1,9 @@
 import { unwrap } from "@vortexjs/common";
 import {
+	getImmediateValue,
 	type Lifetime,
 	type Signal,
 	type Store,
-	getImmediateValue,
 	useDerived,
 	useState,
 } from "@vortexjs/core";
@@ -14,7 +14,7 @@ import { paths } from "./compile-time/paths";
 import { developmentServer } from "./compile-time/server";
 
 export function service<T>(initializer: () => T) {
-	let instance: T | undefined = undefined;
+	let instance: T | undefined;
 
 	return {
 		get instance() {

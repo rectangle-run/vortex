@@ -14,8 +14,7 @@
 		"tailwindcss": "catalog:"
 	},
 	"scripts": {
-		"dev": "wormhole dev",
-		"fmt": "biome check --write"
+		"dev": "wormhole dev"
 	},
 	"peerDependencies": {
 		"typescript": "catalog:"

@@ -1,17 +1,12 @@
-import { unwrap } from "@vortexjs/common";
 import type { PippinError } from "@vortexjs/pippin";
 import { print } from "esrap";
 import tsx from "esrap/languages/tsx";
-import {
-	type CallExpression,
-	type Expression,
-	type Node,
-	parseAsync,
-} from "oxc-parser";
-import type { Discovery, DiscoveryProps } from "./api";
-import { exportNode } from "./builders";
-import { Scoper, resolveName } from "./scoper";
+import { type Expression, type Node, parseAsync } from "oxc-parser";
+import type { Discovery, DiscoveryProps, DiscoveryTarget } from "./api";
+import { resolveName, Scoper } from "./scoper";
 import { Transformer } from "./transform";
+import { handleAPIFunction } from "./transpile/api";
+import { handleRouteFunction } from "./transpile/route";
 
 export function getSpecialImport(module: string, imported: string) {
 	if (
@@ -37,6 +32,7 @@ export interface CompilerState {
 	transformer: Transformer;
 	scoper: Scoper;
 	errors: Omit<PippinError, "path">[];
+	target: DiscoveryTarget;
 	discoveries: Discovery[];
 }
 
@@ -115,69 +111,6 @@ export function getStringLiteralValue(state: CompilerState, node: Node) {
 	return undefined;
 }
 
-export function handleRouteFunction(
-	state: CompilerState,
-	node: CallExpression,
-) {
-	state.transformer.remove(node);
-
-	if (node.arguments.length !== 2) {
-		state.errors.push({
-			from: node.start,
-			to: node.end,
-			message: `expected 2 arguments, got ${node.arguments.length}`,
-			hints: [],
-		});
-		return;
-	}
-
-	const options = getObjectKeys(state, unwrap(node.arguments[1]));
-	const path = getStringLiteralValue(state, unwrap(node.arguments[0]));
-
-	if (!options) return;
-	if (!path) return;
-
-	const keys = Object.keys(options);
-
-	if (keys.length === 0) {
-		state.errors.push({
-			from: node.start,
-			to: node.end,
-			message: "expected options object to have at least one property",
-			hints: [],
-		});
-		return;
-	}
-
-	const validKeys = ["page", "layout"] as const;
-
-	for (const key of keys) {
-		if (!validKeys.includes(key as any)) {
-			state.errors.push({
-				from: node.start,
-				to: node.end,
-				message: `invalid option key "${key}", expected one of ${validKeys.join(", ")}`,
-				hints: [],
-			});
-		}
-	}
-
-	for (const key of validKeys) {
-		const value = options[key];
-
-		if (!value) continue;
-
-		const exported = exportNode(state, value);
-
-		state.discoveries.push({
-			type: "route_frame",
-			exported: exported,
-			frameType: key,
-			path,
-		});
-	}
-}
-
 export async function discoveryCompile(props: DiscoveryProps): Promise<{
 	source: string;
 	errors: Omit<PippinError, "path">[];
@@ -200,6 +133,7 @@ export async function discoveryCompile(props: DiscoveryProps): Promise<{
 		scoper: new Scoper(),
 		errors: [],
 		discoveries: [],
+		target: props.target,
 	};
 
 	state.scoper.hook(state.transformer);
@@ -221,6 +155,8 @@ export async function discoveryCompile(props: DiscoveryProps): Promise<{
 
 		if (specialImport === "route") {
 			handleRouteFunction(state, node);
+		} else if (specialImport === "query" || specialImport === "mutation") {
+			handleAPIFunction(state, node, specialImport);
 		}
 	});
 

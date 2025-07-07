@@ -1,12 +1,12 @@
 import {
+	awaited,
 	type JSXNode,
 	Lifetime,
-	awaited,
 	render,
 	useDerived,
 } from "@vortexjs/core";
-import { type JSX, html } from "@vortexjs/dom";
-import { type ImportHash, type RouterNode, matchRoute } from "../shared/router";
+import { html, type JSX } from "@vortexjs/dom";
+import { type ImportHash, matchRoute, type RouterNode } from "../shared/router";
 import { initializeClientSideRouting, usePathname } from "./csr";
 
 export interface ClientProps {
@@ -45,7 +45,7 @@ export async function INTERNAL_loadClient(props: ClientProps) {
 	const hierarchy = useDerived((get) => {
 		const rm = get(routeMatch);
 
-		let node: JSXNode = undefined;
+		let node: JSXNode;
 
 		for (const frame of rm.frames.toReversed()) {
 			const Frame = createFrameLoader(frame, props);

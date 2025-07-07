@@ -2,11 +2,11 @@ import type { PippinPlugin } from "@vortexjs/pippin";
 import type { DiscoveryPluginProps, DiscoveryTarget } from "./api";
 import { discoveryCompile } from "./compiler";
 
-export { discoveryCompile } from "./compiler";
 export * from "./api";
+export { discoveryCompile } from "./compiler";
 
 export function pippinPluginDiscovery(
-	props: DiscoveryPluginProps,
+	_props: DiscoveryPluginProps,
 ): PippinPlugin {
 	return {
 		name: "Discovery",

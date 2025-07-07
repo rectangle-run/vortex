@@ -24,7 +24,8 @@ export function hash(
 	const smolBuffer = new Uint8Array(32);
 
 	for (let i = 0; i < smolBuffer.length; i++) {
-		smolBuffer[i] = unwrap(smolBuffer[i]) ^ unwrap(binaryData[i % binaryData.length]);
+		smolBuffer[i] =
+			unwrap(smolBuffer[i]) ^ unwrap(binaryData[i % binaryData.length]);
 	}
 
 	let result = 0;

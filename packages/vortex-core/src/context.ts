@@ -3,10 +3,7 @@ import type { JSXNode } from "./jsx/jsx-common";
 import { type Signal, type SignalOrValue, toSignal } from "./signal";
 
 export interface Context<T> {
-	(props: {
-		value: SignalOrValue<T>;
-		children: JSXNode;
-	}): JSXNode;
+	(props: { value: SignalOrValue<T>; children: JSXNode }): JSXNode;
 	use(): Signal<T>;
 }
 

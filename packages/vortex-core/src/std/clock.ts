@@ -1,5 +1,5 @@
 import { useHookLifetime } from "../lifetime";
-import { type Signal, getImmediateValue, store } from "../signal";
+import { getImmediateValue, type Signal, store } from "../signal";
 
 export function useInterval(delay: number, callback: () => void) {
 	const lifetime = useHookLifetime();

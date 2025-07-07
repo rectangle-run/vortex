@@ -1,11 +1,11 @@
 import type { JSXNode } from "../jsx/jsx-common";
 import { type Lifetime, useHookLifetime } from "../lifetime";
 import {
-	type Signal,
-	type SignalOrValue,
 	derived,
 	getImmediateValue,
 	isSignal,
+	type Signal,
+	type SignalOrValue,
 	store,
 } from "../signal";
 

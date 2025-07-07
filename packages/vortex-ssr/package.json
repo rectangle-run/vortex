@@ -19,7 +19,6 @@
 	},
 	"scripts": {
 		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
-		"fmt": "biome check --write",
 		"test": "bun test"
 	},
 	"exports": {

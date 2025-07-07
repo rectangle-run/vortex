@@ -1,7 +1,7 @@
 import {
+	isSignal,
 	type Signal,
 	type Store,
-	isSignal,
 	toSignal,
 	useDerived,
 } from "../signal";

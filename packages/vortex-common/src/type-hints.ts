@@ -1,5 +1,5 @@
 export function unreachable(
-	value: never,
+	_value: never,
 	message = "Unreachable state",
 ): never {
 	throw new Error(message);

@@ -24,7 +24,7 @@ function getIdent(node: VNode, codegen: CodegenStream): string {
 		return unwrap(codegen.nodeToQuickIdent.get(node));
 	}
 
-	let ident: string | undefined = undefined;
+	let ident: string | undefined;
 
 	if ("fixedIdent" in node && node.fixedIdent) {
 		ident ??= node.fixedIdent;

@@ -2,39 +2,21 @@
 	"$schema": "https://turborepo.com/schema.json",
 	"tasks": {
 		"build": {
-			"outputs": [
-				"dist/**"
-			],
-			"dependsOn": [
-				"^build"
-			],
-			"inputs": [
-				"src/**"
-			],
-			"outputLogs": "new-only"
-		},
-		"fmt": {
-			"persistent": false,
-			"cache": true,
+			"outputs": ["dist/**"],
+			"dependsOn": ["^build"],
+			"inputs": ["src/**"],
 			"outputLogs": "new-only"
 		},
 		"dev": {
 			"persistent": true,
 			"cache": false,
-			"dependsOn": [
-				"^build"
-			]
+			"dependsOn": ["^build"]
 		},
 		"test": {
 			"persistent": false,
 			"cache": true,
-			"dependsOn": [
-				"^build"
-			],
-			"inputs": [
-				"src/**",
-				"test/**"
-			]
+			"dependsOn": ["^build"],
+			"inputs": ["src/**", "test/**"]
 		}
 	}
 }

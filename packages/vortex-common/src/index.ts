@@ -2,16 +2,16 @@ import { join, parse, sep } from "node:path";
 
 export type EvaluateType<T> = T extends object
 	? {
-		[key in keyof T]: EvaluateType<T[key]>;
-	}
+			[key in keyof T]: EvaluateType<T[key]>;
+		}
 	: T;
 
 export type DeepPartial<T> = {
 	[P in keyof T]?: T[P] extends (infer U)[]
-	? DeepPartial<U>[]
-	: T[P] extends object
-	? DeepPartial<T[P]>
-	: T[P];
+		? DeepPartial<U>[]
+		: T[P] extends object
+			? DeepPartial<T[P]>
+			: T[P];
 };
 
 export function TODO(whatToDo: string): never {
@@ -28,8 +28,8 @@ export function trace(message: string) {
 	};
 }
 
-export * from "./ultraglobal";
 export * from "./type-hints";
+export * from "./ultraglobal";
 
 export async function findTopLevelProject(cwd: string): Promise<string> {
 	// Find the first parent directory that contains a package.json file, preferring files closer to root, example: /home/user/project/package.json over /home/user/project/packages/abc/package.json
@@ -48,5 +48,5 @@ export async function findTopLevelProject(cwd: string): Promise<string> {
 	throw new Error("No package.json found in any parent directory.");
 }
 
-export * from "./skl";
 export * from "./hash";
+export * from "./skl";

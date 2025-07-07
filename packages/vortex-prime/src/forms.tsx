@@ -1,7 +1,7 @@
 import {
+	getImmediateValue,
 	type SignalOrValue,
 	type Store,
-	getImmediateValue,
 	useDerived,
 } from "@vortexjs/core";
 
@@ -345,6 +345,7 @@ export function useToggle({
 		} as { props: Record<string, unknown> },
 	};
 }
+
 import { useId } from "./id";
 
 /**

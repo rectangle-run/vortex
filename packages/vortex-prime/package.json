@@ -18,8 +18,7 @@
 		"typescript": "catalog:"
 	},
 	"scripts": {
-		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
-		"fmt": "biome check --write"
+		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist"
 	},
 	"exports": {
 		".": {

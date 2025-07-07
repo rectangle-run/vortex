@@ -55,60 +55,23 @@ route(
 			typescript: true,
 			target: "client",
 		}),
-	).toMatchInlineSnapshot(`
-	  {
-	    "discoveries": [
-	      {
-	        "exported": "$d_0",
-	        "frameType": "page",
-	        "path": "/",
-	        "type": "route_frame",
-	      },
-	      {
-	        "exported": "$d_1",
-	        "frameType": "layout",
-	        "path": "/",
-	        "type": "route_frame",
-	      },
-	      {
-	        "exported": "$d_2",
-	        "frameType": "page",
-	        "path": "/docs/[page]",
-	        "type": "route_frame",
-	      },
-	    ],
-	    "errors": [],
-	    "source": 
-	  "import route from "@vortexjs/wormhole/route";
+	).toMatchSnapshot();
 
-	  export const $d_0 = function () {
-	  	return <>
-	                      <h1 class="text-4xl font-bold">
-	                          Welcome to Wormhole, {Object.entries(globalThis).length}
-	                      </h1>
-	                      <p>
-	                          This is an example app, go to the{" "}
-	                          <a href="/docs/tada">docs</a>
-	                      </p>
-	                  </>;
-	  };
+	expect(
+		await discoveryCompile({
+			fileName: "test.wormhole",
+			source: `import { query } from "@vortexjs/wormhole/route";
 
-	  export const $d_1 = function ({ children }) {
-	  	return <>
-	                      <head>
-	                          <title>Wormhole Example</title>
-	                      </head>
-	                      <body>{children}</body>
-	                  </>;
-	  };
+	const a = query("/api/data", {
+		impl: "data",
+		schema: "abc",
+		method: "DELETE",
+	});
 
-	  export const $d_2 = function ({ page }) {
-	  	return <>
-	                      <h1>Documentation for {page}</h1>
-	                      <p>This is the documentation page for {page}.</p>
-	                  </>;
-	  };"
-	  ,
-	  }
-	`);
+	a(); `,
+			jsx: true,
+			typescript: true,
+			target: "client",
+		}),
+	).toMatchSnapshot();
 });

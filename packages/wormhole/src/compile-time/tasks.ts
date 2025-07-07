@@ -1,4 +1,4 @@
-import { type Store, getImmediateValue, useState } from "@vortexjs/core";
+import { getImmediateValue, type Store, useState } from "@vortexjs/core";
 
 export interface Task {
 	[Symbol.dispose]: () => void;

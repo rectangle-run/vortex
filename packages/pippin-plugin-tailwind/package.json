@@ -2,7 +2,10 @@
 	"name": "@vortexjs/pippin-plugin-tailwind",
 	"type": "module",
 	"license": "MIT-0",
-	"contributors": ["andylovescode", "TailwindCSS Developers"],
+	"contributors": [
+		"andylovescode",
+		"TailwindCSS Developers"
+	],
 	"repository": {
 		"url": "https://github.com/andylovescode/vortex"
 	},
@@ -21,7 +24,6 @@
 	},
 	"scripts": {
 		"build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
-		"fmt": "biome check --write",
 		"test": "bun test"
 	},
 	"exports": {

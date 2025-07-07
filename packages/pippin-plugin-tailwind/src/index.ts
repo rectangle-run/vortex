@@ -3,8 +3,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import {
-	Instrumentation,
 	compile,
+	Instrumentation,
 	optimize,
 	toSourceMap,
 } from "@tailwindcss/node";
