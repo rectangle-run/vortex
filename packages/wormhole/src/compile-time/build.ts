@@ -1,5 +1,5 @@
 import { join } from "node:path/posix";
-import { unwrap } from "@vortexjs/common";
+import { hash, unwrap } from "@vortexjs/common";
 import { pippinPluginDiscovery } from "@vortexjs/discovery";
 import { type PippinPlugin, pippin } from "@vortexjs/pippin";
 import { pippinPluginTailwind } from "@vortexjs/pippin-plugin-tailwind";
@@ -86,7 +86,7 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 
 			codegen += `if (key === "${key}") {`;
 
-			const importCacheKey = Bun.hash(filePath).toString(36);
+			const importCacheKey = hash(filePath).toString(36);
 
 			codegen += `const imported = (importCache[${JSON.stringify(importCacheKey)}] ??= await import(${JSON.stringify(filePath)}));`;
 
@@ -122,7 +122,7 @@ export async function buildClient(props: BuildProps): Promise<BuildResult> {
 
 			codegen += `if (key === "${key}") {`;
 
-			const importCacheKey = Bun.hash(filePath).toString(36);
+			const importCacheKey = hash(filePath).toString(36);
 
 			codegen += `const imported = (importCache[${JSON.stringify(importCacheKey)}] ??= await import(${JSON.stringify(filePath)}));`;
 
