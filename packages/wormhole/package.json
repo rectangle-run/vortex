@@ -21,6 +21,7 @@
 		"@vortexjs/dom": "workspace:*",
 		"@vortexjs/ssr": "workspace:*",
 		"@vortexjs/pippin-plugin-tailwind": "workspace:",
+		"@vortexjs/pippin": "workspace:*",
 		"chalk": "catalog:"
 	},
 	"peerDependencies": {
