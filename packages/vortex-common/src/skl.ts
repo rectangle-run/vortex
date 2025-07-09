@@ -13,6 +13,7 @@ export namespace SKL {
         null: "Null",
         true: "True",
         false: "False",
+        undefined: "Undefined"
     } as const;
 
     export const symbols = {
@@ -215,6 +216,9 @@ export namespace SKL {
             if (indicator[1] === keywords.null) {
                 return null;
             }
+            if (indicator[1] === keywords.undefined) {
+                return undefined;
+            }
             if (indicator[1] === keywords.true) {
                 return true;
             }
@@ -416,6 +420,10 @@ export namespace SKL {
         }
         if (obj === null) {
             serializeContext_write(context, "null");
+            return;
+        }
+        if (obj === undefined) {
+            serializeContext_write(context, "undefined");
             return;
         }
         if (typeof obj === "boolean") {
