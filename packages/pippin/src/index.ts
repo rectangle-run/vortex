@@ -229,10 +229,8 @@ export function fromBun(plugin: BunPlugin): PippinPlugin {
  * @returns A Pippin instance that can be used to transform files.
  */
 export function pippin(opts: {
-    cacheDir?: string;
 } = {}): Pippin {
     const plugins: PippinPlugin[] = [];
-    const cacheDir = opts.cacheDir;
 
     const self: Pippin = {
         name: "pippin",
@@ -245,24 +243,6 @@ export function pippin(opts: {
 
             for (const plugin of plugins) {
                 for (const transformer of plugin.transformers) {
-                    const cacheKey = hash(JSON.stringify({
-                        ...state,
-                        path: props.path,
-                        plugin: plugin.name
-                    })).toString(36);
-                    if (cacheDir) {
-                        try {
-                            const result = SKL.parse(await Bun.file(join(cacheDir, cacheKey)).text()) as { format: PippinFileFormat, source: string };
-
-                            if (result) {
-                                state.format = result.format;
-                                state.source = result.source;
-                            }
-
-                            continue;
-                        } catch { }
-                    }
-
                     const result = await transformer.transform({
                         ...state,
                         path: props.path,
@@ -293,10 +273,6 @@ export function pippin(opts: {
                             state.errors.push(error);
                         },
                     });
-
-                    if (cacheDir) {
-                        await Bun.write(join(cacheDir, cacheKey), SKL.minify(SKL.stringify(result)));
-                    }
 
                     if (result) {
                         state.source = result.source;
