@@ -1,166 +1,155 @@
 import { join } from "node:path";
 import { unwrap } from "@vortexjs/common";
 import {
-	type JSXNode,
-	Lifetime,
-	render,
-	type Signal,
-	useDerived,
-	useEffect,
+    getImmediateValue,
+    type JSXNode,
+    Lifetime,
+    render,
+    type Signal,
+    useDerived,
+    useEffect,
 } from "@vortexjs/core";
 import { createHTMLRoot, printHTML, ssr } from "@vortexjs/ssr";
 import chalk from "chalk";
 import {
-	generateRouterTree,
-	type ImportNamed,
-	type InputRoute,
-	matchRoute,
-	type RouterNode,
+    generateRouterTree,
+    type ImportNamed,
+    type InputRoute,
+    matchRoute,
+    type RouterNode,
 } from "../shared/router";
 import type { State } from "../state";
-import { buildClient } from "./build";
+import { build } from "./build";
 import { getLoadKey } from "./load-key";
 import { addTask } from "./tasks";
+import type { HTTPMethod } from "../shared/http-method";
 
 export interface DevServer {
-	readonly type: "DevServer";
-	readonly port: Signal<number>;
+    readonly type: "DevServer";
+    readonly port: Signal<number>;
+}
+
+interface APIDeclaration {
+    endpoint: string;
+    loadKey: string;
+    method: HTTPMethod;
 }
 
 export async function developmentServer(state: State): Promise<DevServer> {
-	const lt = state.lt;
+    const lt = state.lt;
 
-	using _hlt = Lifetime.changeHookLifetime(lt);
+    using _hlt = Lifetime.changeHookLifetime(lt);
 
-	const index = state.index.instance;
-	const config = await state.config.instance;
+    const index = state.index.instance;
+    const config = await state.config.instance;
 
-	let routerTree: RouterNode<ImportNamed> | undefined;
-	let serverEntryPath = "";
+    let routerTree: RouterNode<ImportNamed> | undefined;
+    let serverEntryPath = "";
+    let clientEntryPath = "";
 
-	useEffect(async (get) => {
-		const routes: InputRoute[] = [];
+    useEffect(async (get) => {
+        const routes: InputRoute[] = [];
 
-		for (const discovery of get(index.discoveries)) {
-			if (discovery.type !== "route_frame") return;
+        for (const discovery of get(index.discoveries)) {
+            if (discovery.type !== "route_frame") continue;
 
-			routes.push({
-				path: discovery.path,
-				frame: {
-					filePath: discovery.filePath,
-					exportId: discovery.exported,
-				},
-				frameType: discovery.frameType,
-			});
-		}
+            routes.push({
+                path: discovery.path,
+                frame: {
+                    filePath: discovery.filePath,
+                    exportId: discovery.exported,
+                },
+                frameType: discovery.frameType,
+            });
 
-		routerTree = generateRouterTree(routes);
+            console.log(discovery, routes);
+        }
 
-		const { serverBundle } = await buildClient({
-			routes: routerTree,
-			dev: true,
-			state,
-		});
+        routerTree = generateRouterTree(routes);
 
-		serverEntryPath = serverBundle;
-	});
+        const { serverBundle, clientBundle } = await build({
+            routes: routerTree,
+            dev: true,
+            state,
+            discoveries: get(index.discoveries)
+        });
 
-	const port = useDerived((get) => get(config).dev?.port ?? 3000);
+        serverEntryPath = serverBundle;
+        clientEntryPath = clientBundle;
+    });
 
-	useEffect((get, { lifetime }) => {
-		const server = Bun.serve({
-			routes: {
-				"/*": async (req) => {
-					if (!routerTree) {
-						return new Response("Router tree not ready", {
-							status: 503,
-						});
-					}
+    const port = useDerived((get) => get(config).dev?.port ?? 3000);
 
-					const route = new URL(req.url).pathname;
-					const matched = matchRoute(route, routerTree);
+    useEffect((get, { lifetime }) => {
+        const server = Bun.serve({
+            routes: {
+                "/*": async (req) => {
+                    if (!routerTree) {
+                        return new Response("Router tree not ready", {
+                            status: 503,
+                        });
+                    }
 
-					let node: JSXNode;
+                    const route = new URL(req.url).pathname;
 
-					const { load } = await import(serverEntryPath);
+                    const { render: serverRender, apis: apiz, load: loader } = await import(serverEntryPath);
 
-					for (const frame of matched.frames.toReversed()) {
-						const component = (await load(
-							getLoadKey(frame),
-						)) as () => JSXNode;
+                    const apis = apiz as APIDeclaration[];
+                    const load = loader as (key: string) => Promise<unknown>;
 
-						if (!component) {
-							console.warn("Failed to load component ", frame);
-						}
+                    for (const api of apis) {
+                        if (req.method !== api.method) continue;
+                        if (api.endpoint !== route) continue;
 
-						node = {
-							type: "component",
-							impl: component,
-							props: {
-								...matched.slugs,
-								...matched.spreads,
-								children: node,
-							},
-						};
-					}
+                        const impl = await load(api.loadKey) as (() => Promise<unknown>);
 
-					const vroot = createHTMLRoot();
+                        const result = await impl();
+                    }
 
-					render(ssr(), vroot, node).close();
+                    let node: JSXNode;
 
-					vroot.children.push({
-						tagName: "script",
-						attributes: {
-							type: "module",
-							src: "/dist/client.js",
-						},
-						children: [],
-					});
+                    const vroot = createHTMLRoot();
 
-					vroot.children.push({
-						tagName: "link",
-						attributes: {
-							rel: "stylesheet",
-							href: "/dist/styles.css",
-						},
-						children: [],
-					});
+                    await serverRender({
+                        pathname: route,
+                        root: vroot
+                    })
 
-					const html = printHTML(vroot);
+                    const html = printHTML(vroot);
 
-					return new Response(html, {
-						headers: {
-							"Content-Type": "text/html; charset=utf-8",
-						},
-					});
-				},
-				"/dist/*": async (req) => {
-					const path = unwrap(req.url.split("dist/")[1]);
-					const filePath = join(
-						state.paths.wormhole.buildBox.output.path,
-						path,
-					);
+                    return new Response(html, {
+                        headers: {
+                            "Content-Type": "text/html; charset=utf-8",
+                        },
+                    });
+                },
+                "/dist/*": async (req) => {
+                    const path = unwrap(req.url.split("dist/")[1]);
+                    const filePath = join(
+                        state.paths.wormhole.buildBox.output.path,
+                        path,
+                    );
 
-					return new Response(Bun.file(filePath));
-				},
-			},
-			port: get(port),
-			reusePort: true,
-			development: true,
-		});
+                    return new Response(Bun.file(filePath));
+                },
+            },
+            port: get(port),
+            reusePort: true,
+            development: true,
+        });
 
-		const task = addTask({
-			name: `Server: ${chalk.magenta(server.url.href)} ${chalk.italic.gray("(in most terminals, hold control while clicking this link)")}`,
-		});
+        const task = addTask({
+            name: `Server: ${chalk.magenta(server.url.href)} ${chalk.italic.gray("(in most terminals, hold control while clicking this link)")}`,
+        });
 
-		lifetime.onClosed(() => {
-			server.stop();
-			task[Symbol.dispose]();
-		});
-	});
+        lifetime.onClosed(() => {
+            server.stop();
+            task[Symbol.dispose]();
+        });
+    });
 
-	return {
-		type: "DevServer",
-		port,
-	};
+    return {
+        type: "DevServer",
+        port,
+    };
 }

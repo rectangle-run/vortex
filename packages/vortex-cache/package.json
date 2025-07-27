@@ -1,5 +1,5 @@
 {
-    "name": "@vortexjs/pippin",
+    "name": "@vortexjs/cache",
     "type": "module",
     "license": "MIT-0",
     "repository": {
@@ -10,9 +10,7 @@
         "tsup": "catalog:"
     },
     "dependencies": {
-        "@jridgewell/source-map": "catalog:",
-        "@vortexjs/common": "workspace:*",
-        "@vortexjs/cache": "workspace:*"
+        "@vortexjs/common": "workspace:*"
     },
     "peerDependencies": {
         "typescript": "catalog:"

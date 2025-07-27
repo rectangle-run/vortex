@@ -9,15 +9,30 @@ Here's why Vortex is cool.
 -  🕸️ **Fine-grained reactivity**: We create a graph of data where updates pulse through, minimizing compute.
 -  ⚡ **Fast**: Vortex is designed for speed, with minimal overhead and efficient updates.
 -  🧩 **Composable**: Build complex UIs from simple reactive primitives.
--  🌐 **Renderer agnostic**: Use Vortex with any renderer. At the moment, we only render to the DOM, but that may change.
--  🛠️ **Developer-friendly**: Intuitive APIs and TypeScript support make it easy to get started.
+-  🌐 **Renderer agnostic**: Use Vortex with any renderer, DOM, SSR, or whatever you want to write support for.
+-  🛠️ **Developer-friendly**: The API surface is simple and clear, and everything is safely typed.
 
 ## Packages
 
-| Package          | Description                                               |
-|------------------|-----------------------------------------------------------|
-| `@vortexjs/core` | Core reactive primitives for Vortex, and rendering engine |
-| `@vortexjs/dom`  | DOM renderer for Vortex applications                      |
+- Core
+    - `@vortexjs/common` - A library used by all of Vortex, providing utilities
+    - `@vortexjs/core` - The main reconciling engine of Vortex
+    - `@vortexjs/dom` - A DOM renderer for Vortex Core
+- Wormhole
+    - `@vortexjs/cache` - An ultra-fast caching engine for reusing data between builds
+    - `@vortexjs/ssr` - A renderer providing incremental diffing and initial HTML rendering
+    - `@vortexjs/pippin` - A plugin stacker for Bun, because Bun's builtin plugin API is... Buns *buh-dum-tsk*
+    - `@vortexjs/pippin-plugin-tailwind` - Tailwind support for Pippin
+    - `@vortexjs/discovery` - A pippin plugin powering the simple APIs in Wormhole
+    - `@vortexjs/wormhole` - The Vortex metaframework
+- Utilities
+    - `@vortexjs/locounter` - A quick and dirty line-counter
+    - `@vortexjs/cataloger` - A quick and dirty way of switching to catalogs
+- Ecosystem
+    - `@vortexjs/prime` - A set of unstyled, accessible components
+- Apps
+    - `@vortexjs/example` - An example project with no metaframework goodies
+    - `@vortexjs/example-wormhole` - An example project with Wormhole
 
 ## Quick Start
 
@@ -152,11 +167,11 @@ function InputExample() {
 
 ```tsx
 function RefExample() {
-	return (
-		<div use={el => el.innerText = "Just kidding, the text gets overwritten by me!"}>
-			This says something cool!
-		</div>
-	);
+    return (
+       	<div use={el => el.innerText = "Just kidding, the text gets overwritten by me!"}> {/* note: this does not work with SSR! */}
+            This says something cool!
+        </div>
+    );
 }
 ```
 

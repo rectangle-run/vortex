@@ -236,7 +236,7 @@ export namespace SKL {
         }
 
         if (indicator === null) {
-            throw new Error("Unexpected end of input");
+            throw new Error("Unexpected end of input (after reading class)");
         }
 
         if (indicator[0] === "symbol" && indicator[1] === "LeftParenthesis") {
@@ -246,7 +246,7 @@ export namespace SKL {
                 const key = parseContext_read(context);
 
                 if (key === null) {
-                    throw new Error("Unexpected end of input");
+                    throw new Error("Unexpected end of input (when trying to read key)");
                 }
 
                 if (key[0] === "symbol" && key[1] === "RightParenthesis") {
@@ -286,8 +286,8 @@ export namespace SKL {
                     return new Set(kv.items as unknown[]);
                 }
                 if (clazz === "map") {
-                    const map = new Map<string, unknown>();
-                    for (const [key, value] of Object.entries(kv)) {
+                    const map = new Map<unknown, unknown>();
+                    for (const [key, value] of kv.entries as [unknown, unknown][]) {
                         map.set(key, value);
                     }
                     return map;
@@ -302,10 +302,6 @@ export namespace SKL {
             const arr: unknown[] = [];
 
             while (true) {
-                const value = parseContext_readObj(context);
-
-                arr.push(value);
-
                 if (
                     parseContext_peek(context)?.[0] === "symbol" &&
                     parseContext_peek(context)?.[1] === "RightSquareBracket"
@@ -313,6 +309,10 @@ export namespace SKL {
                     parseContext_read(context); // consume the closing bracket
                     break; // End of array
                 }
+
+                const value = parseContext_readObj(context);
+
+                arr.push(value);
             }
 
             return arr;
@@ -341,12 +341,14 @@ export namespace SKL {
     export interface SerializeContext {
         output: string;
         indentLevel: number;
+        minified: boolean;
     }
 
     export function serializeContext_create(): SerializeContext {
         return {
             output: "",
             indentLevel: 0,
+            minified: false
         };
     }
 
@@ -359,6 +361,7 @@ export namespace SKL {
     }
 
     export function serializeContext_newline(context: SerializeContext): void {
+        if (context.minified) return
         serializeContext_write(context, "\n");
         serializeContext_write(context, "    ".repeat(context.indentLevel));
     }
@@ -442,6 +445,29 @@ export namespace SKL {
             serializeContext_write(context, "]");
             return;
         }
+        if (obj instanceof Date) {
+            serializeContext_write(context, `date(unix=${obj.getTime()})`)
+        }
+        if (obj instanceof Set) {
+            serializeContext_write(context, "set(");
+            serializeContext_indent(context);
+            serializeContext_newline(context);
+            serializeContext_write(context, "items = ");
+            serializeContext_writeObject(context, obj.values())
+            serializeContext_dedent(context)
+            serializeContext_newline(context)
+            serializeContext_write(context, ")")
+        }
+        if (obj instanceof Map) {
+            serializeContext_write(context, "map(");
+            serializeContext_indent(context);
+            serializeContext_newline(context);
+            serializeContext_write(context, "entries = ");
+            serializeContext_writeObject(context, obj.entries())
+            serializeContext_dedent(context)
+            serializeContext_newline(context)
+            serializeContext_write(context, ")")
+        }
         if (typeof obj === "object") {
             serializeContext_write(context, "(");
             serializeContext_indent(context);
@@ -462,29 +488,15 @@ export namespace SKL {
         throw new Error(`Unsupported type for serialization: ${typeof obj}`);
     }
 
-    export function serialize(obj: unknown): string {
+    export function serialize(obj: unknown, opts?: { minified?: boolean }): string {
         const context = serializeContext_create();
+
+        const minified = opts?.minified ?? false;
+
+        context.minified = minified;
+
         serializeContext_writeObject(context, obj);
         return context.output.trim();
-    }
-
-    export function minify(str: string): string {
-        let wroteWS = false;
-        let output = "";
-
-        for (const char of str) {
-            if (isWhitespace(char)) {
-                if (!wroteWS) {
-                    wroteWS = true;
-                    output += " ";
-                }
-            } else {
-                output += char;
-                wroteWS = false;
-            }
-        }
-
-        return output;
     }
 
     export const stringify = serialize;

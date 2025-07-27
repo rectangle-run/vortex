@@ -1,7 +1,6 @@
 import type { BunPlugin } from "bun";
 import { pullTheThread } from "./threadpull";
-import { hash, SKL } from "@vortexjs/common";
-import { join } from "node:path";
+import type { Cache } from "@vortexjs/cache";
 
 export type PippinFileFormat =
     | {
@@ -98,6 +97,7 @@ export interface PippinTransformer {
         path: string;
         namespace: string;
         logError(props: Omit<PippinError, "path">): Promise<void>;
+        cache?: Cache;
     }): Promise<
         | {
             source: string;
@@ -229,8 +229,10 @@ export function fromBun(plugin: BunPlugin): PippinPlugin {
  * @returns A Pippin instance that can be used to transform files.
  */
 export function pippin(opts: {
+    cache?: Cache
 } = {}): Pippin {
     const plugins: PippinPlugin[] = [];
+    const cache = opts.cache;
 
     const self: Pippin = {
         name: "pippin",
@@ -246,6 +248,7 @@ export function pippin(opts: {
                     const result = await transformer.transform({
                         ...state,
                         path: props.path,
+                        cache,
                         async logError(err) {
                             const resolve = async (pos: number) => {
                                 return (

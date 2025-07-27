@@ -2,129 +2,129 @@ import { watch } from "node:fs";
 import { exists, readdir } from "node:fs/promises";
 import { basename, extname, join, resolve } from "node:path";
 import {
-	getImmediateValue,
-	Lifetime,
-	type Signal,
-	type Store,
-	useDerived,
-	useState,
+    getImmediateValue,
+    Lifetime,
+    type Signal,
+    type Store,
+    useDerived,
+    useState,
 } from "@vortexjs/core";
-import { type Discovery, discoveryCompile } from "@vortexjs/discovery";
+import { checkForCues, type Discovery, discoveryCompile } from "@vortexjs/discovery";
 import { addTask } from "./tasks";
-
-const discoveryCompilerCues = ["@vortexjs/wormhole/route"];
-
-export function checkForCues(contents: string): boolean {
-	return discoveryCompilerCues.some((cue) => contents.includes(cue));
-}
+import type { State } from "../state";
 
 function checkPathValidity(path: string) {
-	return !path.includes(".wormhole") && !path.includes("node_modules");
+    return !path.includes(".wormhole") && !path.includes("node_modules");
 }
 
 export type TaggedDiscovery = Discovery & {
-	filePath: string;
+    filePath: string;
 };
 
 export interface Index {
-	discoveries: Signal<TaggedDiscovery[]>;
+    discoveries: Signal<TaggedDiscovery[]>;
 }
 
-export function indexDirectory(path: string, lt: Lifetime): Index {
-	using _hlt = Lifetime.changeHookLifetime(lt);
+export function indexDirectory(state: State): Index {
+    using _hlt = Lifetime.changeHookLifetime(state.lt);
 
-	const fileDiscoveries: Store<Record<string, TaggedDiscovery[]>> = useState(
-		{},
-	);
+    const fileDiscoveries: Store<Record<string, TaggedDiscovery[]>> = useState(
+        {},
+    );
 
-	async function revalidate(fullPath: string) {
-		using _task = addTask({
-			name: `Index ${basename(fullPath)}`,
-		});
+    async function revalidate(fullPath: string) {
+        using _task = addTask({
+            name: `Index ${basename(fullPath)}`,
+        });
 
-		const contents = await Bun.file(fullPath).text();
+        const contents = await Bun.file(fullPath).text();
 
-		if (!checkForCues(contents)) return;
+        if (!checkForCues(contents)) return;
 
-		const ext = extname(fullPath);
+        const ext = extname(fullPath);
 
-		const { discoveries } = await discoveryCompile({
-			source: contents,
-			fileName: basename(fullPath),
-			jsx: ext === ".jsx" || ext === ".tsx",
-			typescript: ext === ".ts" || ext === ".tsx",
-			target: "client",
-		});
+        const { discoveries, errors } = await discoveryCompile({
+            source: contents,
+            fileName: basename(fullPath),
+            jsx: ext === ".jsx" || ext === ".tsx",
+            typescript: ext === ".ts" || ext === ".tsx",
+            target: "server",
+            cache: state.cache
+        });
 
-		fileDiscoveries.set({
-			...getImmediateValue(fileDiscoveries),
-			[fullPath]: discoveries.map((x) => ({
-				...x,
-				filePath: fullPath,
-			})),
-		});
-	}
+        if (errors.length > 0) {
+            throw errors;
+        }
 
-	async function firstPassIndex(dir = path) {
-		using _task = addTask({
-			name: `Index ${basename(dir)}`,
-		});
+        fileDiscoveries.set({
+            ...getImmediateValue(fileDiscoveries),
+            [fullPath]: discoveries.map((x) => ({
+                ...x,
+                filePath: fullPath,
+            })),
+        });
+    }
 
-		const entries = await readdir(dir);
+    async function firstPassIndex(dir = state.projectDir) {
+        using _task = addTask({
+            name: `Index ${basename(dir)}`,
+        });
 
-		for (const entry of entries) {
-			const fullPath = join(dir, entry);
-			const stat = await Bun.file(fullPath).stat();
+        const entries = await readdir(dir);
 
-			if (!checkPathValidity(fullPath)) {
-				continue;
-			}
+        for (const entry of entries) {
+            const fullPath = join(dir, entry);
+            const stat = await Bun.file(fullPath).stat();
 
-			if (stat.isDirectory()) {
-				firstPassIndex(fullPath); // await intentionally omitted to allow parallel indexing
-			}
+            if (!checkPathValidity(fullPath)) {
+                continue;
+            }
 
-			if (stat.isFile()) {
-				revalidate(fullPath);
-			}
-		}
-	}
+            if (stat.isDirectory()) {
+                firstPassIndex(fullPath); // await intentionally omitted to allow parallel indexing
+            }
 
-	firstPassIndex();
+            if (stat.isFile()) {
+                revalidate(fullPath);
+            }
+        }
+    }
 
-	const discoveries = useDerived((get) => {
-		const fl = get(fileDiscoveries);
-		const result: TaggedDiscovery[] = [];
+    firstPassIndex();
 
-		for (const [_p, discoveries] of Object.entries(fl)) {
-			result.push(...discoveries);
-		}
+    const discoveries = useDerived((get) => {
+        const fl = get(fileDiscoveries);
+        const result: TaggedDiscovery[] = [];
 
-		return result;
-	});
+        for (const [_p, discoveries] of Object.entries(fl)) {
+            result.push(...discoveries);
+        }
 
-	const watcher = watch(path, {
-		recursive: true,
-	});
+        return result;
+    });
 
-	watcher.on("change", async (_eventType, fileName) => {
-		const absFileName = resolve(path, fileName.toString());
+    const watcher = watch(state.projectDir, {
+        recursive: true,
+    });
 
-		if (
-			checkPathValidity(absFileName) &&
-			(await exists(absFileName)) &&
-			(await Bun.file(absFileName).stat()).isFile()
-		) {
-			revalidate(absFileName);
-		} else {
-			fileDiscoveries.set({
-				...getImmediateValue(fileDiscoveries),
-				[absFileName]: [],
-			});
-		}
-	});
+    watcher.on("change", async (_eventType, fileName) => {
+        const absFileName = resolve(state.projectDir, fileName.toString());
 
-	return {
-		discoveries,
-	};
+        if (
+            checkPathValidity(absFileName) &&
+            (await exists(absFileName)) &&
+            (await Bun.file(absFileName).stat()).isFile()
+        ) {
+            revalidate(absFileName);
+        } else {
+            fileDiscoveries.set({
+                ...getImmediateValue(fileDiscoveries),
+                [absFileName]: [],
+            });
+        }
+    });
+
+    return {
+        discoveries,
+    };
 }

@@ -11,5 +11,7 @@ const lt = new Lifetime();
 
 const state = new State(projectDir, lt);
 
+await state.init();
+
 developmentServer(state);
 informationBoard(state);

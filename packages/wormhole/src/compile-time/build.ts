@@ -1,12 +1,12 @@
 import { join } from "node:path/posix";
 import { hash, unwrap } from "@vortexjs/common";
-import { pippinPluginDiscovery } from "@vortexjs/discovery";
+import { pippinPluginDiscovery, type Discovery } from "@vortexjs/discovery";
 import { type PippinPlugin, pippin } from "@vortexjs/pippin";
 import { pippinPluginTailwind } from "@vortexjs/pippin-plugin-tailwind";
 import {
-	hashImports,
-	type ImportNamed,
-	type RouterNode,
+    hashImports,
+    type ImportNamed,
+    type RouterNode,
 } from "../shared/router";
 import type { State } from "../state";
 import type { WormholeError } from "./errors";
@@ -14,191 +14,205 @@ import { getLoadKey } from "./load-key";
 import { addTask } from "./tasks";
 
 export interface BuildResult {
-	clientBundle: string;
-	serverBundle: string;
-	cssBundle: string;
+    clientBundle: string;
+    serverBundle: string;
+    cssBundle: string;
 }
 
 export interface BuildProps {
-	routes: RouterNode<ImportNamed>;
-	dev: boolean;
-	state: State;
+    routes: RouterNode<ImportNamed>;
+    dev: boolean;
+    state: State;
+    target: "client" | "server";
+    discoveries: (Discovery & { filePath: string })[];
 }
 
-export async function buildClient(props: BuildProps): Promise<BuildResult> {
-	using _task = addTask({ name: "Building client" });
+export async function buildPlatform(props: BuildProps): Promise<void> {
+    using _task = addTask({ name: "Building target: " + props.target });
 
-	const state = props.state;
-	const paths = state.paths;
+    const state = props.state;
+    const paths = state.paths;
 
-	const routeExports: {
-		filePath: string;
-		export: string;
-	}[] = [];
+    const symbolExports: {
+        filePath: string;
+        export: string;
+    }[] = [];
 
-	function traverseNode(node: RouterNode<ImportNamed>) {
-		if (node.page) {
-			routeExports.push({
-				filePath: node.page.filePath,
-				export: node.page.exportId,
-			});
-		}
+    function traverseNode(node: RouterNode<ImportNamed>) {
+        if (node.page) {
+            symbolExports.push({
+                filePath: node.page.filePath,
+                export: node.page.exportId,
+            });
+        }
 
-		if (node.layout) {
-			routeExports.push({
-				filePath: node.layout.filePath,
-				export: node.layout.exportId,
-			});
-		}
+        if (node.layout) {
+            symbolExports.push({
+                filePath: node.layout.filePath,
+                export: node.layout.exportId,
+            });
+        }
 
-		if (node.notFoundPage) {
-			routeExports.push({
-				filePath: node.notFoundPage.filePath,
-				export: node.notFoundPage.exportId,
-			});
-		}
+        if (node.notFoundPage) {
+            symbolExports.push({
+                filePath: node.notFoundPage.filePath,
+                export: node.notFoundPage.exportId,
+            });
+        }
 
-		if (node.epsilon) {
-			traverseNode(node.epsilon.node);
-		}
+        if (node.epsilon) {
+            traverseNode(node.epsilon.node);
+        }
 
-		for (const sub in node.cases) {
-			traverseNode(unwrap(node.cases[sub]));
-		}
-	}
+        for (const sub in node.cases) {
+            traverseNode(unwrap(node.cases[sub]));
+        }
+    }
 
-	traverseNode(props.routes);
+    traverseNode(props.routes);
 
-	const entrypoints: string[] = [];
+    for (const discovery of props.discoveries) {
+        if (discovery.type !== "api") continue;
 
-	{
-		// Client entrypoint
-		let codegen = "";
+        symbolExports.push({
+            filePath: discovery.filePath,
+            export: discovery.exported
+        })
+    }
 
-		codegen += `import { INTERNAL_loadClient } from "@vortexjs/wormhole";\n`;
+    const entrypoints: string[] = [];
 
-		codegen += "const importCache = {};";
+    {
+        // entrypoint
+        const loadFn = props.target === "server" ? "INTERNAL_loadServer" : "INTERNAL_loadClient";
+        let codegen = "";
 
-		codegen += "async function load(key) {";
+        codegen += `import { ${loadFn} } from "@vortexjs/wormhole";\n`;
 
-		for (const { filePath, export: exportId } of routeExports) {
-			const key = getLoadKey({ filePath, exportId });
+        codegen += "const importCache = {};";
 
-			codegen += `if (key === "${key}") {`;
+        codegen += "async function load(key) {";
 
-			const importCacheKey = hash(filePath).toString(36);
+        for (const { filePath, export: exportId } of symbolExports) {
+            const key = getLoadKey({ filePath, exportId });
 
-			codegen += `const imported = (importCache[${JSON.stringify(importCacheKey)}] ??= await import(${JSON.stringify(filePath)}));`;
+            codegen += `if (key === "${key}") {`;
 
-			codegen += `return imported[${JSON.stringify(exportId)}]`;
+            const importCacheKey = hash(filePath).toString(36);
 
-			codegen += "}";
-		}
+            codegen += `const imported = (importCache[${JSON.stringify(importCacheKey)}] ??= await import(${JSON.stringify(filePath)}));`;
 
-		codegen += "}";
+            codegen += `return imported[${JSON.stringify(exportId)}]`;
 
-		codegen += `INTERNAL_loadClient({ load, routes: ${JSON.stringify(hashImports(props.routes))} });`;
+            codegen += "}";
+        }
 
-		const clientEntryPath = join(
-			paths.wormhole.buildBox.codegenned.path,
-			"client.ts",
-		);
+        codegen += "}";
 
-		await Bun.write(clientEntryPath, codegen);
+        if (props.target === "client") {
+            codegen += `${loadFn}({ load, routes: ${JSON.stringify(hashImports(props.routes))} });`;
+        } else if (props.target === "server") {
+            codegen += "export async function render({ pathname, root }) {";
 
-		entrypoints.push(clientEntryPath);
-	}
+            codegen += `await ${loadFn}({ load, routes: ${JSON.stringify(hashImports(props.routes))}, pathname, root });`;
 
-	{
-		// Server entrypoint
-		let codegen = "";
+            codegen += "}";
 
-		codegen += "const importCache = {};";
+            const apis = props.discoveries.filter(x => x.type === "api").map(x => ({
+                loadKey: getLoadKey({
+                    filePath: x.filePath,
+                    exportId: x.exported
+                }),
+                method: x.method,
+                endpoint: x.endpoint
+            }));
 
-		codegen += "export async function load(key) {";
+            codegen += `export const apis = ${JSON.stringify(apis)};`;
+        }
 
-		for (const { filePath, export: exportId } of routeExports) {
-			const key = getLoadKey({ filePath, exportId });
+        const entryPath = join(
+            paths.wormhole.buildBox.codegenned.path,
+            props.target + ".ts",
+        );
 
-			codegen += `if (key === "${key}") {`;
+        await Bun.write(entryPath, codegen);
 
-			const importCacheKey = hash(filePath).toString(36);
+        entrypoints.push(entryPath);
+    }
 
-			codegen += `const imported = (importCache[${JSON.stringify(importCacheKey)}] ??= await import(${JSON.stringify(filePath)}));`;
+    const plugins: PippinPlugin[] = [];
 
-			codegen += `return imported[${JSON.stringify(exportId)}]`;
+    {
+        // CSS entrypoint
+        const pkgJson = await Bun.file(join(paths.root, "package.json")).json();
 
-			codegen += "}";
-		}
+        const appCssPath = join(paths.root, "src", "app.css");
 
-		codegen += "}";
+        if (pkgJson.dependencies?.tailwindcss) {
+            plugins.push(pippinPluginTailwind());
+        }
 
-		const serverEntryPath = join(
-			paths.wormhole.buildBox.codegenned.path,
-			"server.ts",
-		);
+        const cssEntryPath = join(
+            paths.wormhole.buildBox.codegenned.path,
+            "styles.css",
+        );
+        let cssContent = "";
 
-		await Bun.write(serverEntryPath, codegen);
+        if (await Bun.file(appCssPath).exists()) {
+            cssContent += `@import url(${JSON.stringify(appCssPath)});\n`;
+        }
 
-		entrypoints.push(serverEntryPath);
-	}
+        await Bun.write(cssEntryPath, cssContent);
 
-	const plugins: PippinPlugin[] = [];
+        entrypoints.push(cssEntryPath);
+    }
 
-	{
-		// CSS entrypoint
-		const pkgJson = await Bun.file(join(paths.root, "package.json")).json();
+    plugins.push(
+        pippinPluginDiscovery({
+            target: props.target,
+        }),
+    );
 
-		const appCssPath = join(paths.root, "src", "app.css");
+    const pp = pippin({
+        cache: state.cache
+    }).add(...plugins);
 
-		if (pkgJson.dependencies?.tailwindcss) {
-			plugins.push(pippinPluginTailwind());
-		}
+    await Bun.build({
+        splitting: true,
+        entrypoints,
+        outdir: paths.wormhole.buildBox.output.path,
+        plugins: [pp],
+        minify: !props.dev,
+        banner: "// happy hacking :3\n",
+        sourcemap: props.dev ? "inline" : "none",
+    });
 
-		const cssEntryPath = join(
-			paths.wormhole.buildBox.codegenned.path,
-			"styles.css",
-		);
-		let cssContent = "";
+    const errors: WormholeError[] = [];
 
-		if (await Bun.file(appCssPath).exists()) {
-			cssContent += `@import url(${JSON.stringify(appCssPath)});\n`;
-		}
+    for (const err of pp.errors) {
+        errors.push(err);
+    }
 
-		await Bun.write(cssEntryPath, cssContent);
+    state.buildErrors.update(errors);
+}
 
-		entrypoints.push(cssEntryPath);
-	}
+export async function build(props: Omit<BuildProps, "target">) {
+    const promises: Promise<void>[] = [];
 
-	plugins.push(
-		pippinPluginDiscovery({
-			target: "client",
-		}),
-	);
+    for (const target of ["client", "server"] as const) {
+        promises.push(buildPlatform({
+            ...props,
+            target
+        }))
+    }
 
-	const pp = pippin().add(...plugins);
+    await Promise.all(promises);
 
-	await Bun.build({
-		splitting: true,
-		entrypoints,
-		outdir: paths.wormhole.buildBox.output.path,
-		plugins: [pp],
-		minify: !props.dev,
-		banner: "// happy hacking :3\n",
-		sourcemap: props.dev ? "inline" : "none",
-	});
+    const paths = props.state.paths;
 
-	const errors: WormholeError[] = [];
-
-	for (const err of pp.errors) {
-		errors.push(err);
-	}
-
-	state.buildErrors.update(errors);
-
-	return {
-		clientBundle: join(paths.wormhole.buildBox.output.path, "client.js"),
-		serverBundle: join(paths.wormhole.buildBox.output.path, "server.js"),
-		cssBundle: join(paths.wormhole.buildBox.output.path, "styles.css"),
-	};
+    return {
+        clientBundle: join(paths.wormhole.buildBox.output.path, "client.js"),
+        serverBundle: join(paths.wormhole.buildBox.output.path, "server.js"),
+        cssBundle: join(paths.wormhole.buildBox.output.path, "styles.css"),
+    };
 }

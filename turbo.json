@@ -1,22 +1,42 @@
 {
-	"$schema": "https://turborepo.com/schema.json",
-	"tasks": {
-		"build": {
-			"outputs": ["dist/**"],
-			"dependsOn": ["^build"],
-			"inputs": ["src/**"],
-			"outputLogs": "new-only"
-		},
-		"dev": {
-			"persistent": true,
-			"cache": false,
-			"dependsOn": ["^build"]
-		},
-		"test": {
-			"persistent": false,
-			"cache": true,
-			"dependsOn": ["^build"],
-			"inputs": ["src/**", "test/**"]
-		}
-	}
+    "$schema": "./node_modules/turbo/schema.json",
+    "tasks": {
+        "build": {
+            "outputs": [
+                "dist/**"
+            ],
+            "dependsOn": [
+                "^build"
+            ],
+            "inputs": [
+                "src/**"
+            ],
+            "outputLogs": "new-only"
+        },
+        "dev": {
+            "persistent": true,
+            "cache": false,
+            "dependsOn": [
+                "^build"
+            ]
+        },
+        "@vortexjs/example-wormhole#dev": {
+            "persistent": true,
+            "cache": false,
+            "dependsOn": [
+                "^build"
+            ]
+        },
+        "test": {
+            "persistent": false,
+            "cache": true,
+            "dependsOn": [
+                "^build"
+            ],
+            "inputs": [
+                "src/**",
+                "test/**"
+            ]
+        }
+    }
 }

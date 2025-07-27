@@ -1,4 +1,4 @@
-import { unwrap } from "./type-hints";
+import { unwrap } from "./unwrap";
 
 export function hash(
     data: string | Uint8Array | ArrayBuffer | null | undefined,
