@@ -1,39 +1,39 @@
 import { unwrap } from "./unwrap";
 
 export function hash(
-    data: string | Uint8Array | ArrayBuffer | null | undefined,
+	data: string | Uint8Array | ArrayBuffer | null | undefined,
 ) {
-    const binaryData =
-        typeof data === "string"
-            ? new TextEncoder().encode(data)
-            : data instanceof Uint8Array
-                ? new Uint8Array(data)
-                : data instanceof ArrayBuffer
-                    ? new Uint8Array(data)
-                    : new Uint8Array();
+	const binaryData =
+		typeof data === "string"
+			? new TextEncoder().encode(data)
+			: data instanceof Uint8Array
+				? new Uint8Array(data)
+				: data instanceof ArrayBuffer
+					? new Uint8Array(data)
+					: new Uint8Array();
 
-    // Goof around with the data
-    let ptr = 0;
+	// Goof around with the data
+	let ptr = 0;
 
-    for (let i = 0; i < binaryData.length * 32; i++) {
-        binaryData[ptr] = unwrap(binaryData[ptr]) ^ (i % 256);
-        ptr += unwrap(binaryData[ptr]) * (i + 1);
-        ptr %= binaryData.length;
-    }
+	for (let i = 0; i < binaryData.length * 32; i++) {
+		binaryData[ptr] = unwrap(binaryData[ptr]) ^ (i % 256);
+		ptr += unwrap(binaryData[ptr]) * (i + 1);
+		ptr %= binaryData.length;
+	}
 
-    const smolBuffer = new Uint8Array(8);
+	const smolBuffer = new Uint8Array(8);
 
-    for (let i = 0; i < smolBuffer.length; i++) {
-        smolBuffer[i] =
-            unwrap(smolBuffer[i]) ^ unwrap(binaryData[i % binaryData.length]);
-    }
+	for (let i = 0; i < smolBuffer.length; i++) {
+		smolBuffer[i] =
+			unwrap(smolBuffer[i]) ^ unwrap(binaryData[i % binaryData.length]);
+	}
 
-    let result = 0;
+	let result = 0;
 
-    for (const byte of smolBuffer) {
-        result *= 256;
-        result += byte;
-    }
+	for (const byte of smolBuffer) {
+		result *= 256;
+		result += byte;
+	}
 
-    return result;
+	return result;
 }

@@ -7,34 +7,36 @@ import { deepEquals } from "./deep-equals";
     well write tests to make sure it's not the function being schizo
 */
 describe("deep equals works", () => {
-    const samples = [
-        1,
-        "one",
-        Promise.resolve(123),
-        {
-            a: 123,
-            b: [1, 2, 3]
-        },
-        {
-            a: 123,
-            b: []
-        },
-        {
-            b: 123,
-            a: []
-        },
-        [],
-        [1],
-        [[]],
-        "A",
-        "a"
-    ]
+	const samples = [
+		1,
+		"one",
+		Promise.resolve(123),
+		{
+			a: 123,
+			b: [1, 2, 3],
+		},
+		{
+			a: 123,
+			b: [],
+		},
+		{
+			b: 123,
+			a: [],
+		},
+		[],
+		[1],
+		[[]],
+		"A",
+		"a",
+	];
 
-    for (let a = 0; a < samples.length; a++) {
-        for (let b = 0; b < samples.length; b++) {
-            test(`${a} vs ${b}`, () => {
-                expect(deepEquals(samples[a], samples[b])).toBe(Bun.deepEquals(samples[a], samples[b]))
-            })
-        }
-    }
-})
+	for (let a = 0; a < samples.length; a++) {
+		for (let b = 0; b < samples.length; b++) {
+			test(`${a} vs ${b}`, () => {
+				expect(deepEquals(samples[a], samples[b])).toBe(
+					Bun.deepEquals(samples[a], samples[b]),
+				);
+			});
+		}
+	}
+});
