@@ -1,5 +1,18 @@
 # @vortexjs/bun-example
 
+## 1.5.4
+
+### Patch Changes
+
+- 1f8e9da: Reformat
+- Updated dependencies [dee619e]
+- Updated dependencies [a3cda05]
+- Updated dependencies [1f8e9da]
+- Updated dependencies [dee619e]
+- Updated dependencies [adb9185]
+  - @vortexjs/core@2.5.0
+  - @vortexjs/dom@2.0.4
+
 ## 1.5.3
 
 ### Patch Changes

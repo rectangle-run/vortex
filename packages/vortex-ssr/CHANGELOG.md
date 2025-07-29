@@ -1,5 +1,24 @@
 # @vortexjs/dom
 
+## 0.0.4
+
+### Patch Changes
+
+- 1f8e9da: Reformat
+- Updated dependencies [f870d4f]
+- Updated dependencies [dee619e]
+- Updated dependencies [a3cda05]
+- Updated dependencies [0885d49]
+- Updated dependencies [1f8e9da]
+- Updated dependencies [936f5d6]
+- Updated dependencies [dee619e]
+- Updated dependencies [adb9185]
+- Updated dependencies [50075fb]
+- Updated dependencies [1f8e9da]
+  - @vortexjs/common@0.1.0
+  - @vortexjs/core@2.5.0
+  - @vortexjs/dom@2.0.4
+
 ## 0.0.3
 
 ### Patch Changes
