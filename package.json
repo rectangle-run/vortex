@@ -34,6 +34,7 @@
         "wdev": "turbo @vortexjs/example-wormhole#dev",
         "version": "changeset version",
         "dev": "turbo dev",
+        "test": "turbo test",
         "fmt": "bunx @biomejs/biome@2.0.6 check --write",
         "reset-builds": "rm -rf packages/*/dist .turbo"
     },
