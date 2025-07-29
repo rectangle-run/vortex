@@ -1,22 +1,22 @@
-// Bun Snapshot v1, https://goo.gl/fbAQLP
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`client output 1`] = `
 {
   "discoveries": [
     {
-      "exported": "$d_0",
+      "exported": "$d_85_499",
       "frameType": "page",
       "path": "/",
       "type": "route_frame",
     },
     {
-      "exported": "$d_1",
+      "exported": "$d_515_771",
       "frameType": "layout",
       "path": "/",
       "type": "route_frame",
     },
     {
-      "exported": "$d_2",
+      "exported": "$d_829_1050",
       "frameType": "page",
       "path": "/docs/[page]",
       "type": "route_frame",
@@ -26,7 +26,10 @@ exports[`client output 1`] = `
   "source": 
 "import route from "@vortexjs/wormhole/route";
 
-export const $d_0 = function () {
+null;
+null;
+
+export const $d_85_499 = function () {
 	return (<>
                     <h1 class="text-4xl font-bold">
                         Welcome to Wormhole, {Object.entries(globalThis).length}
@@ -38,7 +41,7 @@ export const $d_0 = function () {
                 </>);
 };
 
-export const $d_1 = function ({ children }) {
+export const $d_515_771 = function ({ children }) {
 	return (<>
                     <head>
                         <title>Wormhole Example</title>
@@ -47,7 +50,7 @@ export const $d_1 = function ({ children }) {
                 </>);
 };
 
-export const $d_2 = function ({ page }) {
+export const $d_829_1050 = function ({ page }) {
 	return (<>
                     <h1>Documentation for {page}</h1>
                     <p>This is the documentation page for {page}.</p>
@@ -64,11 +67,16 @@ exports[`client output 2`] = `
   "source": 
 "import { query } from "@vortexjs/wormhole/route";
 
-const a = $i_0({ schema: "abc", pathname: '/api/data', method: 'DELETE' });
+const a = $i_0({
+	schema: "abc",
+	endpoint: '/api/data',
+	method: 'GET',
+	isQuery: true
+});
 
 a();
 
-import { INTERNAL_client_query as $i_0 } from '@vortexjs/wormhole';"
+import { INTERNAL_client_api as $i_0 } from '@vortexjs/wormhole';"
 ,
 }
 `;

@@ -18,8 +18,7 @@
         "typescript": "catalog:"
     },
     "scripts": {
-        "build": "tsup ./src/index.ts --format esm --dts --out-dir dist",
-        "test": "bun test"
+        "build": "tsup ./src/index.ts --format esm --dts --out-dir dist"
     },
     "exports": {
         ".": {
