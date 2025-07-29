@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { unwrap } from "@vortexjs/common";
+import { SKL, unwrap } from "@vortexjs/common";
 import {
     getImmediateValue,
     type JSXNode,
@@ -23,6 +23,7 @@ import { build } from "./build";
 import { getLoadKey } from "./load-key";
 import { addTask } from "./tasks";
 import type { HTTPMethod } from "../shared/http-method";
+import type { StandardSchemaV1 } from "../shared/standard";
 
 export interface DevServer {
     readonly type: "DevServer";
@@ -31,7 +32,8 @@ export interface DevServer {
 
 interface APIDeclaration {
     endpoint: string;
-    loadKey: string;
+    implLoadKey: string;
+    schemaLoadKey: string;
     method: HTTPMethod;
 }
 
@@ -101,9 +103,34 @@ export async function developmentServer(state: State): Promise<DevServer> {
                         if (req.method !== api.method) continue;
                         if (api.endpoint !== route) continue;
 
-                        const impl = await load(api.loadKey) as (() => Promise<unknown>);
+                        const impl = await load(api.implLoadKey) as ((props: any) => Promise<unknown>) & { schema: StandardSchemaV1<any, any> };
 
-                        const result = await impl();
+                        const schema = await load(api.schemaLoadKey) as StandardSchemaV1<any, any>;
+
+                        let props = api.method === "GET" ?
+                            SKL.parse(unwrap(new URL(req.url).searchParams.get("props"))) : SKL.parse(await req.text());
+
+                        if (props === undefined || props === null) {
+                            props = {};
+                        }
+
+                        const valid = await schema["~standard"].validate(props);
+
+                        if (valid.issues) {
+                            return new Response(
+                                "Invalid data passed",
+                                {
+                                    status: 400,
+                                    headers: {
+                                        "Content-Type": "text/plain; charset=utf-8",
+                                    },
+                                }
+                            );
+                        }
+
+                        const result = await impl(props);
+
+                        return new Response(SKL.stringify(result));
                     }
 
                     let node: JSXNode;

@@ -19,7 +19,7 @@ export type APIFunction = <Input, Output>(
         impl(props: Input): Promise<Output> | Output;
         method?: HTTPMethod;
     }
-) => Promise<Output>;
+) => (inp: Input) => Promise<Output>;
 
 export type BaseProps<Path extends string> = ParsePath<Path>;
 

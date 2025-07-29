@@ -20,7 +20,10 @@ export type Discovery =
 	  }
 	| {
 			type: "api";
-			exported: string;
+			exported: {
+				impl: string;
+				schema: string;
+			};
 			endpoint: string;
 			method: string;
 	  };

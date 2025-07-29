@@ -366,7 +366,10 @@ export namespace SKL {
 	}
 
 	export function serializeContext_newline(context: SerializeContext): void {
-		if (context.minified) return;
+		if (context.minified) {
+			serializeContext_write(context, " ");
+			return;
+		}
 		serializeContext_write(context, "\n");
 		serializeContext_write(context, "    ".repeat(context.indentLevel));
 	}

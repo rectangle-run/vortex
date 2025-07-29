@@ -13,7 +13,7 @@ interface ClientAPIProps<Input, Output> extends BaseAPIProps<Input, Output> {
 }
 
 interface ServerAPIProps<Input, Output> extends BaseAPIProps<Input, Output> {
-    impl: () => ((inp: Input) => Promise<Output> | Output);
+    impl(inp: Input): Promise<Output> | Output;
 }
 
 export function INTERNAL_client_api<Input, Output>(props: ClientAPIProps<Input, Output>): (inp: Input) => Promise<Output> {
@@ -36,7 +36,7 @@ export function INTERNAL_client_api<Input, Output>(props: ClientAPIProps<Input, 
 
         const isGet = props.method === "GET";
 
-        const url = new URL(props.endpoint);
+        const url = new URL(props.endpoint, window.location.href);
 
         if (isGet) {
             url.searchParams.set(
@@ -50,14 +50,12 @@ export function INTERNAL_client_api<Input, Output>(props: ClientAPIProps<Input, 
             body: isGet ? null : SKL.stringify(cleanInput, { minified: true })
         })
 
-        return response as Output;
+        return SKL.parse(await response.text()) as Output;
     }
 }
 
 export function INTERNAL_server_api<Input, Output>(props: ServerAPIProps<Input, Output>): (inp: Input) => Promise<Output> {
     return async function (inp) {
-        const impl = props.impl();
-
-        return await impl(inp);
+        return await props.impl(inp);
     }
 }

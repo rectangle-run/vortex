@@ -52,24 +52,25 @@ export function handleAPIFunction(
 
     const props: Record<string, Expression> = {};
 
+    props.schema = schema;
+
     if (state.target === "server") {
-        const exportId = exportNode(state, impl);
-        props.impl = anonFunct({
-            arguments: [],
-            body: [
-                {
-                    type: "ReturnStatement",
-                    argument: identifier(exportId),
-                    ...defaultSpan
-                }
-            ]
-        });
+        const implExportId = exportNode(state, impl);
+        props.impl = identifier(implExportId);
+
+        const schemaExportId = exportNode(state, schema);
+
+        props.schema = identifier(schemaExportId);
+
         state.clientEligible = false;
         state.discoveries.push({
             type: "api",
             method,
             endpoint: pathname,
-            exported: exportId
+            exported: {
+                impl: implExportId,
+                schema: schemaExportId
+            }
         })
     }
 
@@ -77,7 +78,6 @@ export function handleAPIFunction(
         state.serverEligible = false;
     }
 
-    props.schema = schema;
     props.endpoint = literal(pathname);
     props.method = literal(method);
     props.isQuery = literal(specialImport === "query");

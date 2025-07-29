@@ -1,4 +1,4 @@
-import route, { mutation } from "@vortexjs/wormhole/route";
+import route, { mutation, query } from "@vortexjs/wormhole/route";
 import * as v from "valibot";
 
 route("/", {
@@ -12,6 +12,14 @@ route("/", {
                     This is an example app, go to the{" "}
                     <a href="/docs/tada">docs</a>
                 </p>
+                <button on:click={async () => {
+                    console.log(await add({
+                        a: 1,
+                        b: 2
+                    }))
+                }}>
+                    add
+                </button>
             </>
         );
     },
@@ -36,9 +44,12 @@ route("/docs/[page]", {
     },
 });
 
-export const hello = mutation("/api/hello", {
-    schema: v.string(),
-    impl(name) {
-        console.log(`Hello, ${name}!`);
+export const add = query("/api/add", {
+    schema: v.object({
+        a: v.number(),
+        b: v.number()
+    }),
+    impl({ a, b }) {
+        return a + b;
     }
 })

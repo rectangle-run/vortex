@@ -71,13 +71,20 @@ export async function buildPlatform(props: BuildProps): Promise<void> {
 
     traverseNode(props.routes);
 
-    for (const discovery of props.discoveries) {
-        if (discovery.type !== "api") continue;
+    if (props.target === "server") {
+        for (const discovery of props.discoveries) {
+            if (discovery.type !== "api") continue;
 
-        symbolExports.push({
-            filePath: discovery.filePath,
-            export: discovery.exported
-        })
+            symbolExports.push({
+                filePath: discovery.filePath,
+                export: discovery.exported.impl
+            })
+
+            symbolExports.push({
+                filePath: discovery.filePath,
+                export: discovery.exported.schema
+            })
+        }
     }
 
     const entrypoints: string[] = [];
@@ -91,7 +98,7 @@ export async function buildPlatform(props: BuildProps): Promise<void> {
 
         codegen += "const importCache = {};";
 
-        codegen += "async function load(key) {";
+        codegen += "export async function load(key) {";
 
         for (const { filePath, export: exportId } of symbolExports) {
             const key = getLoadKey({ filePath, exportId });
@@ -119,9 +126,13 @@ export async function buildPlatform(props: BuildProps): Promise<void> {
             codegen += "}";
 
             const apis = props.discoveries.filter(x => x.type === "api").map(x => ({
-                loadKey: getLoadKey({
+                implLoadKey: getLoadKey({
                     filePath: x.filePath,
-                    exportId: x.exported
+                    exportId: x.exported.impl
+                }),
+                schemaLoadKey: getLoadKey({
+                    filePath: x.filePath,
+                    exportId: x.exported.schema
                 }),
                 method: x.method,
                 endpoint: x.endpoint
