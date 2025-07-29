@@ -1,5 +1,19 @@
 # @vortexjs/common
 
+## 0.1.0
+
+### Minor Changes
+
+- f870d4f: SKL: Add `minified` option to SKL.stringify
+- 0885d49: Add new hasher
+- 50075fb: SKL: Add undefined support
+- 1f8e9da: Introduce description to unreachable state
+
+### Patch Changes
+
+- 1f8e9da: Reformat
+- 936f5d6: Decrease hash length from 32 -> 8, making it 64 bits instead of 256, which shouldn't matter, as this does not need a large number of bits, due to it being not security-critical. If you are using this in a security critical manner, don't. This hash has not been tested for security.
+
 ## 0.0.3
 
 ### Patch Changes
