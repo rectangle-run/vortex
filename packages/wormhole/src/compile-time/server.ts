@@ -107,8 +107,22 @@ export async function developmentServer(state: State): Promise<DevServer> {
 
                         const schema = await load(api.schemaLoadKey) as StandardSchemaV1<any, any>;
 
-                        let props = api.method === "GET" ?
-                            SKL.parse(unwrap(new URL(req.url).searchParams.get("props"))) : SKL.parse(await req.text());
+                        let props: any = undefined;
+
+                        try {
+                            api.method === "GET" ?
+                                SKL.parse(unwrap(new URL(req.url).searchParams.get("props"))) : SKL.parse(await req.text());
+                        } catch (e) {
+                            return new Response(
+                                "Invalid data passed (could not parse SKL)",
+                                {
+                                    status: 400,
+                                    headers: {
+                                        "Content-Type": "text/plain; charset=utf-8",
+                                    },
+                                }
+                            );
+                        }
 
                         if (props === undefined || props === null) {
                             props = {};
