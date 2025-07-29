@@ -1,0 +1,8 @@
+- `/dev` - The development world, everything to do with the dev server and stuff
+- `/build` - The folder for things related to building
+- `/local` - Common code that runs locally
+- `/client` - The code that runs on the client, and the client only
+- `/server` - The code that runs on the server, and the server only
+- `/runtime` - The code that can run on both the client and the server
+- `/shared` - The code that runs anywhere
+- `/virt` - Functions you call that get automagically replaced with compiler hints for Discovery

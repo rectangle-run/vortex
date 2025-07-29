@@ -17,13 +17,13 @@ import {
     type InputRoute,
     matchRoute,
     type RouterNode,
-} from "../shared/router";
+} from "~/build/router";
 import type { State } from "../state";
-import { build } from "./build";
-import { getLoadKey } from "./load-key";
-import { addTask } from "./tasks";
-import type { HTTPMethod } from "../shared/http-method";
-import type { StandardSchemaV1 } from "../shared/standard";
+import { build } from "~/build/build";
+import { getLoadKey } from "~/build/load-key";
+import { addTask } from "~/cli/statusboard";
+import type { HTTPMethod } from "~/shared/http-method";
+import type { StandardSchemaV1 } from "~/shared/standard";
 
 export interface DevServer {
     readonly type: "DevServer";
@@ -110,7 +110,7 @@ export async function developmentServer(state: State): Promise<DevServer> {
                         let props: any = undefined;
 
                         try {
-                            api.method === "GET" ?
+                            props = api.method === "GET" ?
                                 SKL.parse(unwrap(new URL(req.url).searchParams.get("props"))) : SKL.parse(await req.text());
                         } catch (e) {
                             return new Response(
@@ -124,15 +124,12 @@ export async function developmentServer(state: State): Promise<DevServer> {
                             );
                         }
 
-                        if (props === undefined || props === null) {
-                            props = {};
-                        }
-
                         const valid = await schema["~standard"].validate(props);
 
                         if (valid.issues) {
                             return new Response(
-                                "Invalid data passed",
+                                `Invalid data passed (did not match schema) (${valid.issues.map(x => x.message).join(", ")}
+                                ), your data was interpreted as ${JSON.stringify(props)}`,
                                 {
                                     status: 400,
                                     headers: {

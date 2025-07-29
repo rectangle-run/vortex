@@ -7,11 +7,11 @@ import {
     hashImports,
     type ImportNamed,
     type RouterNode,
-} from "../shared/router";
-import type { State } from "../state";
-import type { WormholeError } from "./errors";
-import { getLoadKey } from "./load-key";
-import { addTask } from "./tasks";
+} from "~/build/router";
+import type { State } from "~/state";
+import type { WormholeError } from "~/build/errors";
+import { getLoadKey } from "~/build/load-key";
+import { addTask } from "~/cli/statusboard";
 
 export interface BuildResult {
     clientBundle: string;

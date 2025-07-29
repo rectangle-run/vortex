@@ -6,8 +6,8 @@ import {
     useDerived,
 } from "@vortexjs/core";
 import { html, type JSX } from "@vortexjs/dom";
-import { type ImportHash, matchRoute, type RouterNode } from "../shared/router";
-import { initializeClientSideRouting, usePathname } from "./csr";
+import { type ImportHash, matchRoute, type RouterNode } from "~/build/router";
+import { initializeClientSideRouting, usePathname } from "~/runtime/csr";
 
 export interface ClientProps {
     load<T>(hashKey: string): Promise<T>;

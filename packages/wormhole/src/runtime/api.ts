@@ -1,6 +1,6 @@
 import { SKL } from "@vortexjs/common";
-import type { HTTPMethod } from "../shared/http-method";
-import type { StandardSchemaV1 } from "../shared/standard";
+import type { HTTPMethod } from "~/shared/http-method";
+import type { StandardSchemaV1 } from "~/shared/standard";
 
 interface BaseAPIProps<Input, Output> {
     schema: StandardSchemaV1<unknown, Input>;

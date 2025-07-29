@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 
 import { Lifetime } from "@vortexjs/core";
-import { informationBoard } from "./compile-time/infoboard";
-import { developmentServer } from "./compile-time/server";
-import { State } from "./state";
+import { statusBoard } from "~/cli/statusboard";
+import { developmentServer } from "~/dev/server";
+import { State } from "~/state";
 
 const projectDir = process.cwd();
 
@@ -14,4 +14,4 @@ const state = new State(projectDir, lt);
 await state.init();
 
 developmentServer(state);
-informationBoard(state);
+statusBoard(state);

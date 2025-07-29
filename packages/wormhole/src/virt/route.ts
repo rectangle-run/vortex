@@ -1,6 +1,6 @@
 import type { JSXChildren } from "@vortexjs/core";
-import type { StandardSchemaV1 } from "../shared/standard";
-import type { HTTPMethod } from "../shared/http-method";
+import type { StandardSchemaV1 } from "~/shared/standard";
+import type { HTTPMethod } from "~/shared/http-method";
 
 export type RouteFunction = <Path extends string>(
     path: Path,

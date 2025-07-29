@@ -2,7 +2,7 @@ import { exists } from "node:fs/promises";
 import { join } from "node:path";
 import type { DeepPartial } from "@vortexjs/common";
 import { type Lifetime, useEffect, useState } from "@vortexjs/core";
-import { useFile } from "./contents";
+import { useFile } from "~/local/contents";
 
 export type Config = DeepPartial<{
     dev: {

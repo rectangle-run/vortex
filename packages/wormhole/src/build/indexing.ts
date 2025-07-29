@@ -10,8 +10,8 @@ import {
     useState,
 } from "@vortexjs/core";
 import { checkForCues, type Discovery, discoveryCompile } from "@vortexjs/discovery";
-import { addTask } from "./tasks";
-import type { State } from "../state";
+import { addTask } from "~/cli/statusboard";
+import type { State } from "~/state";
 
 function checkPathValidity(path: string) {
     return !path.includes(".wormhole") && !path.includes("node_modules");

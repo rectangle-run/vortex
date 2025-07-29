@@ -9,11 +9,11 @@ import {
 	useDerived,
 	useState,
 } from "@vortexjs/core";
-import { getConfig } from "./compile-time/config";
-import { ErrorCollection, type WormholeError } from "./compile-time/errors";
-import { indexDirectory } from "./compile-time/indexing";
-import { paths } from "./compile-time/paths";
-import { developmentServer } from "./compile-time/server";
+import { ErrorCollection, type WormholeError } from "./build/errors";
+import { indexDirectory } from "./build/indexing";
+import { developmentServer } from "./dev/server";
+import { getConfig } from "./local/config";
+import { paths } from "./local/paths";
 
 export function service<T>(initializer: () => T) {
 	let instance: T | undefined;
