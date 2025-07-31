@@ -28,7 +28,7 @@ export function service<T>(initializer: () => T) {
 	};
 }
 
-export class State implements ErrorCollection {
+export class Project implements ErrorCollection {
 	constructor(
 		public projectDir: string,
 		public lt: Lifetime,

@@ -8,7 +8,7 @@ import {
 	type ImportNamed,
 	type RouterNode,
 } from "~/build/router";
-import type { State } from "~/state";
+import type { Project } from "~/state";
 import type { WormholeError } from "~/build/errors";
 import { getLoadKey } from "~/build/load-key";
 import { addTask } from "~/cli/statusboard";
@@ -22,7 +22,7 @@ export interface BuildResult {
 export interface BuildProps {
 	routes: RouterNode<ImportNamed>;
 	dev: boolean;
-	state: State;
+	state: Project;
 	target: "client" | "server";
 	discoveries: (Discovery & { filePath: string })[];
 }

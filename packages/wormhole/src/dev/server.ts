@@ -18,7 +18,7 @@ import {
 	matchRoute,
 	type RouterNode,
 } from "~/build/router";
-import type { State } from "../state";
+import type { Project } from "../state";
 import { build } from "~/build/build";
 import { getLoadKey } from "~/build/load-key";
 import { addTask } from "~/cli/statusboard";
@@ -37,7 +37,7 @@ interface APIDeclaration {
 	method: HTTPMethod;
 }
 
-export async function developmentServer(state: State): Promise<DevServer> {
+export async function developmentServer(state: Project): Promise<DevServer> {
 	const lt = state.lt;
 
 	using _hlt = Lifetime.changeHookLifetime(lt);

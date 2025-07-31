@@ -1,85 +1,85 @@
 import {
-    awaited,
-    flatten,
-    Lifetime,
-    useDerived,
-    useEffect,
+	awaited,
+	flatten,
+	Lifetime,
+	useDerived,
+	useEffect,
 } from "@vortexjs/core";
 import chalk from "chalk";
 import { createPrinter } from "~/cli/printer";
-import type { State } from "~/state";
+import type { Project } from "~/state";
 import { showErrors } from "~/build/errors";
 
-export function statusBoard(state: State) {
-    const lt = state.lt;
-    using _hlt = Lifetime.changeHookLifetime(lt);
+export function statusBoard(state: Project) {
+	const lt = state.lt;
+	using _hlt = Lifetime.changeHookLifetime(lt);
 
-    const lines = useDerived(async (get) => {
-        const printer = createPrinter();
+	const lines = useDerived(async (get) => {
+		const printer = createPrinter();
 
-        using _p = printer.indent();
+		using _p = printer.indent();
 
-        printer.gap();
-        printer.log(chalk.hex("#3b82f6")("wormhole"));
-        printer.gap();
+		printer.gap();
+		printer.log(chalk.hex("#3b82f6")("wormhole"));
+		printer.gap();
 
-        {
-            using _g = printer.group("Tasks");
-            const currentTasks = get(tasks);
+		{
+			using _g = printer.group("Tasks");
+			const currentTasks = get(tasks);
 
-            if (currentTasks.length === 0) {
-                printer.log("No tasks available.");
-            } else {
-                for (const task of currentTasks) {
-                    printer.log(`- ${task.name}`);
-                }
-            }
-        }
+			if (currentTasks.length === 0) {
+				printer.log("No tasks available.");
+			} else {
+				for (const task of currentTasks) {
+					printer.log(`- ${task.name}`);
+				}
+			}
+		}
 
-        const errors = get(state.errors);
+		const errors = get(state.errors);
 
-        if (errors.length > 0) {
-            using _g = printer.group(`${errors.length} Errors`);
+		if (errors.length > 0) {
+			using _g = printer.group(`${errors.length} Errors`);
 
-            await showErrors(state, printer);
-        }
+			await showErrors(state, printer);
+		}
 
-        return printer.lines;
-    });
+		return printer.lines;
+	});
 
-    const awaitedLines = flatten(useDerived((get) => awaited(get(lines))));
+	const awaitedLines = flatten(useDerived((get) => awaited(get(lines))));
 
-    useEffect((get) => {
-        const lines = get(awaitedLines);
+	useEffect((get) => {
+		const lines = get(awaitedLines);
 
-        if (!lines) return;
+		if (!lines) return;
 
-        //console.clear();
+		//console.clear();
 
-        for (const line of lines) {
-            console.log(line);
-        }
-    });
+		for (const line of lines) {
+			console.log(line);
+		}
+	});
 }
 
 import { getImmediateValue, type Store, useState } from "@vortexjs/core";
 
 export interface Task {
-    [Symbol.dispose]: () => void;
-    name: string;
+	[Symbol.dispose]: () => void;
+	name: string;
 }
 
 export const tasks: Store<Task[]> = useState([]);
 
 export function addTask(props: Omit<Task, typeof Symbol.dispose>): Task {
-    const task: Task = {
-        ...props,
-        [Symbol.dispose]: () => {
-            tasks.set(getImmediateValue(tasks).filter((t) => t !== task));
-        },
-    };
+	const task: Task = {
+		...props,
+		[Symbol.dispose]: () => {
+			tasks.set(getImmediateValue(tasks).filter((t) => t !== task));
+		},
+	};
 
-    tasks.set([...getImmediateValue(tasks), task]);
+	tasks.set([...getImmediateValue(tasks), task]);
 
-    return task;
+	return task;
 }

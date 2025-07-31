@@ -3,13 +3,13 @@
 import { Lifetime } from "@vortexjs/core";
 import { statusBoard } from "~/cli/statusboard";
 import { developmentServer } from "~/dev/server";
-import { State } from "~/state";
+import { Project } from "~/state";
 
 const projectDir = process.cwd();
 
 const lt = new Lifetime();
 
-const state = new State(projectDir, lt);
+const state = new Project(projectDir, lt);
 
 await state.init();
 
