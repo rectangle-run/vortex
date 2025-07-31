@@ -1,6 +1,6 @@
 import { type Brand, unwrap } from "@vortexjs/common";
 import { getLoadKey } from "~/build/load-key";
-import { createMessageError, type UpdatableErrorCollection, type WormholeError } from "./errors";
+import { MessageError, type UpdatableErrorCollection, type WormholeError } from "./errors";
 
 // Parsing
 export type ParsedRoute = RouteSegment[];
@@ -70,7 +70,7 @@ function makeBlankNode(source: string): RouterNode<any> {
 	}
 }
 
-export function generateRouterTree({ routes, errors }: {
+export function RouterNode({ routes, errors }: {
 	routes: InputRoute[];
 	errors: UpdatableErrorCollection;
 }) {
@@ -96,7 +96,7 @@ export function generateRouterTree({ routes, errors }: {
 				} else {
 					if (currentNode.arrayEpsilon) {
 						errorList.push(
-							createMessageError(
+							MessageError(
 								`When I was trying to add the route '${route.path}', I ran into a problem.`,
 								`The slug segment '[${segment.name}]' conflicts with a spread segment defined by '${currentNode.fallbackTransition.node.sourcePath}'`
 							),
@@ -113,7 +113,7 @@ export function generateRouterTree({ routes, errors }: {
 				} else {
 					if (!currentNode.arrayEpsilon) {
 						errorList.push(
-							createMessageError(
+							MessageError(
 								`When I was trying to add the route '${route.path}', I ran into a problem.`,
 								`The spread segment '[...${segment.name}]' conflicts with a slug segment defined by '${currentNode.fallbackTransition.node.sourcePath}'`
 							),
@@ -128,7 +128,7 @@ export function generateRouterTree({ routes, errors }: {
 		if (route.frameType === "page") {
 			if (currentNode.page) {
 				errorList.push(
-					createMessageError(
+					MessageError(
 						`There are multiple different definitions of '${route.path}' with conflicting pages. Each path can only have one page.`,
 					),
 				);
@@ -138,7 +138,7 @@ export function generateRouterTree({ routes, errors }: {
 		} else if (route.frameType === "layout") {
 			if (currentNode.layout) {
 				errorList.push(
-					createMessageError(
+					MessageError(
 						`There are multiple different definitions of '${route.path}' with conflicting layouts. Each path can only have one layout.`,
 					),
 				);

@@ -10,7 +10,7 @@ import {
 	useState,
 } from "@vortexjs/core";
 import { ErrorCollection, type WormholeError } from "./build/errors";
-import { indexDirectory } from "./build/indexing";
+import { Indexer } from "./build/indexing";
 import { developmentServer } from "./dev/server";
 import { getConfig } from "./local/config";
 import { paths } from "./local/paths";
@@ -71,7 +71,7 @@ export class Project implements ErrorCollection {
 	}
 
 	server = service(() => developmentServer(this));
-	index = service(() => indexDirectory(this));
+	index = service(() => Indexer(this));
 	config = service(() => getConfig(this.lt, this.projectDir));
 
 	buildErrors = ErrorCollection.updatable();

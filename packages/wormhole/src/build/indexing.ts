@@ -21,11 +21,11 @@ export type TaggedDiscovery = Discovery & {
 	filePath: string;
 };
 
-export interface Index {
+export interface Indexer {
 	discoveries: Signal<TaggedDiscovery[]>;
 }
 
-export function indexDirectory(state: Project): Index {
+export function Indexer(state: Project): Indexer {
 	using _hlt = Lifetime.changeHookLifetime(state.lt);
 
 	const fileDiscoveries: Store<Record<string, TaggedDiscovery[]>> = useState(

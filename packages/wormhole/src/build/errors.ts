@@ -38,7 +38,7 @@ export interface UpdatableErrorCollection extends ErrorCollection {
 	update(errors: WormholeError[]): void;
 }
 
-export function createMessageError(
+export function MessageError(
 	...markup: string[]
 ): MessageError {
 	return {
