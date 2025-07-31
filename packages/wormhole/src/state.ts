@@ -46,6 +46,7 @@ export class State implements ErrorCollection {
 			this.lt,
 		);
 		this.addErrorCollection(this.buildErrors);
+		this.addErrorCollection(this.routingErrors);
 		this.cache = baseCache();
 	}
 
@@ -74,5 +75,6 @@ export class State implements ErrorCollection {
 	config = service(() => getConfig(this.lt, this.projectDir));
 
 	buildErrors = ErrorCollection.updatable();
+	routingErrors = ErrorCollection.updatable();
 	paths: ReturnType<typeof paths>;
 }

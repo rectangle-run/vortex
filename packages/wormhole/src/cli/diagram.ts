@@ -225,7 +225,7 @@ export interface DiagramProps {
 	}[];
 }
 
-const colors = {
+export const colors = {
 	error: "#f87171",
 	info: "#3b82f6",
 };
@@ -295,9 +295,9 @@ export function diagram(props: DiagramProps): string {
 				for (const pos of diagnosticPositions) {
 					if (
 						pos.x <
-							diagnostic.message.length +
-								diagnostic.offsetInLine +
-								2 &&
+						diagnostic.message.length +
+						diagnostic.offsetInLine +
+						2 &&
 						pos.y === y
 					) {
 						collides = true;
