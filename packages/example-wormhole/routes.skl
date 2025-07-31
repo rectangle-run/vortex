@@ -1,0 +1,57 @@
+[
+    (
+        type = "api"
+        impl = (
+            name = "$d_949_982"
+            file = "D:\\Programming\\vortex\\packages\\example-wormhole\\src\\features\\home\\index.tsx"
+        )
+        schema = (
+            name = "$d_891_941"
+            file = "D:\\Programming\\vortex\\packages\\example-wormhole\\src\\features\\home\\index.tsx"
+        )
+        matcher = [
+            (
+                type = "static"
+                match = "api"
+            )
+            (
+                type = "static"
+                match = "add"
+            )
+        ]
+    )
+    (
+        type = "route"
+        matcher = [
+        ]
+        frames = [
+            (
+                name = "$d_120_508"
+                file = "D:\\Programming\\vortex\\packages\\example-wormhole\\src\\features\\home\\index.tsx"
+            )
+        ]
+    )
+    (
+        type = "route"
+        matcher = [
+            (
+                type = "static"
+                match = "docs"
+            )
+            (
+                type = "spread"
+                name = "page"
+            )
+        ]
+        frames = [
+            (
+                name = "$d_518_624"
+                file = "D:\\Programming\\vortex\\packages\\example-wormhole\\src\\features\\home\\index.tsx"
+            )
+            (
+                name = "$d_667_832"
+                file = "D:\\Programming\\vortex\\packages\\example-wormhole\\src\\features\\home\\index.tsx"
+            )
+        ]
+    )
+]

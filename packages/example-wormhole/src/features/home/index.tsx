@@ -33,17 +33,6 @@ route("/", {
 	},
 });
 
-route("/docs/[page]", {
-	page({ page }) {
-		return (
-			<>
-				<h1>Documentation for {page}</h1>
-				<p>This is the documentation page for {page}.</p>
-			</>
-		);
-	},
-});
-
 route("/docs/[...page]", {
 	page({ page }) {
 		return (

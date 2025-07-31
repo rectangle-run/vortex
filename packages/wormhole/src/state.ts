@@ -11,7 +11,6 @@ import {
 } from "@vortexjs/core";
 import { ErrorCollection, type WormholeError } from "./build/errors";
 import { Indexer } from "./build/indexing";
-import { developmentServer } from "./dev/server";
 import { getConfig } from "./local/config";
 import { paths } from "./local/paths";
 
@@ -54,8 +53,6 @@ export class Project implements ErrorCollection {
 		this.cache = await filesystemCache(
 			join(this.paths.wormhole.cache.path, "rebuild-cache.skl"),
 		);
-
-		console.log(`when initing cache, ${this.cache.entries.length} entries`);
 	}
 
 	cache: Cache;
@@ -70,7 +67,6 @@ export class Project implements ErrorCollection {
 		);
 	}
 
-	server = service(() => developmentServer(this));
 	index = service(() => Indexer(this));
 	config = service(() => getConfig(this.lt, this.projectDir));
 

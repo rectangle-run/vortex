@@ -23,6 +23,7 @@ export type TaggedDiscovery = Discovery & {
 
 export interface Indexer {
 	discoveries: Signal<TaggedDiscovery[]>;
+	firstIndex: Promise<void>;
 }
 
 export function Indexer(state: Project): Indexer {
@@ -71,6 +72,7 @@ export function Indexer(state: Project): Indexer {
 		});
 
 		const entries = await readdir(dir);
+		const promises: Promise<void>[] = [];
 
 		for (const entry of entries) {
 			const fullPath = join(dir, entry);
@@ -81,16 +83,16 @@ export function Indexer(state: Project): Indexer {
 			}
 
 			if (stat.isDirectory()) {
-				firstPassIndex(fullPath); // await intentionally omitted to allow parallel indexing
+				promises.push(firstPassIndex(fullPath)); // await intentionally omitted to allow parallel indexing
 			}
 
 			if (stat.isFile()) {
-				revalidate(fullPath);
+				promises.push(revalidate(fullPath));
 			}
 		}
-	}
 
-	firstPassIndex();
+		await Promise.all(promises);
+	}
 
 	const discoveries = useDerived((get) => {
 		const fl = get(fileDiscoveries);
@@ -126,5 +128,6 @@ export function Indexer(state: Project): Indexer {
 
 	return {
 		discoveries,
+		firstIndex: firstPassIndex()
 	};
 }
