@@ -1,6 +1,6 @@
 import type { Export } from "~/local/export";
 import type { RoutePath } from "./router";
-import { Build_analyze } from "./build.analysis";
+import { Build_analyze } from "./build_analysis";
 import type { Project } from "~/state";
 import { pippin, type PippinPlugin } from "@vortexjs/pippin";
 import { getImmediateValue } from "@vortexjs/core";
