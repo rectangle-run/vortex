@@ -1,9 +1,9 @@
 import { join } from "node:path";
 import { baseCache, type Cache, filesystemCache } from "@vortexjs/cache";
-import { unwrap, type DeepPartial } from "@vortexjs/common";
+import { type DeepPartial, unwrap } from "@vortexjs/common";
 import {
 	getImmediateValue,
-	Lifetime,
+	type Lifetime,
 	type Signal,
 	type Store,
 	useDerived,
@@ -11,9 +11,8 @@ import {
 } from "@vortexjs/core";
 import { ErrorCollection, type WormholeError } from "./build/errors";
 import { Indexer } from "./build/indexing";
-import { getConfig, type Config } from "./local/config";
+import { type Config, getConfig } from "./local/config";
 import { paths } from "./local/paths";
-import { awaited, flatten } from "@vortexjs/core";
 
 export function service<T>(initializer: () => T) {
 	let instance: T | undefined;

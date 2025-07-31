@@ -47,8 +47,6 @@ export async function Build_analyze(this: Build) {
 		path: [],
 		layouts: [],
 	});
-
-	await Bun.write("./routes.skl", SKL.stringify(this.routes));
 }
 
 function flattenNode(
