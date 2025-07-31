@@ -1,9 +1,9 @@
 import { join } from "node:path";
 import { baseCache, type Cache, filesystemCache } from "@vortexjs/cache";
-import { unwrap } from "@vortexjs/common";
+import { unwrap, type DeepPartial } from "@vortexjs/common";
 import {
 	getImmediateValue,
-	type Lifetime,
+	Lifetime,
 	type Signal,
 	type Store,
 	useDerived,
@@ -11,8 +11,9 @@ import {
 } from "@vortexjs/core";
 import { ErrorCollection, type WormholeError } from "./build/errors";
 import { Indexer } from "./build/indexing";
-import { getConfig } from "./local/config";
+import { getConfig, type Config } from "./local/config";
 import { paths } from "./local/paths";
+import { awaited, flatten } from "@vortexjs/core";
 
 export function service<T>(initializer: () => T) {
 	let instance: T | undefined;
@@ -53,6 +54,7 @@ export class Project implements ErrorCollection {
 		this.cache = await filesystemCache(
 			join(this.paths.wormhole.cache.path, "rebuild-cache.skl"),
 		);
+		this.config = await getConfig(this.lt, this.projectDir);
 	}
 
 	cache: Cache;
@@ -68,7 +70,7 @@ export class Project implements ErrorCollection {
 	}
 
 	index = service(() => Indexer(this));
-	config = service(() => getConfig(this.lt, this.projectDir));
+	config = undefined as unknown as Signal<DeepPartial<Config>>;
 
 	buildErrors = ErrorCollection.updatable();
 	routingErrors = ErrorCollection.updatable();
