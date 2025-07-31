@@ -41,6 +41,7 @@ export function createPrinter() {
 			this.log(
 				styled ? chalk.hex("#34d399").bold(`# ${heading}`) : heading,
 			);
+			this.gap();
 
 			return this.indent();
 		},
