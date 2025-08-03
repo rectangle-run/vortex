@@ -1,3 +1,2 @@
-export * from "~/client/entrypoint.client";
-export * from "~/server/entrypoint.server";
+export * from "~/runtime/entrypoint";
 export * from "~/runtime/api";

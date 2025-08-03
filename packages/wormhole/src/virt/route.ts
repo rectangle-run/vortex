@@ -46,7 +46,7 @@ const routeFn = ((_path, _params) => {
 export default routeFn;
 export const route = routeFn;
 
-const apiFn = ((props) => {
+const apiFn = ((_props) => {
     throw new Error(
         "You somehow managed to call query/mutation without it being eliminated by the compiler. I don't know how you would fix this, the compiler is deeply ingrained in wormhole.",
     );

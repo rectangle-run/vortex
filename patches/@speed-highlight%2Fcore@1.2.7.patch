@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 108264e996339c01a95c34ae0ff3b4c1f1f63a0a..b967321d59f4c8d5049132c688551d1076384421 100644
+--- a/package.json
++++ b/package.json
+@@ -86,5 +86,6 @@
+       ]
+     }
+   },
+-  "type": "module"
++  "type": "module",
++  "sideEffects": false
+ }

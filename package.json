@@ -47,5 +47,8 @@
         "@biomejs/biome",
         "esbuild"
     ],
-    "packageManager": "bun@1.2.15"
+    "packageManager": "bun@1.2.15",
+    "patchedDependencies": {
+        "@speed-highlight/core@1.2.7": "patches/@speed-highlight%2Fcore@1.2.7.patch"
+    }
 }
