@@ -1,16 +1,19 @@
 import type { EntrypointProps } from "~/runtime";
 import type { Build, BuildAdapter, TargetLocation } from "../build";
 import type { Export } from "~/local/export";
-import type { BunFile } from "bun";
+import { pathToFileURL, type BunFile } from "bun";
 import { addTask } from "~/cli/statusboard";
+import { join } from "node:path";
 
 export interface DevAdapterResult {
     clientEntry: string;
     serverEntry: string;
+    cssEntry: string;
 }
 
 export interface DevAdapter extends BuildAdapter<DevAdapterResult> {
     buildForLocation(build: Build, server: TargetLocation): Promise<string>;
+    buildCSS(build: Build): Promise<string>;
 }
 
 export function DevAdapter(): DevAdapter {
@@ -98,13 +101,36 @@ export function DevAdapter(): DevAdapter {
 
             return bundled.outputs.main;
         },
+        async buildCSS(build: Build) {
+            let codegenCSS = "";
+
+            const appCSSPath = join(build.project.projectDir, "src", "app.css");
+
+            if (await Bun.file(appCSSPath).exists()) {
+                codegenCSS += `@import "${appCSSPath}";`;
+            }
+
+            const cssPath = await build.writeCodegenned("styles", codegenCSS, "css");
+
+            const bundled = await build.bundle({
+                target: "client",
+                inputPaths: {
+                    main: cssPath,
+                },
+                dev: true
+            });
+
+            return bundled.outputs.main;
+        },
         async run(build) {
             const clientEntry = this.buildForLocation(build, "client");
             const serverEntry = this.buildForLocation(build, "server");
+            const cssEntry = this.buildCSS(build);
 
             return {
                 clientEntry: await clientEntry,
                 serverEntry: await serverEntry,
+                cssEntry: await cssEntry,
             }
         }
     };

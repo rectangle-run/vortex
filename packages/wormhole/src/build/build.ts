@@ -57,8 +57,9 @@ export class Build<AdapterOutput = any> {
     async writeCodegenned(
         name: string,
         content: string,
+        ext = "tsx"
     ): Promise<string> {
-        const path = join(this.workingPath, `${name}.tsx`);
+        const path = join(this.workingPath, `${name}.${ext}`);
 
         await Bun.write(path, content);
 
@@ -96,7 +97,7 @@ export class Build<AdapterOutput = any> {
             target: target === "server" ? "bun" : "browser",
             sourcemap: dev ? "inline" : "none",
             naming: {
-                entry: "[name].js",
+                entry: "[name].[ext]",
             },
             minify: !dev,
         });
