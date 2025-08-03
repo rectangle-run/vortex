@@ -27,7 +27,7 @@ export function tinyIds_new() {
     };
 }
 
-export const tinyIds = tinyIds_new();
+export const tinyIds = /* @__PURE__ */ tinyIds_new();
 
 export interface ImportedRichText {
     text: RichText;
@@ -63,10 +63,8 @@ function pipe(...dirs: ("up" | "down" | "left" | "right")[]) {
     return charset[index] ?? " ";
 }
 
-const NO_SYNTAX_HIGHLIGHT = process.env.NO_SYNTAX_HIGHLIGHT === "true";
-
 export async function importRichText(text: string): Promise<ImportedRichText> {
-    if (NO_SYNTAX_HIGHLIGHT) {
+    if (process.env.NO_SYNTAX_HIGHLIGHT === "true") {
         const lines: RichText = [];
         const logicalLocations: string[] = [];
 

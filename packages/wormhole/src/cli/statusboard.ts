@@ -10,7 +10,7 @@ import { createPrinter } from "~/cli/printer";
 import type { Project } from "~/state";
 import { showErrors } from "~/build/errors";
 
-export function statusBoard(state: Project) {
+export function StatusBoard(state: Project) {
     const lt = state.lt;
     using _hlt = Lifetime.changeHookLifetime(lt);
 

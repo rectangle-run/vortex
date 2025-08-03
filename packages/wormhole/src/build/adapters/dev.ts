@@ -73,10 +73,16 @@ export function DevAdapter(): DevAdapter {
 				props: ${JSON.stringify(entrypointProps)},
 				loaders,
 				renderer,
-				root
+				root,
+				pathname: props.pathname
 			});`;
 
             codegenSource += `}`;
+
+            if (location === "client") {
+                codegenSource += `window.wormhole = {};`;
+                codegenSource += `window.wormhole.hydrate = main;`;
+            }
 
             const filename = `entrypoint-${location}`;
 
@@ -87,7 +93,7 @@ export function DevAdapter(): DevAdapter {
                 inputPaths: {
                     main: path,
                 },
-                dev: false
+                dev: true
             })
 
             return bundled.outputs.main;

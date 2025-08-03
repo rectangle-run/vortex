@@ -98,7 +98,6 @@ export class Build<AdapterOutput = any> {
             naming: {
                 entry: "[name].js",
             },
-            external: ["@speed-highlight/core"],
             minify: !dev,
         });
 
@@ -106,11 +105,13 @@ export class Build<AdapterOutput = any> {
 
         for (const [id, entry] of Object.entries(inputPaths)) {
             const name = basename(entry as string);
-            const nameWithoutExt = name.replace(/\.[^/.]+$/, "");
-            const path = join(this.outputPath, nameWithoutExt + ".js");
+            const fileName = name.slice(0, name.lastIndexOf("."));
+            const path = join(this.outputPath, fileName + ".js");
 
             results[id as Files] = path;
         }
+
+        console.log(results);
 
         return {
             outputs: results

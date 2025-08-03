@@ -1,86 +1,90 @@
 import { unwrap } from "@vortexjs/common";
 import {
-	awaited,
-	flatten,
-	type JSXNode,
-	Lifetime,
-	render,
-	type Renderer,
-	useDerived,
-	useState,
+    awaited,
+    flatten,
+    type JSXNode,
+    Lifetime,
+    render,
+    type Renderer,
+    useDerived,
+    useState,
 } from "@vortexjs/core";
 import { matchPath, type RoutePath } from "~/build/router";
 import { initializeClientSideRouting, usePathname } from "~/runtime/csr";
 
 export interface EntrypointImport {
-	index: number;
+    index: number;
 }
 
 export interface EntrypointRoute {
-	matcher: RoutePath;
-	frames: EntrypointImport[];
+    matcher: RoutePath;
+    frames: EntrypointImport[];
 }
 
 export interface EntrypointProps {
-	routes: EntrypointRoute[];
+    routes: EntrypointRoute[];
 }
 
 export function INTERNAL_entrypoint<Root>({
-	props,
-	loaders,
-	renderer,
-	root,
-	pathname: pathnameToUse
+    props,
+    loaders,
+    renderer,
+    root,
+    pathname: pathnameToUse,
+    lifetime = new Lifetime(),
 }: {
-	props: EntrypointProps, loaders: (() => Promise<any>)[], renderer: Renderer<Root, any>, root: Root, pathname?: string
+    props: EntrypointProps, loaders: (() => Promise<any>)[], renderer: Renderer<Root, any>, root: Root, pathname?: string,
+    lifetime?: Lifetime
 }) {
-	if ("location" in globalThis) {
-		initializeClientSideRouting();
-	}
+    using _hlt = Lifetime.changeHookLifetime(lifetime);
 
-	const pathname = pathnameToUse ? useState(pathnameToUse) : usePathname();
-	const route = useDerived((get) => {
-		const path = get(pathname);
-		return props.routes.find((r) => matchPath(r.matcher, path));
-	});
-	const framesPromise = useDerived(async (get) => {
-		const rot = unwrap(get(route));
-		const frames = [];
+    if ("location" in globalThis) {
+        initializeClientSideRouting();
+    }
 
-		for (const frame of rot.frames) {
-			frames.push(await unwrap(loaders[frame.index])());
-		}
+    const pathname = pathnameToUse ? useState(pathnameToUse) : usePathname();
+    const route = useDerived((get) => {
+        const path = get(pathname);
+        return props.routes.find((r) => matchPath(r.matcher, path));
+    });
+    const framesPromise = useDerived(async (get) => {
+        const rot = unwrap(get(route));
+        const frames = [];
 
-		return frames;
-	});
-	const frames = flatten(useDerived((get) => {
-		return awaited(get(framesPromise))
-	}));
-	const hierarchy = useDerived((get) => {
-		let node = <></>;
+        for (const frame of rot.frames) {
+            frames.push(await unwrap(loaders[frame.index])());
+        }
 
-		const framesResolved = get(frames);
+        return frames;
+    });
+    const frames = flatten(useDerived((get) => {
+        return awaited(get(framesPromise))
+    }));
+    const hierarchy = useDerived((get) => {
+        let node = <></>;
 
-		if (!framesResolved) {
-			return <h1>loading</h1>
-		}
+        const framesResolved = get(frames);
 
-		for (const Frame of framesResolved.toReversed()) {
-			node = <Frame>
-				{node}
-			</Frame>
-		}
+        if (!framesResolved) {
+            return <h1>loading</h1>
+        }
 
-		return node;
-	})
+        for (const Frame of framesResolved.toReversed()) {
+            node = <Frame>
+                {node}
+            </Frame>
+        }
 
-	render(renderer, root, <html>
-		<head>
-			<link rel="stylesheet" href="/styles.css" />
-			<script src="/client.js" type="module"></script>
-		</head>
-		<body>
-			{hierarchy}
-		</body>
-	</html>);
+        return node;
+    })
+
+    render(renderer, root, <html>
+        <head>
+            <link rel="stylesheet" href="/styles.css" />
+            <script src="/entrypoint-client.js" type="module"></script>
+        </head>
+        <body>
+            {hierarchy}
+        </body>
+    </html>);
 }

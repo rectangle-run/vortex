@@ -1,10 +1,9 @@
 #!/usr/bin/env bun
 
 import { Lifetime } from "@vortexjs/core";
-import { statusBoard } from "~/cli/statusboard";
+import { StatusBoard } from "~/cli/statusboard";
 import { Project } from "~/state";
-import { DevAdapter } from "./build/adapters/dev";
-import { Build } from "./build/build";
+import { DevServer } from "./dev/dev-server";
 
 const projectDir = process.cwd();
 
@@ -14,8 +13,6 @@ const state = new Project(projectDir, lt);
 
 await state.init();
 
-const build = new Build(state, DevAdapter());
+DevServer(state);
 
-statusBoard(state);
-
-console.log(await build.run());
+StatusBoard(state);
