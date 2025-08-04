@@ -12,28 +12,30 @@ export class Reconciler<RendererNode, HydrationContext> {
 		private root: RendererNode,
 	) { }
 
-	render(
+	render({ node, hydration, lt, context }: {
 		node: JSXNode,
 		hydration: HydrationContext | undefined,
 		lt: Lifetime,
 		context: ContextScope,
-	): FLNode<RendererNode> {
+	}): FLNode<RendererNode> {
 		if (node === undefined || node === null) {
 			return new FLFragment<RendererNode>();
 		}
 
 		if (Array.isArray(node)) {
 			return this.render({
-				type: "fragment",
-				children: node
-			}, hydration, lt, context);
+				node: {
+					type: "fragment",
+					children: node
+				}, hydration, lt, context
+			});
 		}
 
 		switch (node.type) {
 			case "fragment": {
 				const frag = new FLFragment<RendererNode>();
 				frag.children = node.children.map((child) =>
-					this.render(child, hydration, lt, context),
+					this.render({ node: child, hydration, lt, context }),
 				);
 				return frag;
 			}
@@ -56,7 +58,7 @@ export class Reconciler<RendererNode, HydrationContext> {
 				);
 
 				element.children = node.children.map((child) =>
-					this.render(child, elmHydration, lt, context),
+					this.render({ node: child, hydration: elmHydration, lt, context }),
 				);
 
 				for (const [name, value] of Object.entries(node.attributes)) {
@@ -113,19 +115,19 @@ export class Reconciler<RendererNode, HydrationContext> {
 
 				const result = node.impl(node.props);
 
-				return this.render(result, hydration, lt, context);
+				return this.render({ node: result, hydration, lt, context });
 			}
 			case "dynamic": {
 				const swapContainer = new FLFragment<RendererNode>();
 
 				effect(
 					(get, { lifetime }) => {
-						const newRender = this.render(
-							get(node.value),
+						const newRender = this.render({
+							node: get(node.value),
 							hydration,
-							lifetime,
+							lt: lifetime,
 							context,
-						);
+						});
 
 						swapContainer.children = [newRender];
 					},
@@ -173,12 +175,12 @@ export class Reconciler<RendererNode, HydrationContext> {
 							using _hl =
 								Lifetime.changeHookLifetime(itemLifetime);
 
-							const renderedItem = this.render(
-								node.renderItem(item, newKeys.indexOf(key)),
+							const renderedItem = this.render({
+								node: node.renderItem(item, newKeys.indexOf(key)),
 								hydration,
-								itemLifetime,
+								lt: itemLifetime,
 								context,
-							);
+							});
 
 							renderMap.set(key, {
 								node: renderedItem,
@@ -206,7 +208,9 @@ export class Reconciler<RendererNode, HydrationContext> {
 
 				forked.addContext(node.id, node.value);
 
-				return this.render(node.children, hydration, lt, forked);
+				return this.render({
+					node: node.children, hydration, lt, context: forked
+				});
 			}
 			default: {
 				unreachable(

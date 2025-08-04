@@ -42,12 +42,12 @@ function internalRender<RendererNode, HydrationContext>({ renderer, root, compon
 	const reconciler = new Reconciler(renderer, root);
 	const lt = new Lifetime();
 
-	const flNode = reconciler.render(
-		component,
-		renderer.getHydrationContext(root),
+	const flNode = reconciler.render({
+		node: component,
+		hydration: renderer.getHydrationContext(root),
 		lt,
-		ContextScope.current ?? new ContextScope(),
-	);
+		context: ContextScope.current ?? new ContextScope(),
+	});
 
 	const portal = new FLPortal(root, renderer);
 
