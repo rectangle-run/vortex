@@ -85,6 +85,45 @@ export function DevAdapter(): DevAdapter {
 
 			codegenSource += `}`;
 
+			if (location === "server") {
+				codegenSource += `import {INTERNAL_tryHandleAPI} from "@vortexjs/wormhole";`
+				codegenSource += `export async function tryHandleAPI(request) {`;
+
+				const apiIndicies: Export[] = [];
+
+				const apiRoutes = build.routes.filter(x => x.type === "api");
+
+				const getApiExportIndex = (exp: Export): number => {
+					const index = apiIndicies.findIndex(x => x.file === exp.file && x.name === exp.name);
+					if (index === -1) {
+						apiIndicies.push(exp);
+						return apiIndicies.length - 1;
+					}
+					return index;
+				}
+
+				codegenSource += `const apis = ${JSON.stringify(apiRoutes.map(x => ({
+					matcher: x.matcher,
+					impl: getApiExportIndex(x.impl),
+					schema: getApiExportIndex(x.schema),
+					method: x.method,
+				})))};`;
+
+				codegenSource += `return INTERNAL_tryHandleAPI(request, apis, [`;
+
+				for (const exp of apiIndicies) {
+					const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
+
+					const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
+
+					codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
+				}
+
+				codegenSource += `]);`;
+
+				codegenSource += `}`;
+			}
+
 			if (location === "client") {
 				codegenSource += `window.wormhole = {};`;
 				codegenSource += `window.wormhole.hydrate = main;`;

@@ -3,6 +3,7 @@ import type { Build } from "./build";
 import { parseRoute, RouterNode, type RoutePath } from "./router";
 import type { Export } from "~/local/export";
 import { SKL } from "@vortexjs/common";
+import type { HTTPMethod } from "~/shared/http-method";
 
 export async function Build_analyze(this: Build) {
 	await this.project.index.instance.firstIndex;
@@ -22,6 +23,7 @@ export async function Build_analyze(this: Build) {
 				file: discovery.filePath,
 			},
 			matcher: parseRoute(discovery.endpoint),
+			method: discovery.method as HTTPMethod,
 		})
 	}
 

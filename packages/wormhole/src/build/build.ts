@@ -8,6 +8,7 @@ import pippinPluginTailwind from "@vortexjs/pippin-plugin-tailwind";
 import { pippinPluginDiscovery } from "@vortexjs/discovery";
 import { basename, join } from "node:path";
 import { rm, rmdir } from "node:fs/promises";
+import type { HTTPMethod } from "~/shared/http-method";
 
 export interface BuildBaseRoute<Type extends string> {
 	type: Type;
@@ -17,6 +18,7 @@ export interface BuildBaseRoute<Type extends string> {
 export interface BuildAPIRoute extends BuildBaseRoute<"api"> {
 	impl: Export;
 	schema: Export;
+	method: HTTPMethod;
 }
 
 export interface BuildPageRoute extends BuildBaseRoute<"route"> {

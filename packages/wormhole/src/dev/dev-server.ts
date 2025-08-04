@@ -69,10 +69,22 @@ interface ServerEntrypoint {
 		context: ContextScope,
 		lifetime: Lifetime
 	}): void;
+	tryHandleAPI(request: Request): Promise<Response | undefined>;
 }
 
 async function DevServer_processRequest(this: DevServer, request: Request): Promise<Response> {
+	const built = await this.buildResult;
+
+	const serverPath = built.serverEntry;
+	const serverEntrypoint = (await import(serverPath)) as ServerEntrypoint;
+
 	// Priority 1: API routes
+	const apiResponse = await serverEntrypoint.tryHandleAPI(request);
+
+	if (apiResponse !== undefined && apiResponse !== null) {
+		return apiResponse;
+	}
+
 	// Priority 2: Static files
 	const outputPath = this.project.paths.wormhole.buildBox.output.path;
 	const filePath = join(outputPath, new URL(request.url).pathname);
@@ -82,11 +94,6 @@ async function DevServer_processRequest(this: DevServer, request: Request): Prom
 	}
 
 	// Priority 3: SSR
-	const built = await this.buildResult;
-
-	const serverPath = built.serverEntry;
-	const serverEntrypoint = (await import(serverPath)) as ServerEntrypoint;
-
 	const root = createHTMLRoot();
 	const renderer = ssr();
 
