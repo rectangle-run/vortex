@@ -34,9 +34,10 @@ export interface RenderProps<RendererNode, HydrationContext> {
 	renderer: Renderer<RendererNode, HydrationContext>,
 	root: RendererNode,
 	component: JSXNode,
+	context?: ContextScope,
 };
 
-function internalRender<RendererNode, HydrationContext>({ renderer, root, component }: RenderProps<RendererNode, HydrationContext>): Lifetime {
+function internalRender<RendererNode, HydrationContext>({ renderer, root, component, context }: RenderProps<RendererNode, HydrationContext>): Lifetime {
 	using _trace = trace("Initial page render");
 
 	const reconciler = new Reconciler(renderer, root);
@@ -46,7 +47,7 @@ function internalRender<RendererNode, HydrationContext>({ renderer, root, compon
 		node: component,
 		hydration: renderer.getHydrationContext(root),
 		lt,
-		context: ContextScope.current ?? new ContextScope(),
+		context: context ?? ContextScope.current ?? new ContextScope(),
 	});
 
 	const portal = new FLPortal(root, renderer);

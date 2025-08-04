@@ -65,11 +65,16 @@ export class Reconciler<RendererNode, HydrationContext> {
 					value
 						.subscribe((next) => {
 							element.setAttribute(name, next);
+							context.streaming.updated();
 						})
 						.cascadesFrom(lt);
 				}
 
 				for (const [name, value] of Object.entries(node.bindings)) {
+					value.subscribe(() => {
+						context.streaming.updated();
+					}).cascadesFrom(lt);
+
 					this.renderer
 						.bindValue(unwrap(element.rendererNode), name, value)
 						.cascadesFrom(lt);
@@ -90,6 +95,7 @@ export class Reconciler<RendererNode, HydrationContext> {
 				for (const [name, value] of Object.entries(node.styles)) {
 					value
 						.subscribe((next) => {
+							context.streaming.updated();
 							this.renderer.setStyle(
 								unwrap(element.rendererNode),
 								name,
@@ -122,6 +128,8 @@ export class Reconciler<RendererNode, HydrationContext> {
 
 				effect(
 					(get, { lifetime }) => {
+						context.streaming.updated();
+
 						const newRender = this.render({
 							node: get(node.value),
 							hydration,
@@ -154,6 +162,8 @@ export class Reconciler<RendererNode, HydrationContext> {
 				let lastKeyOrder = "";
 
 				effect((get) => {
+					context.streaming.updated();
+
 					const items = get(node.items);
 					const newKeys = items.map((item, idx) =>
 						node.getKey(item, idx),

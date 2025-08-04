@@ -32,8 +32,62 @@ export function createContext<T>(name = "Unnamed"): Context<T> {
 	return result;
 }
 
+export class StreamingContext {
+	private updateCallbackImmediate = 0;
+	private updateCallbacks = new Set<() => void>();
+	private loadingCounter = 0;
+	private onDoneLoadingCallback = () => {};
+	onDoneLoading: Promise<void>;
+
+	constructor() {
+		this.onDoneLoading = new Promise((resolve) => {
+			this.onDoneLoadingCallback = resolve;
+		});
+	}
+
+	onUpdate(callback: () => void): () => void {
+		this.updateCallbacks.add(callback);
+
+		return () => {
+			this.updateCallbacks.delete(callback);
+		};
+	}
+
+	markLoading() {
+		const self = this;
+
+		this.loadingCounter++;
+
+		return {
+			[Symbol.dispose]() {
+				self.updated();
+				self.loadingCounter--;
+			},
+		};
+	}
+
+	updated() {
+		if (this.updateCallbackImmediate) {
+			return;
+		}
+
+		this.updateCallbackImmediate = setImmediate(() => {
+			this.updateCallbackImmediate = 0;
+
+			for (const callback of this.updateCallbacks) {
+				callback();
+			}
+
+			if (this.loadingCounter === 0) {
+				this.onDoneLoadingCallback();
+			}
+		}) as unknown as number;
+	}
+}
+
 export class ContextScope {
 	contexts: Record<string, Signal<any>> = {};
+	streaming: StreamingContext = new StreamingContext();
 
 	fork() {
 		const newScope = new ContextScope();
@@ -68,4 +122,8 @@ export function useContextScope(): ContextScope {
 		);
 	}
 	return scope;
+}
+
+export function useStreaming(): StreamingContext {
+	return useContextScope().streaming;
 }

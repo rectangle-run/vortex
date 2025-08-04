@@ -1,9 +1,12 @@
+import { useStreaming } from "../context";
 import { type Signal, useState } from "../signal";
 
 export function awaited<T>(value: Promise<T>): Signal<T | undefined> {
 	const result = useState<T | undefined>(undefined);
+	const streaming = useStreaming();
 
 	async function fetchValue() {
+		using _loading = streaming.markLoading();
 		result.set(await value);
 	}
 
