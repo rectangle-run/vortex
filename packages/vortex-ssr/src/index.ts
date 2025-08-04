@@ -19,6 +19,28 @@ export interface VText {
 
 export type VNode = VElement | VText;
 
+function documentBadQuerySelector(
+	document: VNode,
+	tagName: string
+): VElement[] {
+	const result: VElement[] = [];
+
+	function traverse(node: VNode) {
+		if ("tagName" in node) {
+			if (node.tagName === tagName) {
+				result.push(node);
+			}
+			for (const child of node.children) {
+				traverse(child);
+			}
+		}
+	}
+
+	traverse(document);
+
+	return result;
+}
+
 function getIdent(node: VNode, codegen: CodegenStream): string {
 	if (codegen.nodeToQuickIdent.get(node)) {
 		return unwrap(codegen.nodeToQuickIdent.get(node));
@@ -36,6 +58,13 @@ function getIdent(node: VNode, codegen: CodegenStream): string {
 
 	if ("tagName" in node && node.tagName === "head") {
 		ident = "document.head";
+	}
+
+	if (!ident && "tagName" in node) {
+		// Find the index that this node would be in a fake document.querySelector
+		const index = documentBadQuerySelector(codegen.document, node.tagName).indexOf(node);
+
+		ident ??= `document[${codegen.getIndexerShorthand("querySelectorAll")}](${codegen.getIndexerShorthand(node.tagName)})[${index}]`;
 	}
 
 	if (!ident) {
@@ -79,9 +108,10 @@ export type CodegenStream = {
 	getFreshIdent(): string;
 	getIndexerShorthand(indexer: string): string;
 	nodeToQuickIdent: Map<VNode, string>;
+	document: VElement;
 };
 
-export function createCodegenStream(): CodegenStream {
+export function createCodegenStream(document: VElement): CodegenStream {
 	let code = "";
 	let identCounter = 0;
 	const indexerShorthands: Record<string, string> = {};
@@ -106,6 +136,7 @@ export function createCodegenStream(): CodegenStream {
 			return indexerShorthands[indexer];
 		},
 		nodeToQuickIdent: new Map<VNode, string>(),
+		document,
 	};
 }
 
@@ -165,7 +196,7 @@ export function printHTML(node: VNode, printer = createHTMLPrinter()): string {
 	return printer.html;
 }
 
-export function diffInto(from: VNode, to: VNode, codegen: CodegenStream) {
+export function diffInto(from: VNode, to: VNode, codegen: CodegenStream = createCodegenStream(from as VElement)) {
 	if ("tagName" in from && "tagName" in to) {
 		// Safety check to ensure both nodes are of the same type
 		if (getType(from) !== getType(to)) {
@@ -292,6 +323,8 @@ export function diffInto(from: VNode, to: VNode, codegen: CodegenStream) {
 			`Cannot diff nodes of different types: ${getType(from)} vs ${getType(to)}`,
 		);
 	}
+
+	return codegen;
 }
 
 function camelCaseToKebabCase(name: string): string {

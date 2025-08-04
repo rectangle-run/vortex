@@ -119,15 +119,13 @@ async function DevServer_processRequest(this: DevServer, request: Request): Prom
 	let currentSnapshot = structuredClone(root);
 
 	context.streaming.onUpdate(() => {
-		const codegen = createCodegenStream();
-
-		diffInto(currentSnapshot, root, codegen);
+		const codegen = diffInto(currentSnapshot, root);
 
 		const code = codegen.getCode();
 
 		currentSnapshot = structuredClone(root);
 
-		writer.write(`<script w>document.querySelectorAll("script[w]").forEach(it => it.remove());${code}</script>`);
+		writer.write(`<script>${code}</script>`);
 	});
 
 	await context.streaming.onDoneLoading;
