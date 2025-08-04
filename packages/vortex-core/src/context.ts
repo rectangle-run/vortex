@@ -36,7 +36,7 @@ export class StreamingContext {
 	private updateCallbackImmediate = 0;
 	private updateCallbacks = new Set<() => void>();
 	private loadingCounter = 0;
-	private onDoneLoadingCallback = () => { };
+	private onDoneLoadingCallback = () => {};
 	onDoneLoading: Promise<void>;
 
 	constructor() {

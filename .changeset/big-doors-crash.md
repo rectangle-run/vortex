@@ -1,0 +1,5 @@
+---
+"@vortexjs/ssr": patch
+---
+
+Bugfixes

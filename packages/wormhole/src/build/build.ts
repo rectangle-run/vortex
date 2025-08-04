@@ -10,25 +10,25 @@ import { basename, join } from "node:path";
 import { rm, rmdir } from "node:fs/promises";
 
 export interface BuildBaseRoute<Type extends string> {
-    type: Type;
-    matcher: RoutePath;
+	type: Type;
+	matcher: RoutePath;
 }
 
 export interface BuildAPIRoute extends BuildBaseRoute<"api"> {
-    impl: Export;
-    schema: Export;
+	impl: Export;
+	schema: Export;
 }
 
 export interface BuildPageRoute extends BuildBaseRoute<"route"> {
-    frames: Export[];
+	frames: Export[];
 }
 
 export type BuildRoute = BuildAPIRoute | BuildPageRoute;
 
 export interface BuildAdapter<AdapterOutput> {
-    run(
-        build: Build<AdapterOutput>,
-    ): Promise<AdapterOutput>;
+	run(
+		build: Build<AdapterOutput>,
+	): Promise<AdapterOutput>;
 }
 
 export type TargetLocation = "client" | "server";
@@ -45,85 +45,83 @@ export type TargetLocation = "client" | "server";
  * 3. Pass the adapter data back up
  */
 export class Build<AdapterOutput = any> {
-    routes: BuildRoute[] = [];
-    outputPath: string;
-    workingPath: string;
+	routes: BuildRoute[] = [];
+	outputPath: string;
+	workingPath: string;
 
-    constructor(public project: Project, public adapter: BuildAdapter<AdapterOutput>) {
-        this.outputPath = this.project.paths.wormhole.buildBox.output.path;
-        this.workingPath = this.project.paths.wormhole.buildBox.codegenned.path;
-    }
+	constructor(public project: Project, public adapter: BuildAdapter<AdapterOutput>) {
+		this.outputPath = this.project.paths.wormhole.buildBox.output.path;
+		this.workingPath = this.project.paths.wormhole.buildBox.codegenned.path;
+	}
 
-    async writeCodegenned(
-        name: string,
-        content: string,
-        ext = "tsx"
-    ): Promise<string> {
-        const path = join(this.workingPath, `${name}.${ext}`);
+	async writeCodegenned(
+		name: string,
+		content: string,
+		ext = "tsx"
+	): Promise<string> {
+		const path = join(this.workingPath, `${name}.${ext}`);
 
-        await Bun.write(path, content);
+		await Bun.write(path, content);
 
-        return path;
-    }
+		return path;
+	}
 
-    analyze = Build_analyze;
+	analyze = Build_analyze;
 
-    async bundle<Files extends string>(
-        { inputPaths, target, dev = false }: {
-            inputPaths: Record<Files, string>,
-            target: TargetLocation;
-            dev?: boolean;
-        }
-    ): Promise<{
-        outputs: Record<Files, string>;
-    }> {
-        const entrypoints = Object.values<string>(inputPaths);
-        const p = pippin();
+	async bundle<Files extends string>(
+		{ inputPaths, target, dev = false }: {
+			inputPaths: Record<Files, string>,
+			target: TargetLocation;
+			dev?: boolean;
+		}
+	): Promise<{
+		outputs: Record<Files, string>;
+	}> {
+		const entrypoints = Object.values<string>(inputPaths);
+		const p = pippin();
 
-        // Check for tailwind
-        if (getImmediateValue(this.project.config).tailwind?.enabled) {
-            p.add(pippinPluginTailwind());
-        }
+		// Check for tailwind
+		if (getImmediateValue(this.project.config).tailwind?.enabled) {
+			p.add(pippinPluginTailwind());
+		}
 
-        p.add(pippinPluginDiscovery({
-            target
-        }));
+		p.add(pippinPluginDiscovery({
+			target
+		}));
 
-        const build = await Bun.build({
-            plugins: [p],
-            splitting: true,
-            entrypoints,
-            outdir: this.outputPath,
-            target: target === "server" ? "bun" : "browser",
-            sourcemap: dev ? "inline" : "none",
-            naming: {
-                entry: "[name].[ext]",
-            },
-            minify: !dev,
-        });
+		const build = await Bun.build({
+			plugins: [p],
+			splitting: true,
+			entrypoints,
+			outdir: this.outputPath,
+			target: target === "server" ? "bun" : "browser",
+			sourcemap: dev ? "inline" : "none",
+			naming: {
+				entry: "[name].[ext]",
+			},
+			minify: !dev,
+		});
 
-        const results: Record<Files, string> = {} as any;
+		const results: Record<Files, string> = {} as any;
 
-        for (const [id, entry] of Object.entries(inputPaths)) {
-            const name = basename(entry as string);
-            const fileName = name.slice(0, name.lastIndexOf("."));
-            const path = join(this.outputPath, fileName + ".js");
+		for (const [id, entry] of Object.entries(inputPaths)) {
+			const name = basename(entry as string);
+			const fileName = name.slice(0, name.lastIndexOf("."));
+			const path = join(this.outputPath, fileName + ".js");
 
-            results[id as Files] = path;
-        }
+			results[id as Files] = path;
+		}
 
-        console.log(results);
+		return {
+			outputs: results
+		};
+	}
 
-        return {
-            outputs: results
-        };
-    }
-
-    async run() {
-        try {
-            await rmdir(this.project.paths.wormhole.buildBox.path, { recursive: true });
-        } catch { }
-        await this.analyze();
-        return await this.adapter.run(this);
-    }
+	async run() {
+		try {
+			await rmdir(this.project.paths.wormhole.buildBox.path, { recursive: true });
+		} catch { }
+		await this.analyze();
+		return await this.adapter.run(this);
+	}
 }

@@ -30,6 +30,14 @@ function getIdent(node: VNode, codegen: CodegenStream): string {
 		ident ??= node.fixedIdent;
 	}
 
+	if ("tagName" in node && node.tagName === "body") {
+		ident = "document.body";
+	}
+
+	if ("tagName" in node && node.tagName === "head") {
+		ident = "document.head";
+	}
+
 	if (!ident) {
 		if (!node.parent) {
 			throw new Error("Node has no parent, cannot generate ident");
@@ -180,7 +188,7 @@ export function diffInto(from: VNode, to: VNode, codegen: CodegenStream) {
 			while (fromCount < toCount) {
 				if (category === "Text") {
 					codegen.write(
-						`document[${codegen.getIndexerShorthand("createTextNode")}]("");`,
+						`${getIdent(from, codegen)}[${codegen.getIndexerShorthand("appendChild")}](document[${codegen.getIndexerShorthand("createTextNode")}](""));`,
 					);
 					from.children.push({ content: "", parent: from } as VText);
 				} else {
