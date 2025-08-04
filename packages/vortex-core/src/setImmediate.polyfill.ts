@@ -1,15 +1,7 @@
-export function setImmediate(callback: (...args: any[]) => void, ...args: any[]): number {
-	if ("setImmediate" in globalThis) return setImmediate(callback, ...args) as number;
+export const setImmediate: typeof globalThis.setImmediate = globalThis.setImmediate ?? ((callback: (...args: any[]) => void, ...args: any[]): number => {
 	return setTimeout(callback, 0, ...args) as unknown as number;
-}
+});
 
-export function clearImmediate(
-	instance: number
-) {
-	if ("clearImmediate" in globalThis) {
-		clearImmediate(instance);
-		return;
-	}
-
+export const clearImmediate: typeof globalThis.clearImmediate = globalThis.clearImmediate ?? ((instance: number) => {
 	clearTimeout(instance);
-}
+});

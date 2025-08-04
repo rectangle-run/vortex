@@ -1,7 +1,7 @@
 import { unwrap } from "@vortexjs/common";
 import type { JSXNode } from "./jsx/jsx-common";
 import { type Signal, type SignalOrValue, toSignal } from "./signal";
-import { setImmediate } from "./setImmediate.polyfill";
+import { clearImmediate, setImmediate } from "./setImmediate.polyfill";
 
 export interface Context<T> {
 	(props: { value: SignalOrValue<T>; children: JSXNode }): JSXNode;
@@ -61,26 +61,29 @@ export class StreamingContext {
 
 		return {
 			[Symbol.dispose]() {
-				self.updated();
 				self.loadingCounter--;
+				self.updated();
 			},
 		};
 	}
 
 	updated() {
 		if (this.updateCallbackImmediate) {
-			return;
+			clearImmediate(this.updateCallbackImmediate);
 		}
 
-		this.updateCallbackImmediate = setImmediate(() => {
-			this.updateCallbackImmediate = 0;
+		// biome-ignore lint/complexity/noUselessThisAlias: without it, shit breaks
+		const self = this;
 
-			for (const callback of this.updateCallbacks) {
+		this.updateCallbackImmediate = setImmediate(() => {
+			self.updateCallbackImmediate = 0;
+
+			for (const callback of self.updateCallbacks) {
 				callback();
 			}
 
-			if (this.loadingCounter === 0) {
-				this.onDoneLoadingCallback();
+			if (self.loadingCounter === 0) {
+				self.onDoneLoadingCallback();
 			}
 		}) as unknown as number;
 	}
