@@ -241,11 +241,13 @@ class Reconciler<RendererNode, HydrationContext> {
     }
 }
 
-export function render<RendererNode, HydrationContext>(
+export interface RenderProps<RendererNode, HydrationContext> {
     renderer: Renderer<RendererNode, HydrationContext>,
     root: RendererNode,
     component: JSXNode,
-): Lifetime {
+};
+
+function internalRender<RendererNode, HydrationContext>({ renderer, root, component }: RenderProps<RendererNode, HydrationContext>): Lifetime {
     using _trace = trace("Initial page render");
 
     const reconciler = new Reconciler(renderer, root);
@@ -263,4 +265,24 @@ export function render<RendererNode, HydrationContext>(
     portal.children = [flNode];
 
     return lt;
+}
+
+export function render<RendererNode, HydrationContext>(
+    renderer: Renderer<RendererNode, HydrationContext>,
+    root: RendererNode,
+    component: JSXNode,
+): Lifetime;
+export function render<RendererNode, HydrationContext>(props: RenderProps<RendererNode, HydrationContext>): Lifetime;
+export function render<RendererNode, HydrationContext>(
+    propsOrRenderer: Renderer<RendererNode, HydrationContext> | RenderProps<RendererNode, HydrationContext>, root?: RendererNode, component?: JSXNode
+) {
+    if ("renderer" in propsOrRenderer) {
+        return internalRender(propsOrRenderer);
+    } else {
+        return internalRender({
+            renderer: propsOrRenderer,
+            root,
+            component,
+        });
+    }
 }
