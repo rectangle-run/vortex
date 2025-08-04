@@ -36,7 +36,7 @@ export class StreamingContext {
 	private updateCallbackImmediate = 0;
 	private updateCallbacks = new Set<() => void>();
 	private loadingCounter = 0;
-	private onDoneLoadingCallback = () => {};
+	private onDoneLoadingCallback = () => { };
 	onDoneLoading: Promise<void>;
 
 	constructor() {
@@ -126,4 +126,20 @@ export function useContextScope(): ContextScope {
 
 export function useStreaming(): StreamingContext {
 	return useContextScope().streaming;
+}
+
+export function useOptionalContextScope(): ContextScope | null {
+	const scope = ContextScope.current;
+	if (!scope) {
+		return null;
+	}
+	return scope;
+}
+
+export function useOptionalStreaming(): StreamingContext | null {
+	const scope = useOptionalContextScope();
+	if (!scope) {
+		return null;
+	}
+	return scope.streaming;
 }
