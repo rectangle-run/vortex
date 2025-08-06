@@ -221,4 +221,4 @@ function RefExample() {
 
 ## License
 
-This project is open source to everybody except fascists. See the [LICENSE](LICENSE) file for details.
+This project is open source. See the [LICENSE](LICENSE) file for details.
