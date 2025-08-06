@@ -1,5 +1,17 @@
 # @vortexjs/dom
 
+## 0.0.5
+
+### Patch Changes
+
+- 8f071be: Bugfixes
+- Updated dependencies [8f071be]
+- Updated dependencies [cf5c406]
+- Updated dependencies [0536d4b]
+- Updated dependencies [3d35737]
+  - @vortexjs/core@2.6.0
+  - @vortexjs/dom@2.0.5
+
 ## 0.0.4
 
 ### Patch Changes
