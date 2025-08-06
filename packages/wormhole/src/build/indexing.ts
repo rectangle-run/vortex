@@ -23,7 +23,7 @@ export type TaggedDiscovery = Discovery & {
 
 export interface Indexer {
 	discoveries: Signal<TaggedDiscovery[]>;
-	firstIndex: Promise<void>;
+	ready: Promise<void>;
 }
 
 export function Indexer(state: Project): Indexer {
@@ -105,19 +105,26 @@ export function Indexer(state: Project): Indexer {
 		return result;
 	});
 
-	const watcher = watch(state.projectDir, {
+	const watcher = watch(join(state.projectDir, "src"), {
 		recursive: true,
+		persistent: true
 	});
 
+	const readyPromises: Promise<void>[] = [];
+
 	watcher.on("change", async (_eventType, fileName) => {
-		const absFileName = resolve(state.projectDir, fileName.toString());
+		const absFileName = resolve(state.projectDir, "src", fileName.toString());
 
 		if (
 			checkPathValidity(absFileName) &&
 			(await exists(absFileName)) &&
 			(await Bun.file(absFileName).stat()).isFile()
 		) {
-			revalidate(absFileName);
+			const p = revalidate(absFileName);
+			p.then(() => {
+				readyPromises.splice(readyPromises.indexOf(p), 1);
+			})
+			readyPromises.push(p);
 		} else {
 			fileDiscoveries.set({
 				...getImmediateValue(fileDiscoveries),
@@ -126,8 +133,14 @@ export function Indexer(state: Project): Indexer {
 		}
 	});
 
+	readyPromises.push(firstPassIndex());
+
+	state.lt.onClosed(() => { watcher.close(); })
+
 	return {
 		discoveries,
-		firstIndex: firstPassIndex()
+		get ready() {
+			return Promise.all(readyPromises).then(() => void 0);
+		}
 	};
 }

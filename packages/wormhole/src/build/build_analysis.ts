@@ -6,7 +6,7 @@ import { SKL } from "@vortexjs/common";
 import type { HTTPMethod } from "~/shared/http-method";
 
 export async function Build_analyze(this: Build) {
-	await this.project.index.instance.firstIndex;
+	await this.project.index.instance.ready;
 
 	// P1 Routes: API routes
 	const apiDiscoveries = getImmediateValue(this.project.index.instance.discoveries).filter(x => x.type === "api");

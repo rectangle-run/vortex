@@ -5,6 +5,7 @@ import { DevAdapter, type DevAdapterResult } from "~/build/adapters/dev";
 import { Build } from "~/build/build";
 import { addTask } from "~/cli/statusboard";
 import { join } from "node:path";
+import { watch } from "node:fs";
 
 export interface DevServer {
 	lifetime: Lifetime;
@@ -53,12 +54,30 @@ export function DevServer(project: Project): DevServer {
 
 	self.rebuild();
 
+	// Watch sourcedir
+	const watcher = watch(join(project.projectDir, "src"), { recursive: true });
+
+	let isWaitingForRebuild = false;
+
+	watcher.on("change", async (eventType, filename) => {
+		if (isWaitingForRebuild) return;
+		isWaitingForRebuild = true;
+		await self.buildResult;
+		isWaitingForRebuild = false;
+		self.rebuild();
+	});
+
+	project.lt.onClosed(() => {
+		watcher.close();
+	});
+
 	return self;
 }
 
 async function DevServer_rebuild(this: DevServer): Promise<void> {
 	const build = new Build(this.project, DevAdapter());
 	this.buildResult = build.run();
+	await this.buildResult;
 }
 
 interface ServerEntrypoint {
@@ -76,7 +95,7 @@ async function DevServer_processRequest(this: DevServer, request: Request): Prom
 	const built = await this.buildResult;
 
 	const serverPath = built.serverEntry;
-	const serverEntrypoint = (await import(serverPath)) as ServerEntrypoint;
+	const serverEntrypoint = (await import(serverPath + `?v=${Date.now()}`)) as ServerEntrypoint;
 
 	// Priority 1: API routes
 	const apiResponse = await serverEntrypoint.tryHandleAPI(request);
@@ -86,8 +105,7 @@ async function DevServer_processRequest(this: DevServer, request: Request): Prom
 	}
 
 	// Priority 2: Static files
-	const outputPath = this.project.paths.wormhole.buildBox.output.path;
-	const filePath = join(outputPath, new URL(request.url).pathname);
+	const filePath = join(built.outdir, new URL(request.url).pathname);
 
 	if (await Bun.file(filePath).exists()) {
 		return new Response(Bun.file(filePath));

@@ -9,6 +9,7 @@ export interface DevAdapterResult {
 	clientEntry: string;
 	serverEntry: string;
 	cssEntry: string;
+	outdir: string;
 }
 
 export interface DevAdapter extends BuildAdapter<DevAdapterResult> {
@@ -173,6 +174,7 @@ export function DevAdapter(): DevAdapter {
 				clientEntry: await clientEntry,
 				serverEntry: await serverEntry,
 				cssEntry: await cssEntry,
+				outdir: build.outputPath
 			}
 		}
 	};

@@ -6,7 +6,7 @@ import { pippin, type PippinPlugin } from "@vortexjs/pippin";
 import { getImmediateValue } from "@vortexjs/core";
 import pippinPluginTailwind from "@vortexjs/pippin-plugin-tailwind";
 import { pippinPluginDiscovery } from "@vortexjs/discovery";
-import { basename, join } from "node:path";
+import { basename, extname, join } from "node:path";
 import { rm, rmdir } from "node:fs/promises";
 import type { HTTPMethod } from "~/shared/http-method";
 
@@ -52,8 +52,9 @@ export class Build<AdapterOutput = any> {
 	workingPath: string;
 
 	constructor(public project: Project, public adapter: BuildAdapter<AdapterOutput>) {
-		this.outputPath = this.project.paths.wormhole.buildBox.output.path;
-		this.workingPath = this.project.paths.wormhole.buildBox.codegenned.path;
+		const bb = this.project.paths.wormhole.buildBox(crypto.randomUUID());
+		this.outputPath = bb.output.path;
+		this.workingPath = bb.codegenned.path;
 	}
 
 	async writeCodegenned(
@@ -120,9 +121,7 @@ export class Build<AdapterOutput = any> {
 	}
 
 	async run() {
-		try {
-			await rmdir(this.project.paths.wormhole.buildBox.path, { recursive: true });
-		} catch { }
+		await this.project.index.instance.ready;
 		await this.analyze();
 		return await this.adapter.run(this);
 	}

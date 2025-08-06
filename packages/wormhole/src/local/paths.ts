@@ -3,20 +3,23 @@ import { join } from "node:path";
 export function paths(root: string) {
 	const wormholeFolder = join(root, ".wormhole");
 	const wormholeCache = join(wormholeFolder, "cache");
-	const buildBox = join(wormholeFolder, "build-box");
 
 	return {
 		root,
 		wormhole: {
 			path: wormholeFolder,
-			buildBox: {
-				path: buildBox,
-				output: {
-					path: join(buildBox, "output"),
-				},
-				codegenned: {
-					path: join(buildBox, "codegenned"),
-				},
+			buildBox(id: string) {
+				const buildBox = join(wormholeFolder, "build-box", /*id*/);
+
+				return {
+					path: buildBox,
+					output: {
+						path: join(buildBox, "output"),
+					},
+					codegenned: {
+						path: join(buildBox, "codegenned"),
+					},
+				}
 			},
 			cache: {
 				path: wormholeCache,
