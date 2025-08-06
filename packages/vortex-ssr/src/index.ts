@@ -26,6 +26,7 @@ function documentBadQuerySelector(
 	const result: VElement[] = [];
 
 	function traverse(node: VNode) {
+		if (!node) return;
 		if ("tagName" in node) {
 			if (node.tagName === tagName) {
 				result.push(node);
