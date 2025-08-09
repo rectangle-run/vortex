@@ -1,7 +1,7 @@
 import { unwrap } from "@vortexjs/common";
 import type { JSXNode } from "./jsx/jsx-common";
-import { type Signal, type SignalOrValue, toSignal } from "./signal";
 import { clearImmediate, setImmediate } from "./setImmediate.polyfill";
+import { type Signal, type SignalOrValue, toSignal } from "./signal";
 
 export interface Context<T> {
 	(props: { value: SignalOrValue<T>; children: JSXNode }): JSXNode;
@@ -37,7 +37,7 @@ export class StreamingContext {
 	private updateCallbackImmediate = 0;
 	private updateCallbacks = new Set<() => void>();
 	private loadingCounter = 0;
-	private onDoneLoadingCallback = () => { };
+	private onDoneLoadingCallback = () => {};
 	onDoneLoading: Promise<void>;
 
 	constructor() {
