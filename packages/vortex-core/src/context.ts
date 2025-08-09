@@ -4,146 +4,151 @@ import { clearImmediate, setImmediate } from "./setImmediate.polyfill";
 import { type Signal, type SignalOrValue, toSignal } from "./signal";
 
 export interface Context<T> {
-	(props: { value: SignalOrValue<T>; children: JSXNode }): JSXNode;
-	use(): Signal<T>;
+    (props: { value: SignalOrValue<T>; children: JSXNode }): JSXNode;
+    use(): Signal<T>;
+    useOptional(): Signal<T> | undefined;
 }
 
 export function createContext<T>(name = "Unnamed"): Context<T> {
-	const id = crypto.randomUUID();
+    const id = crypto.randomUUID();
 
-	const result = (props: {
-		value: SignalOrValue<T>;
-		children: JSXNode;
-	}): JSXNode => {
-		return {
-			type: "context",
-			id,
-			value: toSignal(props.value),
-			children: props.children,
-		};
-	};
+    const result = (props: {
+        value: SignalOrValue<T>;
+        children: JSXNode;
+    }): JSXNode => {
+        return {
+            type: "context",
+            id,
+            value: toSignal(props.value),
+            children: props.children,
+        };
+    };
 
-	result.use = () => {
-		return unwrap(
-			useContextScope().contexts[id],
-			`Context "${name}" not found, you may have forgotten to wrap your component in the context provider.`,
-		);
-	};
+    result.use = () => {
+        return unwrap(
+            useContextScope().contexts[id],
+            `Context "${name}" not found, you may have forgotten to wrap your component in the context provider.`,
+        );
+    };
 
-	return result;
+    result.useOptional = () => {
+        return useContextScope().contexts[id];
+    }
+
+    return result;
 }
 
 export class StreamingContext {
-	private updateCallbackImmediate = 0;
-	private updateCallbacks = new Set<() => void>();
-	private loadingCounter = 0;
-	private onDoneLoadingCallback = () => {};
-	onDoneLoading: Promise<void>;
+    private updateCallbackImmediate = 0;
+    private updateCallbacks = new Set<() => void>();
+    private loadingCounter = 0;
+    private onDoneLoadingCallback = () => { };
+    onDoneLoading: Promise<void>;
 
-	constructor() {
-		this.onDoneLoading = new Promise((resolve) => {
-			this.onDoneLoadingCallback = resolve;
-		});
-	}
+    constructor() {
+        this.onDoneLoading = new Promise((resolve) => {
+            this.onDoneLoadingCallback = resolve;
+        });
+    }
 
-	onUpdate(callback: () => void): () => void {
-		this.updateCallbacks.add(callback);
+    onUpdate(callback: () => void): () => void {
+        this.updateCallbacks.add(callback);
 
-		return () => {
-			this.updateCallbacks.delete(callback);
-		};
-	}
+        return () => {
+            this.updateCallbacks.delete(callback);
+        };
+    }
 
-	markLoading() {
-		const self = this;
+    markLoading() {
+        const self = this;
 
-		this.loadingCounter++;
+        this.loadingCounter++;
 
-		return {
-			[Symbol.dispose]() {
-				self.loadingCounter--;
-				self.updated();
-			},
-		};
-	}
+        return {
+            [Symbol.dispose]() {
+                self.loadingCounter--;
+                self.updated();
+            },
+        };
+    }
 
-	updated() {
-		if (this.updateCallbackImmediate) {
-			clearImmediate(this.updateCallbackImmediate);
-		}
+    updated() {
+        if (this.updateCallbackImmediate) {
+            clearImmediate(this.updateCallbackImmediate);
+        }
 
-		// biome-ignore lint/complexity/noUselessThisAlias: without it, shit breaks
-		const self = this;
+        // biome-ignore lint/complexity/noUselessThisAlias: without it, shit breaks
+        const self = this;
 
-		this.updateCallbackImmediate = setImmediate(() => {
-			self.updateCallbackImmediate = 0;
+        this.updateCallbackImmediate = setImmediate(() => {
+            self.updateCallbackImmediate = 0;
 
-			for (const callback of self.updateCallbacks) {
-				callback();
-			}
+            for (const callback of self.updateCallbacks) {
+                callback();
+            }
 
-			if (self.loadingCounter === 0) {
-				self.onDoneLoadingCallback();
-			}
-		}) as unknown as number;
-	}
+            if (self.loadingCounter === 0) {
+                self.onDoneLoadingCallback();
+            }
+        }) as unknown as number;
+    }
 }
 
 export class ContextScope {
-	contexts: Record<string, Signal<any>> = {};
-	streaming: StreamingContext = new StreamingContext();
+    contexts: Record<string, Signal<any>> = {};
+    streaming: StreamingContext = new StreamingContext();
 
-	fork() {
-		const newScope = new ContextScope();
-		newScope.contexts = { ...this.contexts };
-		return newScope;
-	}
+    fork() {
+        const newScope = new ContextScope();
+        newScope.contexts = { ...this.contexts };
+        return newScope;
+    }
 
-	addContext<T>(id: string, value: Signal<T>): void {
-		this.contexts[id] = value;
-	}
+    addContext<T>(id: string, value: Signal<T>): void {
+        this.contexts[id] = value;
+    }
 
-	static current: ContextScope | null = null;
+    static current: ContextScope | null = null;
 
-	static setCurrent(scope: ContextScope | null) {
-		const previous = ContextScope.current;
+    static setCurrent(scope: ContextScope | null) {
+        const previous = ContextScope.current;
 
-		ContextScope.current = scope;
+        ContextScope.current = scope;
 
-		return {
-			[Symbol.dispose]() {
-				ContextScope.current = previous;
-			},
-		};
-	}
+        return {
+            [Symbol.dispose]() {
+                ContextScope.current = previous;
+            },
+        };
+    }
 }
 
 export function useContextScope(): ContextScope {
-	const scope = ContextScope.current;
-	if (!scope) {
-		throw new Error(
-			"No context scope found, you should have one if you're rendering a component.",
-		);
-	}
-	return scope;
+    const scope = ContextScope.current;
+    if (!scope) {
+        throw new Error(
+            "No context scope found, you should have one if you're rendering a component.",
+        );
+    }
+    return scope;
 }
 
 export function useStreaming(): StreamingContext {
-	return useContextScope().streaming;
+    return useContextScope().streaming;
 }
 
 export function useOptionalContextScope(): ContextScope | null {
-	const scope = ContextScope.current;
-	if (!scope) {
-		return null;
-	}
-	return scope;
+    const scope = ContextScope.current;
+    if (!scope) {
+        return null;
+    }
+    return scope;
 }
 
 export function useOptionalStreaming(): StreamingContext | null {
-	const scope = useOptionalContextScope();
-	if (!scope) {
-		return null;
-	}
-	return scope.streaming;
+    const scope = useOptionalContextScope();
+    if (!scope) {
+        return null;
+    }
+    return scope.streaming;
 }
