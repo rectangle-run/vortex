@@ -5,7 +5,7 @@ export * from "./deep-partial";
 export * from "./dev";
 export * from "./hash";
 export * from "./npm";
-export * from "./skl";
+export * as SKL from "./skl";
 export * from "./smolify";
 export * from "./ultraglobal";
 export * from "./unreachable";
