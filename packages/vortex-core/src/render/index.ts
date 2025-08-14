@@ -18,7 +18,7 @@ export * as FL from "./fragments";
 export interface Renderer<RendererNode, HydrationContext> {
     createNode(type: string, hydration?: HydrationContext): RendererNode;
     setAttribute(node: RendererNode, name: string, value: any): void;
-    createTextNode(hydration?: HydrationContext): RendererNode;
+    createTextNode(hydration: HydrationContext | undefined, context: ContextScope): RendererNode;
     setTextContent(node: RendererNode, text: string): void;
     setChildren(node: RendererNode, children: RendererNode[]): void;
     getHydrationContext(node: RendererNode): HydrationContext;
@@ -29,7 +29,7 @@ export interface Renderer<RendererNode, HydrationContext> {
     ): Lifetime;
     bindValue<T>(node: RendererNode, name: string, value: Store<T>): Lifetime;
     setStyle(node: RendererNode, name: string, value: string | undefined): void;
-    implementations?: IntrinsicImplementation[];
+    implementations?: IntrinsicImplementation<any, any>[];
 }
 
 export interface RenderProps<RendererNode, HydrationContext> {

@@ -31,7 +31,7 @@
         "change": "changeset",
         "release": "changeset publish",
         "build": "turbo build",
-        "wdev": "turbo @vortexjs/example-wormhole#dev",
+        "wdev": "cd packages/example-wormhole && turbo build && bun dev",
         "version": "changeset version",
         "dev": "turbo dev",
         "test": "turbo test",

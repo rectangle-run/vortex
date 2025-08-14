@@ -1,0 +1,30 @@
+{
+    "name": "@vortexjs/intrinsics",
+    "type": "module",
+    "license": "MIT-0",
+    "repository": {
+        "url": "https://github.com/andylovescode/vortex"
+    },
+    "devDependencies": {
+        "@types/bun": "catalog:",
+        "tsup": "catalog:"
+    },
+    "dependencies": {
+        "@vortexjs/common": "workspace:*",
+        "@vortexjs/core": "workspace:*"
+    },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    },
+    "scripts": {
+        "build": "tsup ./src/index.ts --format esm --dts --out-dir dist"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "version": "0.0.0"
+}

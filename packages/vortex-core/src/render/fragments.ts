@@ -3,121 +3,123 @@
 
 import { unwrap } from "@vortexjs/common";
 import type { Renderer } from ".";
+import type { ContextScope } from "../context";
 
 export abstract class FLNode<RendererNode> {
-	_children: FLNode<RendererNode>[] = [];
-	parent: FLNode<RendererNode> | null = null;
-	rendererNode: RendererNode | null = null;
+    _children: FLNode<RendererNode>[] = [];
+    parent: FLNode<RendererNode> | null = null;
+    rendererNode: RendererNode | null = null;
 
-	abstract onChildrenChanged(): void;
+    abstract onChildrenChanged(): void;
 
-	get children(): FLNode<RendererNode>[] {
-		return this._children;
-	}
+    get children(): FLNode<RendererNode>[] {
+        return this._children;
+    }
 
-	set children(next: FLNode<RendererNode>[]) {
-		this._children = next;
-		for (const child of next) {
-			child.parent = this;
-		}
-		this.onChildrenChanged();
-	}
+    set children(next: FLNode<RendererNode>[]) {
+        this._children = next;
+        for (const child of next) {
+            child.parent = this;
+        }
+        this.onChildrenChanged();
+    }
 
-	get flatChildren(): FLNode<RendererNode>[] {
-		const flat: FLNode<RendererNode>[] = [];
+    get flatChildren(): FLNode<RendererNode>[] {
+        const flat: FLNode<RendererNode>[] = [];
 
-		function traverse(node: FLNode<RendererNode>) {
-			if (node instanceof FLFragment) {
-				for (const child of node.children) {
-					traverse(child);
-				}
-			} else {
-				flat.push(node);
-			}
-		}
+        function traverse(node: FLNode<RendererNode>) {
+            if (node instanceof FLFragment) {
+                for (const child of node.children) {
+                    traverse(child);
+                }
+            } else {
+                flat.push(node);
+            }
+        }
 
-		for (const child of this.children) {
-			traverse(child);
-		}
+        for (const child of this.children) {
+            traverse(child);
+        }
 
-		return flat;
-	}
+        return flat;
+    }
 }
 
 export class FLFragment<RendererNode> extends FLNode<RendererNode> {
-	onChildrenChanged(): void {
-		this.parent?.onChildrenChanged();
-	}
+    onChildrenChanged(): void {
+        this.parent?.onChildrenChanged();
+    }
 }
 
 export class FLText<
-	RendererNode,
-	HydrationContext,
+    RendererNode,
+    HydrationContext,
 > extends FLNode<RendererNode> {
-	_text: string;
+    _text: string;
 
-	get text(): string {
-		return this._text;
-	}
+    get text(): string {
+        return this._text;
+    }
 
-	set text(value: string) {
-		this._text = value;
-		this.renderer.setTextContent(unwrap(this.rendererNode), value);
-	}
+    set text(value: string) {
+        this._text = value;
+        this.renderer.setTextContent(unwrap(this.rendererNode), value);
+    }
 
-	constructor(
-		text: string,
-		private renderer: Renderer<RendererNode, HydrationContext>,
-		hydration?: HydrationContext,
-	) {
-		super();
-		this._text = text;
-		this.rendererNode = renderer.createTextNode(hydration);
-		renderer.setTextContent(this.rendererNode, text);
-	}
+    constructor(
+        text: string,
+        private renderer: Renderer<RendererNode, HydrationContext>,
+        hydration: HydrationContext | undefined,
+        scope: ContextScope
+    ) {
+        super();
+        this._text = text;
+        this.rendererNode = renderer.createTextNode(hydration, scope);
+        renderer.setTextContent(this.rendererNode, text);
+    }
 
-	onChildrenChanged(): void {
-		this.parent?.onChildrenChanged();
-	}
+    onChildrenChanged(): void {
+        this.parent?.onChildrenChanged();
+    }
 }
 
 export class FLElement<
-	RendererNode,
-	HydrationContext,
+    RendererNode,
+    HydrationContext,
 > extends FLNode<RendererNode> {
-	setAttribute(name: string, value: any): void {
-		this.renderer.setAttribute(unwrap(this.rendererNode), name, value);
-	}
+    setAttribute(name: string, value: any): void {
+        this.renderer.setAttribute(unwrap(this.rendererNode), name, value);
+    }
 
-	constructor(
-		private tag: string,
-		private renderer: Renderer<RendererNode, HydrationContext>,
-		hydration?: HydrationContext,
-	) {
-		super();
-		this.rendererNode = renderer.createNode(tag, hydration);
-	}
+    constructor(
+        private tag: string,
+        private renderer: Renderer<RendererNode, HydrationContext>,
+        hydration?: HydrationContext,
+    ) {
+        super();
+        this.rendererNode = renderer.createNode(tag, hydration);
+    }
 
-	onChildrenChanged(): void {
-		const children = this.flatChildren.map((child) =>
-			unwrap(child.rendererNode),
-		);
-		this.renderer.setChildren(unwrap(this.rendererNode), children);
-	}
+    onChildrenChanged(): void {
+        const children = this.flatChildren.map((child) =>
+            unwrap(child.rendererNode),
+        );
+        this.renderer.setChildren(unwrap(this.rendererNode), children);
+    }
 }
 
 export class FLPortal<RendererNode> extends FLNode<RendererNode> {
-	constructor(
-		private target: RendererNode,
-		private renderer: Renderer<RendererNode, any>,
-	) {
-		super();
-	}
+    constructor(
+        private target: RendererNode,
+        private renderer: Renderer<RendererNode, any>,
+    ) {
+        super();
+    }
 
-	onChildrenChanged(): void {
-		this.renderer.setChildren(
-			this.target,
-			this.flatChildren.map((child) => unwrap(child.rendererNode)),
-		);
-	}
+    onChildrenChanged(): void {
+        this.renderer.setChildren(
+            this.target,
+            this.flatChildren.map((child) => unwrap(child.rendererNode)),
+        );
+    }
 }

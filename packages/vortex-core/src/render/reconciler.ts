@@ -45,6 +45,7 @@ export class Reconciler<RendererNode, HydrationContext> {
                     node.value.toString(),
                     this.renderer,
                     hydration,
+                    context
                 );
             }
             case "element": {
