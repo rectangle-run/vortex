@@ -14,10 +14,11 @@ cliApp(
 		gap={2}
 	>
 		<Text>
-			This is a{" "}
-			<Text italic color={colors.rose[600]} weight="bold">
-				*test*
+			<Text color={colors.purple[600]}>▐</Text>
+			<Text background={colors.purple[600]} color="black">
+				•
 			</Text>
+			<Text color={colors.purple[600]}>▌</Text> wormhole
 		</Text>
 
 		<Text>
@@ -26,6 +27,18 @@ cliApp(
 				*test*
 			</Text>
 		</Text>
+
+		<Frame
+			border={colors.emerald[700]}
+			background={colors.emerald[950]}
+			width="100%"
+			grow={1}
+			padding={15}
+			direction="column"
+			gap={2}
+		>
+			<Text>a smol frame</Text>
+		</Frame>
 	</Frame>,
 );
 

@@ -17,6 +17,7 @@ function udlrSymbol16(symbols: UDLRSymbolSet) {
 }
 
 const symbols = {
+    star4: "✦",
     outline: {
         rounded: udlrSymbol16({
             u: "╵",

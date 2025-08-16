@@ -109,12 +109,6 @@ export class Box implements TreeNode {
 
     update() {
         this.yoga.setFlexGrow(this.attributes.grow);
-        this.yoga.setFlexDirection({
-            row: FlexDirection.Row,
-            "row-reverse": FlexDirection.RowReverse,
-            column: FlexDirection.Column,
-            "column-reverse": FlexDirection.ColumnReverse
-        }[this.attributes.direction ?? "row"]);
 
         this.yoga.setGap(Gutter.Row, pixelToTileX(this.attributes.gap ?? 0) as number);
         this.yoga.setGap(Gutter.Column, pixelToTileY(this.attributes.gap ?? 0) as number);
@@ -154,7 +148,7 @@ export class Box implements TreeNode {
                 break;
         }
 
-        switch (this.attributes.flexDirection) {
+        switch (this.attributes.direction) {
             case "row":
                 this.yoga.setFlexDirection(FlexDirection.Row);
                 break;
@@ -202,6 +196,7 @@ export class Box implements TreeNode {
                 ? pixelToTileY(this.attributes.maxHeight)
                 : (this.attributes.maxHeight as any)
         );
+        this.yoga.setAlwaysFormsContainingBlock(true);
     }
 }
 
@@ -276,7 +271,7 @@ export class Text implements TreeNode {
                         italic,
                         bold,
                         underline,
-                        background: "transparent"
+                        background
                     })
                 }
                 continue;

@@ -1,22 +1,22 @@
 {
-	"name": "@vortexjs/locounter",
-	"module": "src/index.ts",
-	"type": "module",
-	"license": "MIT-0",
-	"private": true,
-	"bin": {
-		"locounter": "./src/index.ts"
-	},
-	"devDependencies": {
-		"@types/bun": "catalog:"
-	},
-	"dependencies": {
-		"@vortexjs/common": "workspace:*"
-	},
-	"peerDependencies": {
-		"typescript": "catalog:"
-	},
-	"scripts": {
-		"count": "bun run src/index.ts"
-	}
+    "name": "@vortexjs/locounter",
+    "module": "src/index.ts",
+    "type": "module",
+    "license": "MIT-0",
+    "version": "0.0.0",
+    "bin": {
+        "locounter": "./src/index.ts"
+    },
+    "devDependencies": {
+        "@types/bun": "catalog:"
+    },
+    "dependencies": {
+        "@vortexjs/common": "workspace:*"
+    },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    },
+    "scripts": {
+        "count": "bun run src/index.ts"
+    }
 }

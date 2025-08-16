@@ -33,6 +33,7 @@ export const Text = intrinsic<
 		italic?: boolean;
 		underline?: boolean;
 		size?: number | TextSize;
+		background?: string;
 	},
 	"vortex:text"
 >("vortex:text");
