@@ -7,7 +7,7 @@
     },
     "devDependencies": {
         "@types/bun": "catalog:",
-        "tsup": "catalog:"
+        "tsdown": "catalog:"
     },
     "dependencies": {
         "@vortexjs/common": "workspace:*"
@@ -16,7 +16,7 @@
         "typescript": "catalog:"
     },
     "scripts": {
-        "build": "tsup ./src/index.ts --format esm --dts --out-dir dist"
+        "build": "tsdown ./src/index.ts --format esm --dts --out-dir dist"
     },
     "exports": {
         ".": {

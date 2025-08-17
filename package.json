@@ -11,7 +11,7 @@
             "bun-plugin-tailwind": "^0.0.15",
             "chalk": "^5.4.1",
             "@types/bun": "latest",
-            "tsup": "^8.5.0",
+            "tsdown": "^0.14.1",
             "typescript": "^5",
             "@napi-rs/cli": "^3.0.0-alpha.89",
             "@vortexjs/discovery-win32-x64-msvc": "0.0.0",
