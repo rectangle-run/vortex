@@ -9,6 +9,20 @@
         "turbo": "^2.5.5",
       },
     },
+    "packages/args": {
+      "name": "@vortexjs/args",
+      "version": "0.0.1",
+      "dependencies": {
+        "@vortexjs/common": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/bun": "catalog:",
+        "tsdown": "catalog:",
+      },
+      "peerDependencies": {
+        "typescript": "catalog:",
+      },
+    },
     "packages/cataloger": {
       "name": "@vortexjs/cataloger",
       "bin": {
@@ -113,20 +127,6 @@
         "@tailwindcss/oxide": "catalog:",
         "@vortexjs/common": "workspace:*",
         "@vortexjs/pippin": "workspace:*",
-      },
-      "devDependencies": {
-        "@types/bun": "catalog:",
-        "tsdown": "catalog:",
-      },
-      "peerDependencies": {
-        "typescript": "catalog:",
-      },
-    },
-    "packages/vortex-args": {
-      "name": "@vortexjs/args",
-      "version": "0.0.1",
-      "dependencies": {
-        "@vortexjs/common": "workspace:*",
       },
       "devDependencies": {
         "@types/bun": "catalog:",
@@ -263,6 +263,7 @@
       },
       "dependencies": {
         "@speed-highlight/core": "catalog:",
+        "@vortexjs/args": "workspace:*",
         "@vortexjs/cli": "workspace:*",
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
@@ -538,7 +539,7 @@
 
     "@types/react": ["@types/react@19.1.8", "", { "dependencies": { "csstype": "^3.0.2" } }, "sha512-AwAfQ2Wa5bCx9WP8nZL2uMZWod7J7/JSplxbTmBQ5ms6QpqNYm672H0Vu9ZVKVngQ+ii4R/byguVEUZQyeg44g=="],
 
-    "@vortexjs/args": ["@vortexjs/args@workspace:packages/vortex-args"],
+    "@vortexjs/args": ["@vortexjs/args@workspace:packages/args"],
 
     "@vortexjs/bun-example": ["@vortexjs/bun-example@workspace:packages/example"],
 

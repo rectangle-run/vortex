@@ -1,3 +1,4 @@
+import { colors } from "@vortexjs/cli";
 import chalk from "chalk";
 
 export function createPrinter() {
@@ -39,7 +40,7 @@ export function createPrinter() {
 		group(heading: string, styled = true) {
 			this.gap();
 			this.log(
-				styled ? chalk.hex("#34d399").bold(`# ${heading}`) : heading,
+				styled ? chalk.hex(Bun.color(colors.blue[400], "hex")!).bold(`# ${heading}`) : heading,
 			);
 			this.gap();
 
