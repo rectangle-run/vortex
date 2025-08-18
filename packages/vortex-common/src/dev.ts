@@ -3,6 +3,14 @@ export function TODO(whatToDo: string): never {
 }
 
 export function trace(message: string) {
+	if (!("process" in globalThis) || process.env.DEBUG_PERF !== "1") {
+		return {
+			[Symbol.dispose]() {
+				// No-op
+			},
+		};
+	}
+
 	console.time(message);
 
 	return {

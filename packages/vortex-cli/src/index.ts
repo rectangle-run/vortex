@@ -1,4 +1,4 @@
-import { ContextScope, type JSXNode, render } from "@vortexjs/core";
+import { type JSXNode, render } from "@vortexjs/core";
 import { Direction, Edge, type Node } from "yoga-layout";
 import { cli } from "./corebind";
 import { Canvas, Renderer } from "./render";
@@ -29,7 +29,6 @@ function printYogaNode(node: Node) {
 export function cliApp(root: JSXNode) {
 	const renderer = new Renderer();
 	const internalRoot = new Box();
-	const context = new ContextScope();
 
 	function paint() {
 		const width = process.stdout.columns;
@@ -50,20 +49,21 @@ export function cliApp(root: JSXNode) {
 	let paintImmediate = 0;
 
 	function queuePaint() {
-		if (paintImmediate) return;
+		if (paintImmediate !== 0) return;
 		paintImmediate = setTimeout(() => {
 			paint();
 			paintImmediate = 0;
 		}, 10) as unknown as number;
 	}
 
-	context.streaming.onUpdate(queuePaint);
-
 	render({
 		root: internalRoot,
-		renderer: cli(),
+		renderer: cli({
+			onUpdate() {
+				queuePaint();
+			},
+		}),
 		component: root,
-		context,
 	});
 
 	process.stdout.on("resize", () => {
@@ -71,6 +71,11 @@ export function cliApp(root: JSXNode) {
 	});
 
 	queuePaint();
+
+	setInterval(() => {
+		//@ts-expect-error bun hack
+		process.stdout._refreshSize();
+	}, 500);
 }
 
 export { symbols, colors };

@@ -100,6 +100,7 @@ export const Frame = intrinsic<
 		direction?: "row" | "column" | "row-reverse" | "column-reverse";
 		grow?: number;
 		gap?: number | string;
+		clip?: boolean;
 		alignItems?:
 			| "flex-start"
 			| "flex-end"
@@ -113,6 +114,11 @@ export const Frame = intrinsic<
 			| "space-between"
 			| "space-around"
 			| "space-evenly";
+		position?: "absolute" | "relative" | "static";
+		left?: number;
+		top?: number;
+		right?: number;
+		bottom?: number;
 	},
 	"vortex:frame"
 >("vortex:frame");
