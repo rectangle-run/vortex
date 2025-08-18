@@ -10,6 +10,7 @@ export type RouteFunction = <Path extends string>(
 export type RouteParams<Path extends string> = {
     page?: (props: PageProps<Path>) => void;
     layout?: (props: LayoutProps<Path>) => void;
+    notFound?: (props: LayoutProps<Path>) => void;
 };
 
 export type APIFunction = <Input, Output>(
