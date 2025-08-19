@@ -93,7 +93,7 @@ function App({
     </html>;
 }
 
-export function INTERNAL_entrypoint<Root>({
+export async function INTERNAL_entrypoint<Root>({
     props,
     loaders,
     renderer,
@@ -105,6 +105,17 @@ export function INTERNAL_entrypoint<Root>({
     props: EntrypointProps, loaders: (() => Promise<any>)[], renderer: Renderer<Root, any>, root: Root, pathname?: string,
     lifetime?: Lifetime, context: ContextScope
 }) {
+    preload: if ("window" in globalThis) {
+        // We need to preload the routes so we don't flash the 'loading' state
+        const path = pathname ?? window.location.pathname;
+        const route = props.routes.find((r) => matchPath(r.matcher, path));
+        if (!route) break preload;
+
+        for (const frame of route.frames) {
+            await unwrap(loaders[frame.index])();
+        }
+    }
+
     render({
         context,
         renderer,
