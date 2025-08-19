@@ -1,52 +1,59 @@
 import type { FileSink } from "bun";
 
 export class ANSIWriter {
-	constructor(public terminal: FileSink) { }
+    buffer = "";
 
-	csi() {
-		this.terminal.write("\x1b[");
-	}
+    constructor(public terminal: FileSink) { }
 
-	write(text: string) {
-		this.terminal.write(text);
-	}
+    csi() {
+        this.write("\x1b[");
+    }
 
-	moveTo(x: number, y: number) {
-		this.csi();
-		this.terminal.write(`${y + 1};${x + 1}H`);
-	}
+    flush() {
+        this.terminal.write(this.buffer);
+        this.buffer = "";
+    }
 
-	setCursorVisible(visible: boolean) {
-		this.csi();
-		this.terminal.write(visible ? "?25h" : "?25l");
-	};
+    write(text: string) {
+        this.buffer += text;
+    }
 
-	setBackground(color: string) {
-		const { r, g, b } = Bun.color(color, "{rgb}")!;
+    moveTo(x: number, y: number) {
+        this.csi();
+        this.write(`${y + 1};${x + 1}H`);
+    }
 
-		this.csi();
-		this.terminal.write(`48;2;${r};${g};${b}m`);
-	}
+    setCursorVisible(visible: boolean) {
+        this.csi();
+        this.write(visible ? "?25h" : "?25l");
+    };
 
-	setForeground(color: string) {
-		const { r, g, b } = Bun.color(color, "{rgb}")!;
+    setBackground(color: string) {
+        const { r, g, b } = Bun.color(color, "{rgb}")!;
 
-		this.csi();
-		this.terminal.write(`38;2;${r};${g};${b}m`);
-	}
+        this.csi();
+        this.write(`48;2;${r};${g};${b}m`);
+    }
 
-	setItalic(italic: boolean) {
-		this.csi();
-		this.terminal.write(italic ? "3m" : "23m");
-	}
+    setForeground(color: string) {
+        const { r, g, b } = Bun.color(color, "{rgb}")!;
 
-	setBold(bold: boolean) {
-		this.csi();
-		this.terminal.write(bold ? "1m" : "22m");
-	}
+        this.csi();
+        this.write(`38;2;${r};${g};${b}m`);
+    }
 
-	setUnderline(underline: boolean) {
-		this.csi();
-		this.terminal.write(underline ? "4m" : "24m");
-	}
+    setItalic(italic: boolean) {
+        this.csi();
+        this.write(italic ? "3m" : "23m");
+    }
+
+    setBold(bold: boolean) {
+        this.csi();
+        this.write(bold ? "1m" : "22m");
+    }
+
+    setUnderline(underline: boolean) {
+        this.csi();
+        this.write(underline ? "4m" : "24m");
+    }
 }
