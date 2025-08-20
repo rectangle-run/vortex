@@ -6,76 +6,79 @@ import { addTask } from "~/cli/statusboard";
 import { join } from "node:path";
 
 export interface DevAdapterResult {
-	clientEntry: string;
-	serverEntry: string;
-	cssEntry: string;
-	outdir: string;
+    clientEntry: string;
+    serverEntry: string;
+    cssEntry: string;
+    outdir: string;
 }
 
 export interface DevAdapter extends BuildAdapter<DevAdapterResult> {
-	buildForLocation(build: Build, server: TargetLocation): Promise<string>;
-	buildCSS(build: Build): Promise<string>;
+    buildForLocation(build: Build, server: TargetLocation): Promise<string>;
+    buildCSS(build: Build): Promise<string>;
 }
 
 export function DevAdapter(): DevAdapter {
-	return {
-		async buildForLocation(build: Build, location: TargetLocation) {
-			using _task = addTask({
-				name: `Rebuilding development ${location}`
-			});
-			let codegenSource = "";
+    return {
+        async buildForLocation(build: Build, location: TargetLocation) {
+            using _task = addTask({
+                name: `Rebuilding development ${location}`
+            });
+            let codegenSource = "";
 
-			codegenSource += `import { INTERNAL_entrypoint } from "@vortexjs/wormhole";`;
-			codegenSource += `import { Lifetime } from "@vortexjs/core";`
+            codegenSource += `import { INTERNAL_entrypoint } from "@vortexjs/wormhole";`;
+            codegenSource += `import { Lifetime } from "@vortexjs/core";`
 
-			if (location === "client") {
-				codegenSource += `import { html } from "@vortexjs/dom";`;
-			}
+            if (location === "client") {
+                codegenSource += `import { html } from "@vortexjs/dom";`;
+            }
 
-			codegenSource += `export function main(props) {`;
+            const imports: Export[] = [];
 
-			const imports: Export[] = [];
+            function getExportIndex(exp: Export): number {
+                const index = imports.findIndex(x => x.file === exp.file && x.name === exp.name);
+                if (index === -1) {
+                    imports.push(exp);
+                    return imports.length - 1;
+                }
+                return index;
+            }
 
-			function getExportIndex(exp: Export): number {
-				const index = imports.findIndex(x => x.file === exp.file && x.name === exp.name);
-				if (index === -1) {
-					imports.push(exp);
-					return imports.length - 1;
-				}
-				return index;
-			}
+            const entrypointProps: EntrypointProps = {
+                routes: build.routes.filter(x => x.type === "route").map(x => ({
+                    matcher: x.matcher,
+                    frames: x.frames.map((frame) => ({
+                        index: getExportIndex(frame),
+                    })),
+                    is404: x.is404,
+                }))
+            }
 
-			const entrypointProps: EntrypointProps = {
-				routes: build.routes.filter(x => x.type === "route").map(x => ({
-					matcher: x.matcher,
-					frames: x.frames.map((frame) => ({
-						index: getExportIndex(frame),
-					})),
-				}))
-			}
+            codegenSource += `const entrypointProps = JSON.parse(${JSON.stringify(JSON.stringify(entrypointProps))});`;
 
-			codegenSource += 'const loaders = [';
+            codegenSource += `export function main(props) {`;
 
-			for (const exp of imports) {
-				const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
+            codegenSource += 'const loaders = [';
 
-				const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
+            for (const exp of imports) {
+                const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
 
-				codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
-			}
+                const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
 
-			codegenSource += '];';
+                codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
+            }
 
-			if (location === "server") {
-				codegenSource += `const renderer = props.renderer;`;
-				codegenSource += `const root = props.root;`;
-			} else {
-				codegenSource += `const renderer = html();`;
-				codegenSource += `const root = document.documentElement;`;
-			}
+            codegenSource += '];';
 
-			codegenSource += `return INTERNAL_entrypoint({
-				props: ${JSON.stringify(entrypointProps)},
+            if (location === "server") {
+                codegenSource += `const renderer = props.renderer;`;
+                codegenSource += `const root = props.root;`;
+            } else {
+                codegenSource += `const renderer = html();`;
+                codegenSource += `const root = document.documentElement;`;
+            }
+
+            codegenSource += `return INTERNAL_entrypoint({
+				props: entrypointProps,
 				loaders,
 				renderer,
 				root,
@@ -84,98 +87,106 @@ export function DevAdapter(): DevAdapter {
 				lifetime: props.lifetime ?? new Lifetime(),
 			});`;
 
-			codegenSource += `}`;
+            codegenSource += `}`;
 
-			if (location === "server") {
-				codegenSource += `import {INTERNAL_tryHandleAPI} from "@vortexjs/wormhole";`
-				codegenSource += `export async function tryHandleAPI(request) {`;
+            if (location === "server") {
+                codegenSource += `import {INTERNAL_tryHandleAPI} from "@vortexjs/wormhole";`
+                codegenSource += `export async function tryHandleAPI(request) {`;
 
-				const apiIndicies: Export[] = [];
+                const apiIndicies: Export[] = [];
 
-				const apiRoutes = build.routes.filter(x => x.type === "api");
+                const apiRoutes = build.routes.filter(x => x.type === "api");
 
-				const getApiExportIndex = (exp: Export): number => {
-					const index = apiIndicies.findIndex(x => x.file === exp.file && x.name === exp.name);
-					if (index === -1) {
-						apiIndicies.push(exp);
-						return apiIndicies.length - 1;
-					}
-					return index;
-				}
+                const getApiExportIndex = (exp: Export): number => {
+                    const index = apiIndicies.findIndex(x => x.file === exp.file && x.name === exp.name);
+                    if (index === -1) {
+                        apiIndicies.push(exp);
+                        return apiIndicies.length - 1;
+                    }
+                    return index;
+                }
 
-				codegenSource += `const apis = ${JSON.stringify(apiRoutes.map(x => ({
-					matcher: x.matcher,
-					impl: getApiExportIndex(x.impl),
-					schema: getApiExportIndex(x.schema),
-					method: x.method,
-				})))};`;
+                codegenSource += `const apis = ${JSON.stringify(apiRoutes.map(x => ({
+                    matcher: x.matcher,
+                    impl: getApiExportIndex(x.impl),
+                    schema: getApiExportIndex(x.schema),
+                    method: x.method,
+                })))};`;
 
-				codegenSource += `return INTERNAL_tryHandleAPI(request, apis, [`;
+                codegenSource += `return INTERNAL_tryHandleAPI(request, apis, [`;
 
-				for (const exp of apiIndicies) {
-					const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
+                for (const exp of apiIndicies) {
+                    const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
 
-					const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
+                    const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
 
-					codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
-				}
+                    codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
+                }
 
-				codegenSource += `]);`;
+                codegenSource += `]);`;
 
-				codegenSource += `}`;
-			}
+                codegenSource += `}`;
+            }
 
-			if (location === "client") {
-				codegenSource += `window.wormhole = {};`;
-				codegenSource += `window.wormhole.hydrate = main;`;
-			}
+            if (location === "server") {
+                codegenSource += `import { matchPath } from "@vortexjs/wormhole";`;
+                codegenSource += `export function isRoute404(pathname) {`;
+                codegenSource += `const route = entrypointProps.routes.find(x => matchPath(x.matcher, pathname).matched);`;
+                codegenSource += `return route ? route.is404 : false;`;
+                codegenSource += `}`;
+            }
 
-			const filename = `entrypoint-${location}`;
+            if (location === "client") {
+                codegenSource += `window.wormhole = {};`;
+                codegenSource += `window.wormhole.hydrate = main;`;
+            }
 
-			const path = await build.writeCodegenned(filename, codegenSource);
+            const filename = `entrypoint-${location}`;
 
-			const bundled = await build.bundle({
-				target: location,
-				inputPaths: {
-					main: path,
-				},
-				dev: true
-			})
+            const path = await build.writeCodegenned(filename, codegenSource);
 
-			return bundled.outputs.main;
-		},
-		async buildCSS(build: Build) {
-			let codegenCSS = "";
+            const bundled = await build.bundle({
+                target: location,
+                inputPaths: {
+                    main: path,
+                },
+                dev: true
+            })
 
-			const appCSSPath = join(build.project.projectDir, "src", "app.css");
+            return bundled.outputs.main;
+        },
+        async buildCSS(build: Build) {
+            let codegenCSS = "";
 
-			if (await Bun.file(appCSSPath).exists()) {
-				codegenCSS += `@import "${appCSSPath}";`;
-			}
+            const appCSSPath = join(build.project.projectDir, "src", "app.css");
 
-			const cssPath = await build.writeCodegenned("styles", codegenCSS, "css");
+            if (await Bun.file(appCSSPath).exists()) {
+                codegenCSS += `@import "${appCSSPath}";`;
+            }
 
-			const bundled = await build.bundle({
-				target: "client",
-				inputPaths: {
-					main: cssPath,
-				},
-				dev: true
-			});
+            const cssPath = await build.writeCodegenned("styles", codegenCSS, "css");
 
-			return bundled.outputs.main;
-		},
-		async run(build) {
-			const clientEntry = this.buildForLocation(build, "client");
-			const serverEntry = this.buildForLocation(build, "server");
-			const cssEntry = this.buildCSS(build);
+            const bundled = await build.bundle({
+                target: "client",
+                inputPaths: {
+                    main: cssPath,
+                },
+                dev: true
+            });
 
-			return {
-				clientEntry: await clientEntry,
-				serverEntry: await serverEntry,
-				cssEntry: await cssEntry,
-				outdir: build.outputPath
-			}
-		}
-	};
+            return bundled.outputs.main;
+        },
+        async run(build) {
+            const clientEntry = this.buildForLocation(build, "client");
+            const serverEntry = this.buildForLocation(build, "server");
+            const cssEntry = this.buildCSS(build);
+
+            return {
+                clientEntry: await clientEntry,
+                serverEntry: await serverEntry,
+                cssEntry: await cssEntry,
+                outdir: build.outputPath
+            }
+        }
+    };
 }

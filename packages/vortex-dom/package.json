@@ -1,40 +1,40 @@
 {
-	"name": "@vortexjs/dom",
-	"type": "module",
-	"license": "MIT-0",
-	"repository": {
-		"url": "https://github.com/andylovescode/vortex"
-	},
-	"devDependencies": {
-		"@types/bun": "catalog:",
-		"tsup": "catalog:"
-	},
-	"dependencies": {
-		"@vortexjs/core": "workspace:*",
-		"@vortexjs/common": "workspace:*"
-	},
-	"peerDependencies": {
-		"typescript": "catalog:"
-	},
-	"scripts": {
-		"build": "tsup ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts --format esm --dts --out-dir dist"
-	},
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
-		},
-		"./jsx-runtime": {
-			"types": "./dist/jsx/jsx-runtime.d.ts",
-			"import": "./dist/jsx/jsx-runtime.js",
-			"require": "./dist/jsx/jsx-runtime.cjs"
-		},
-		"./jsx-dev-runtime": {
-			"types": "./dist/jsx/jsx-dev-runtime.d.ts",
-			"import": "./dist/jsx/jsx-dev-runtime.js",
-			"require": "./dist/jsx/jsx-dev-runtime.cjs"
-		}
-	},
-	"version": "2.0.5"
+    "name": "@vortexjs/dom",
+    "type": "module",
+    "license": "MIT-0",
+    "repository": {
+        "url": "https://github.com/andylovescode/vortex"
+    },
+    "devDependencies": {
+        "@types/bun": "catalog:",
+        "tsdown": "catalog:"
+    },
+    "dependencies": {
+        "@vortexjs/core": "workspace:*",
+        "@vortexjs/common": "workspace:*"
+    },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    },
+    "scripts": {
+        "build": "tsdown ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts --format esm --dts --out-dir dist"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./jsx-runtime": {
+            "types": "./dist/jsx/jsx-runtime.d.ts",
+            "import": "./dist/jsx/jsx-runtime.js",
+            "require": "./dist/jsx/jsx-runtime.cjs"
+        },
+        "./jsx-dev-runtime": {
+            "types": "./dist/jsx/jsx-dev-runtime.d.ts",
+            "import": "./dist/jsx/jsx-dev-runtime.js",
+            "require": "./dist/jsx/jsx-dev-runtime.cjs"
+        }
+    },
+    "version": "2.0.5"
 }

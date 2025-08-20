@@ -21,7 +21,7 @@ export type VNode = VElement | VText;
 
 function documentBadQuerySelector(
 	document: VNode,
-	tagName: string
+	tagName: string,
 ): VElement[] {
 	const result: VElement[] = [];
 
@@ -63,7 +63,10 @@ function getIdent(node: VNode, codegen: CodegenStream): string {
 
 	if (!ident && "tagName" in node) {
 		// Find the index that this node would be in a fake document.querySelector
-		const index = documentBadQuerySelector(codegen.document, node.tagName).indexOf(node);
+		const index = documentBadQuerySelector(
+			codegen.document,
+			node.tagName,
+		).indexOf(node);
 
 		ident ??= `document[${codegen.getIndexerShorthand("querySelectorAll")}](${codegen.getIndexerShorthand(node.tagName)})[${index}]`;
 	}
@@ -197,7 +200,11 @@ export function printHTML(node: VNode, printer = createHTMLPrinter()): string {
 	return printer.html;
 }
 
-export function diffInto(from: VNode, to: VNode, codegen: CodegenStream = createCodegenStream(from as VElement)) {
+export function diffInto(
+	from: VNode,
+	to: VNode,
+	codegen: CodegenStream = createCodegenStream(from as VElement),
+) {
 	if ("tagName" in from && "tagName" in to) {
 		// Safety check to ensure both nodes are of the same type
 		if (getType(from) !== getType(to)) {

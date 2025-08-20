@@ -41,7 +41,7 @@ export function handleRouteFunction(
         return;
     }
 
-    const validKeys = ["page", "layout"] as const;
+    const validKeys = ["page", "layout", "notFound"] as const;
 
     for (const key of keys) {
         if (!validKeys.includes(key as any)) {

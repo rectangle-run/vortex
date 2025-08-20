@@ -3,158 +3,176 @@ import type { Project } from "~/state";
 import { createHTMLRoot, ssr, printHTML, createCodegenStream, diffInto } from "@vortexjs/ssr";
 import { DevAdapter, type DevAdapterResult } from "~/build/adapters/dev";
 import { Build } from "~/build/build";
-import { addTask } from "~/cli/statusboard";
+import { addLog, addTask, type RequestTag } from "~/cli/statusboard";
 import { join } from "node:path";
 import { watch } from "node:fs";
+import type { HTTPMethod } from "~/shared/http-method";
 
 export interface DevServer {
-	lifetime: Lifetime;
-	server: Bun.Server;
-	processRequest(request: Request): Promise<Response>;
-	rebuild(): Promise<void>;
-	buildResult: Promise<DevAdapterResult>;
-	project: Project;
+    lifetime: Lifetime;
+    server: Bun.Server;
+    processRequest(request: Request, tags: RequestTag[]): Promise<Response>;
+    rebuild(): Promise<void>;
+    buildResult: Promise<DevAdapterResult>;
+    project: Project;
 }
 
 export function DevServer(project: Project): DevServer {
-	const server = Bun.serve({
-		port: 3141,
-		routes: {
-			"/*": async (req) => {
-				return new Response();
-			}
-		},
-		development: true
-	});
+    const server = Bun.serve({
+        port: 3141,
+        routes: {
+            "/*": async (req) => {
+                return new Response();
+            }
+        },
+        development: true
+    });
 
-	project.lt.onClosed(server.stop);
+    project.lt.onClosed(server.stop);
 
-	const self: DevServer = {
-		lifetime: project.lt,
-		server,
-		processRequest: DevServer_processRequest,
-		rebuild: DevServer_rebuild,
-		buildResult: new Promise(() => { }),
-		project
-	}
+    const self: DevServer = {
+        lifetime: project.lt,
+        server,
+        processRequest: DevServer_processRequest,
+        rebuild: DevServer_rebuild,
+        buildResult: new Promise(() => { }),
+        project
+    }
 
-	server.reload({
-		routes: {
-			"/*": (req) => {
-				return self.processRequest(req);
-			}
-		}
-	});
+    server.reload({
+        routes: {
+            "/*": async (req) => {
+                const tags: RequestTag[] = [];
+                const response = await self.processRequest(req, tags);
 
-	const devServerTask = addTask({
-		name: `Development server running @ ${server.url.toString()}`
-	});
+                addLog({
+                    type: "request",
+                    url: new URL(req.url).pathname,
+                    method: req.method as HTTPMethod,
+                    responseCode: response.status,
+                    tags
+                })
 
-	project.lt.onClosed(devServerTask[Symbol.dispose]);
+                return response;
+            }
+        }
+    });
 
-	self.rebuild();
+    const devServerTask = addTask({
+        name: `Development server running @ ${server.url.toString()}`
+    });
 
-	// Watch sourcedir
-	const watcher = watch(join(project.projectDir, "src"), { recursive: true });
+    project.lt.onClosed(devServerTask[Symbol.dispose]);
 
-	let isWaitingForRebuild = false;
+    self.rebuild();
 
-	watcher.on("change", async (eventType, filename) => {
-		if (isWaitingForRebuild) return;
-		isWaitingForRebuild = true;
-		await self.buildResult;
-		isWaitingForRebuild = false;
-		self.rebuild();
-	});
+    // Watch sourcedir
+    const watcher = watch(join(project.projectDir, "src"), { recursive: true });
 
-	project.lt.onClosed(() => {
-		watcher.close();
-	});
+    let isWaitingForRebuild = false;
 
-	return self;
+    watcher.on("change", async (eventType, filename) => {
+        if (isWaitingForRebuild) return;
+        isWaitingForRebuild = true;
+        await self.buildResult;
+        isWaitingForRebuild = false;
+        self.rebuild();
+    });
+
+    project.lt.onClosed(() => {
+        watcher.close();
+    });
+
+    return self;
 }
 
 async function DevServer_rebuild(this: DevServer): Promise<void> {
-	const build = new Build(this.project, DevAdapter());
-	this.buildResult = build.run();
-	await this.buildResult;
+    const build = new Build(this.project, DevAdapter());
+    this.buildResult = build.run();
+    await this.buildResult;
 }
 
 interface ServerEntrypoint {
-	main<RendererNode, HydrationContext>(props: {
-		renderer: Renderer<RendererNode, HydrationContext>,
-		root: RendererNode,
-		pathname: string,
-		context: ContextScope,
-		lifetime: Lifetime
-	}): void;
-	tryHandleAPI(request: Request): Promise<Response | undefined>;
+    main<RendererNode, HydrationContext>(props: {
+        renderer: Renderer<RendererNode, HydrationContext>,
+        root: RendererNode,
+        pathname: string,
+        context: ContextScope,
+        lifetime: Lifetime
+    }): void;
+    tryHandleAPI(request: Request): Promise<Response | undefined>;
+    isRoute404(pathname: string): boolean;
 }
 
-async function DevServer_processRequest(this: DevServer, request: Request): Promise<Response> {
-	const built = await this.buildResult;
+async function DevServer_processRequest(this: DevServer, request: Request, tags: RequestTag[]): Promise<Response> {
+    const built = await this.buildResult;
 
-	const serverPath = built.serverEntry;
-	const serverEntrypoint = (await import(serverPath + `?v=${Date.now()}`)) as ServerEntrypoint;
+    const serverPath = built.serverEntry;
+    const serverEntrypoint = (await import(serverPath + `?v=${Date.now()}`)) as ServerEntrypoint;
 
-	// Priority 1: API routes
-	const apiResponse = await serverEntrypoint.tryHandleAPI(request);
+    // Priority 1: API routes
+    const apiResponse = await serverEntrypoint.tryHandleAPI(request);
 
-	if (apiResponse !== undefined && apiResponse !== null) {
-		return apiResponse;
-	}
+    if (apiResponse !== undefined && apiResponse !== null) {
+        tags.push("api");
+        return apiResponse;
+    }
 
-	// Priority 2: Static files
-	const filePath = join(built.outdir, new URL(request.url).pathname);
+    // Priority 2: Static files
+    const filePath = join(built.outdir, new URL(request.url).pathname);
 
-	if (await Bun.file(filePath).exists()) {
-		return new Response(Bun.file(filePath));
-	}
+    if (await Bun.file(filePath).exists()) {
+        tags.push("static");
+        return new Response(Bun.file(filePath));
+    }
 
-	// Priority 3: SSR
-	const root = createHTMLRoot();
-	const renderer = ssr();
+    // Priority 3: SSR
+    const root = createHTMLRoot();
+    const renderer = ssr();
 
-	const context = new ContextScope();
+    const context = new ContextScope();
 
-	const lifetime = new Lifetime();
+    const lifetime = new Lifetime();
 
-	serverEntrypoint.main({
-		root,
-		renderer,
-		pathname: new URL(request.url).pathname,
-		context,
-		lifetime
-	});
+    serverEntrypoint.main({
+        root,
+        renderer,
+        pathname: new URL(request.url).pathname,
+        context,
+        lifetime
+    });
 
-	const html = printHTML(root);
+    const html = printHTML(root);
 
-	const { readable, writable } = new TransformStream();
-	const writer = writable.getWriter();
+    const { readable, writable } = new TransformStream();
+    const writer = writable.getWriter();
 
-	writer.write(html);
+    writer.write(html);
 
-	let currentSnapshot = structuredClone(root);
+    let currentSnapshot = structuredClone(root);
 
-	context.streaming.onUpdate(() => {
-		const codegen = diffInto(currentSnapshot, root);
+    context.streaming.onUpdate(() => {
+        const codegen = diffInto(currentSnapshot, root);
 
-		const code = codegen.getCode();
+        const code = codegen.getCode();
 
-		currentSnapshot = structuredClone(root);
+        currentSnapshot = structuredClone(root);
 
-		writer.write(`<script>${code}</script>`);
-	});
+        writer.write(`<script>${code}</script>`);
+    });
 
-	await context.streaming.onDoneLoading;
+    await context.streaming.onDoneLoading;
 
-	writer.write(`<script>window.addEventListener("load", () => {wormhole.hydrate({})});</script>`);
-	writer.close();
-	lifetime.close();
+    writer.write(`<script>window.addEventListener("load", () => {wormhole.hydrate({})});</script>`);
+    writer.close();
+    lifetime.close();
 
-	return new Response(readable, {
-		headers: {
-			'Content-Type': "text/html"
-		}
-	})
+    tags.push("ssr");
+
+    return new Response(readable, {
+        status: serverEntrypoint.isRoute404(new URL(request.url).pathname) ? 404 : 200,
+        headers: {
+            'Content-Type': "text/html"
+        }
+    })
 }

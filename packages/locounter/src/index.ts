@@ -30,7 +30,10 @@ async function countLinesOfCode(directory: string): Promise<LinesOfCode> {
 				name: child.name,
 				count: countLinesOfCode(path),
 			});
-		} else if (child.isFile() && child.name.endsWith(".ts")) {
+		} else if (
+			child.isFile() &&
+			(child.name.endsWith(".ts") || child.name.endsWith(".tsx"))
+		) {
 			childLocs.push({
 				name: child.name,
 				count: Bun.file(path)

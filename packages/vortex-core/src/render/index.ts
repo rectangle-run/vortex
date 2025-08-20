@@ -4,75 +4,77 @@ import type { JSXNode } from "../jsx/jsx-common";
 import { Lifetime } from "../lifetime";
 import { effect, type Store, store } from "../signal";
 import {
-	FLElement,
-	FLFragment,
-	type FLNode,
-	FLPortal,
-	FLText,
+    FLElement,
+    FLFragment,
+    type FLNode,
+    FLPortal,
+    FLText,
 } from "./fragments";
 import { Reconciler } from "./reconciler";
+import type { IntrinsicImplementation } from "../intrinsic";
 
 export * as FL from "./fragments";
 
 export interface Renderer<RendererNode, HydrationContext> {
-	createNode(type: string, hydration?: HydrationContext): RendererNode;
-	setAttribute(node: RendererNode, name: string, value: any): void;
-	createTextNode(hydration?: HydrationContext): RendererNode;
-	setTextContent(node: RendererNode, text: string): void;
-	setChildren(node: RendererNode, children: RendererNode[]): void;
-	getHydrationContext(node: RendererNode): HydrationContext;
-	addEventListener(
-		node: RendererNode,
-		name: string,
-		event: (event: any) => void,
-	): Lifetime;
-	bindValue<T>(node: RendererNode, name: string, value: Store<T>): Lifetime;
-	setStyle(node: RendererNode, name: string, value: string | undefined): void;
+    createNode(type: string, hydration?: HydrationContext): RendererNode;
+    setAttribute(node: RendererNode, name: string, value: any): void;
+    createTextNode(hydration: HydrationContext | undefined, context: ContextScope): RendererNode;
+    setTextContent(node: RendererNode, text: string): void;
+    setChildren(node: RendererNode, children: RendererNode[]): void;
+    getHydrationContext(node: RendererNode): HydrationContext;
+    addEventListener(
+        node: RendererNode,
+        name: string,
+        event: (event: any) => void,
+    ): Lifetime;
+    bindValue<T>(node: RendererNode, name: string, value: Store<T>): Lifetime;
+    setStyle(node: RendererNode, name: string, value: string | undefined): void;
+    implementations?: IntrinsicImplementation<any, any>[];
 }
 
 export interface RenderProps<RendererNode, HydrationContext> {
-	renderer: Renderer<RendererNode, HydrationContext>,
-	root: RendererNode,
-	component: JSXNode,
-	context?: ContextScope,
+    renderer: Renderer<RendererNode, HydrationContext>,
+    root: RendererNode,
+    component: JSXNode,
+    context?: ContextScope,
 };
 
 function internalRender<RendererNode, HydrationContext>({ renderer, root, component, context }: RenderProps<RendererNode, HydrationContext>): Lifetime {
-	using _trace = trace("Initial page render");
+    using _trace = trace("Initial page render");
 
-	const reconciler = new Reconciler(renderer, root);
-	const lt = new Lifetime();
+    const reconciler = new Reconciler(renderer, root);
+    const lt = new Lifetime();
 
-	const flNode = reconciler.render({
-		node: component,
-		hydration: renderer.getHydrationContext(root),
-		lt,
-		context: context ?? ContextScope.current ?? new ContextScope(),
-	});
+    const flNode = reconciler.render({
+        node: component,
+        hydration: renderer.getHydrationContext(root),
+        lt,
+        context: context ?? ContextScope.current ?? new ContextScope(),
+    });
 
-	const portal = new FLPortal(root, renderer);
+    const portal = new FLPortal(root, renderer);
 
-	portal.children = [flNode];
+    portal.children = [flNode];
 
-	return lt;
+    return lt;
 }
 
 export function render<RendererNode, HydrationContext>(
-	renderer: Renderer<RendererNode, HydrationContext>,
-	root: RendererNode,
-	component: JSXNode,
+    renderer: Renderer<RendererNode, HydrationContext>,
+    root: RendererNode,
+    component: JSXNode,
 ): Lifetime;
 export function render<RendererNode, HydrationContext>(props: RenderProps<RendererNode, HydrationContext>): Lifetime;
 export function render<RendererNode, HydrationContext>(
-	propsOrRenderer: Renderer<RendererNode, HydrationContext> | RenderProps<RendererNode, HydrationContext>, root?: RendererNode, component?: JSXNode
+    propsOrRenderer: Renderer<RendererNode, HydrationContext> | RenderProps<RendererNode, HydrationContext>, root?: RendererNode, component?: JSXNode
 ) {
-	if ("renderer" in propsOrRenderer) {
-		return internalRender(propsOrRenderer);
-	} else {
-		return internalRender({
-			renderer: propsOrRenderer,
-			root,
-			component,
-		});
-	}
+    if ("renderer" in propsOrRenderer) {
+        return internalRender(propsOrRenderer);
+    } else {
+        return internalRender({
+            renderer: propsOrRenderer,
+            root,
+            component,
+        });
+    }
 }

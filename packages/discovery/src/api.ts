@@ -16,7 +16,7 @@ export type Discovery =
 			type: "route_frame";
 			path: string;
 			exported: string;
-			frameType: "page" | "layout";
+			frameType: "page" | "layout" | "notFound";
 	  }
 	| {
 			type: "api";
