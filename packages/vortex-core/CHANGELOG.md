@@ -1,5 +1,17 @@
 # @vortexjs/core
 
+## 2.6.0
+
+### Minor Changes
+
+- 8f071be: Streaming deltas
+- 0536d4b: Add props based render API
+
+### Patch Changes
+
+- cf5c406: Improve awaited typing
+- 3d35737: Make `awaited` work outside of a render
+
 ## 2.5.0
 
 ### Minor Changes

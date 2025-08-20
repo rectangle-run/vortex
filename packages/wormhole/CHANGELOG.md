@@ -1,5 +1,23 @@
 # @vortexjs/wormhole
 
+## 0.3.0
+
+### Minor Changes
+
+- 8f071be: Streaming deltas
+
+### Patch Changes
+
+- 51990c6: Improve routing code and make it less janky
+- Updated dependencies [8f071be]
+- Updated dependencies [8f071be]
+- Updated dependencies [cf5c406]
+- Updated dependencies [0536d4b]
+- Updated dependencies [3d35737]
+  - @vortexjs/ssr@0.0.5
+  - @vortexjs/core@2.6.0
+  - @vortexjs/dom@2.0.5
+
 ## 0.2.0
 
 ### Minor Changes
