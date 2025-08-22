@@ -76,10 +76,10 @@ const commands = [
 		const result = await build.run();
 
 		console.log(`Build completed successfully!`);
-		console.log(`Output directory: ${result.outdir}`);
-		console.log(`Client entry: ${result.clientEntry}`);
-		console.log(`Server entry: ${result.serverEntry}`);
-		console.log(`CSS entry: ${result.cssEntry}`);
+		console.log(`Output directory: ${result.outputDir}`);
+		console.log(`Static directory: ${result.staticDir}`);
+		console.log(`Functions directory: ${result.functionsDir}`);
+		console.log(`Config file: ${result.configFile}`);
 	}, "build")
 ]
 

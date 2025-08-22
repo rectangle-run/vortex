@@ -7,8 +7,10 @@ describe("VercelAdapter", () => {
         
         expect(adapter).toBeDefined();
         expect(typeof adapter.run).toBe("function");
-        expect(typeof adapter.buildForLocation).toBe("function");
+        expect(typeof adapter.buildClientBundle).toBe("function");
         expect(typeof adapter.buildCSS).toBe("function");
+        expect(typeof adapter.buildRouteFunction).toBe("function");
+        expect(typeof adapter.buildCatchAllFunction).toBe("function");
     });
     
     test("should have correct interface methods", () => {
@@ -18,7 +20,9 @@ describe("VercelAdapter", () => {
         expect(adapter.run).toBeDefined();
         
         // Check that it implements the VercelAdapter interface
-        expect(adapter.buildForLocation).toBeDefined();
+        expect(adapter.buildClientBundle).toBeDefined();
         expect(adapter.buildCSS).toBeDefined();
+        expect(adapter.buildRouteFunction).toBeDefined();
+        expect(adapter.buildCatchAllFunction).toBeDefined();
     });
 });

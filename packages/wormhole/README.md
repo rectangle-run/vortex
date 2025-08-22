@@ -22,17 +22,17 @@ Uses the DevAdapter for local development with hot reloading and debugging featu
 ```bash
 wormhole build vercel
 ```
-Uses the VercelAdapter for production deployment to Vercel. This adapter:
+Uses the VercelAdapter with the Vercel Build Output API for production deployment to Vercel. This adapter:
 - Generates production-optimized builds (minified, no dev flags)
-- Creates serverless functions compatible with Vercel's runtime
-- Handles both static assets and server-side rendering
-- Supports API routes
+- Creates lightweight edge functions for each route and API endpoint
+- Outputs in the `.vercel/output` directory structure
+- Handles static assets separately from serverless functions
+- Supports both server-side rendering and API routes
 
-The build output includes:
-- `clientEntry`: Client-side JavaScript bundle
-- `serverEntry`: Server-side bundle for Vercel functions
-- `cssEntry`: Compiled CSS bundle
-- `outdir`: Output directory containing all build artifacts
+The build output follows the Vercel Build Output API format:
+- `.vercel/output/static/`: Client-side JavaScript and CSS bundles
+- `.vercel/output/functions/`: Individual edge functions for each route
+- `.vercel/output/config.json`: Vercel configuration and routing rules
 
 ## Who this isn't for
 
