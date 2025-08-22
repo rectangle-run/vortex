@@ -1,0 +1,40 @@
+{
+  "version": 3,
+  "routes": [
+    {
+      "src": "/client.js",
+      "dest": "/static/client.js"
+    },
+    {
+      "src": "/entrypoint-client.js",
+      "dest": "/static/client.js"
+    },
+    {
+      "src": "/styles.css",
+      "dest": "/static/styles.css"
+    },
+    {
+      "src": "/api/add",
+      "dest": "/functions/api-api/add.func",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "src": "/",
+      "dest": "/functions/route-index.func"
+    },
+    {
+      "src": "/docs/*",
+      "dest": "/functions/route-docs/[...page].func"
+    },
+    {
+      "src": "/*",
+      "dest": "/functions/route-[...404].func"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/functions/index.func"
+    }
+  ]
+}

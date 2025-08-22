@@ -172,7 +172,6 @@ export function VercelAdapter(): VercelAdapter {
                 codegenSource += `import { INTERNAL_entrypoint } from "@vortexjs/wormhole";`;
                 codegenSource += `import { Lifetime } from "@vortexjs/core";`;
                 codegenSource += `import { createHTMLRoot, ssr, printHTML } from "@vortexjs/ssr";`;
-                codegenSource += `import { ContextScope } from "@vortexjs/core";`;
 
                 const imports: Export[] = [];
 
@@ -215,7 +214,7 @@ export function VercelAdapter(): VercelAdapter {
                 
                 codegenSource += `const renderer = ssr();`;
                 codegenSource += `const root = createHTMLRoot();`;
-                codegenSource += `const lifetime = new ContextScope();`;
+                codegenSource += `const lifetime = new Lifetime();`;
                 codegenSource += `try {`;
                 codegenSource += `await INTERNAL_entrypoint({
                     props: entrypointProps,
@@ -266,7 +265,6 @@ export function VercelAdapter(): VercelAdapter {
             codegenSource += `import { INTERNAL_entrypoint } from "@vortexjs/wormhole";`;
             codegenSource += `import { Lifetime } from "@vortexjs/core";`;
             codegenSource += `import { createHTMLRoot, ssr, printHTML } from "@vortexjs/ssr";`;
-            codegenSource += `import { ContextScope } from "@vortexjs/core";`;
             codegenSource += `import {INTERNAL_tryHandleAPI} from "@vortexjs/wormhole";`;
 
             const imports: Export[] = [];
@@ -344,7 +342,7 @@ export function VercelAdapter(): VercelAdapter {
             // Handle page routes
             codegenSource += `const renderer = ssr();`;
             codegenSource += `const root = createHTMLRoot();`;
-            codegenSource += `const lifetime = new ContextScope();`;
+            codegenSource += `const lifetime = new Lifetime();`;
             codegenSource += `try {`;
             codegenSource += `await INTERNAL_entrypoint({
                 props: entrypointProps,
@@ -451,6 +449,10 @@ export function VercelAdapter(): VercelAdapter {
             // Add routes for static assets
             routes.push({
                 src: "/client.js",
+                dest: "/static/client.js"
+            });
+            routes.push({
+                src: "/entrypoint-client.js",
                 dest: "/static/client.js"
             });
             routes.push({
