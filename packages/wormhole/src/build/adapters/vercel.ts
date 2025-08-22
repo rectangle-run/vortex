@@ -249,7 +249,8 @@ export function VercelAdapter(): VercelAdapter {
                 inputPaths: {
                     main: path,
                 },
-                dev: false
+                dev: false,
+                noSplitting: true
             });
 
             return bundled.outputs.main;
@@ -375,7 +376,8 @@ export function VercelAdapter(): VercelAdapter {
                 inputPaths: {
                     main: path,
                 },
-                dev: false
+                dev: false,
+                noSplitting: true
             });
 
             return bundled.outputs.main;
