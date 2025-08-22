@@ -87,25 +87,25 @@ export function VercelAdapter(): VercelAdapter {
 
             codegenSource += `window.wormhole = {};`;
             codegenSource += `window.wormhole.hydrate = main;`;
-            
+
             // Add client-side hydration initialization
             codegenSource += `document.addEventListener('DOMContentLoaded', () => {`;
             codegenSource += `const pathname = window.location.pathname;`;
             codegenSource += `main({ pathname, context: {}, lifetime: new Lifetime() });`;
             codegenSource += `});`;
 
-            const filename = "client-bundle";
-            const path = await build.writeCodegenned(filename, codegenSource);
+            const path = await build.writeCodegenned("entrypoint-client", codegenSource);
 
             const bundled = await build.bundle({
                 target: "client",
                 inputPaths: {
-                    main: path,
+                    app: path,
                 },
+                outdir: join(build.project.projectDir, ".vercel", "output", "static"),
                 dev: false
             });
 
-            return bundled.outputs.main;
+            return bundled.outputs.app;
         },
 
         async buildCSS(build: Build) {
@@ -126,12 +126,13 @@ export function VercelAdapter(): VercelAdapter {
             const bundled = await build.bundle({
                 target: "client",
                 inputPaths: {
-                    main: cssPath,
+                    app: cssPath,
                 },
+                outdir: join(build.project.projectDir, ".vercel", "output", "static"),
                 dev: false
             });
 
-            return bundled.outputs.main;
+            return bundled.outputs.app;
         },
 
         async buildRouteFunction(build: Build, route: BuildRoute) {
@@ -144,10 +145,10 @@ export function VercelAdapter(): VercelAdapter {
             if (route.type === "api") {
                 // API route function
                 codegenSource += `import {INTERNAL_tryHandleAPI} from "@vortexjs/wormhole";`;
-                
+
                 const reexporterName = "proxy-" + Bun.hash(`${route.impl.file}-${route.impl.name}`).toString(36);
                 const implPath = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(route.impl.name)} } from ${JSON.stringify(route.impl.file)}`);
-                
+
                 const schemaName = "proxy-" + Bun.hash(`${route.schema.file}-${route.schema.name}`).toString(36);
                 const schemaPath = await build.writeCodegenned(schemaName, `export { ${JSON.stringify(route.schema.name)} } from ${JSON.stringify(route.schema.file)}`);
 
@@ -211,7 +212,7 @@ export function VercelAdapter(): VercelAdapter {
                 codegenSource += `export default async function handler(request) {`;
                 codegenSource += `const url = new URL(request.url);`;
                 codegenSource += `const pathname = url.pathname;`;
-                
+
                 codegenSource += `const renderer = ssr();`;
                 codegenSource += `const root = createHTMLRoot();`;
                 codegenSource += `const lifetime = new Lifetime();`;
@@ -332,7 +333,7 @@ export function VercelAdapter(): VercelAdapter {
             codegenSource += `export default async function handler(request) {`;
             codegenSource += `const url = new URL(request.url);`;
             codegenSource += `const pathname = url.pathname;`;
-            
+
             // Handle API routes first
             codegenSource += `const apiResponse = await INTERNAL_tryHandleAPI(request, apis, apiLoaders);`;
             codegenSource += `if (apiResponse) {`;
@@ -396,15 +397,8 @@ export function VercelAdapter(): VercelAdapter {
             await mkdir(functionsDir, { recursive: true });
 
             // Build client bundle and CSS
-            const clientBundlePath = await this.buildClientBundle(build);
-            const cssBundlePath = await this.buildCSS(build);
-
-            // Copy static assets to static directory
-            const staticClientPath = join(staticDir, "client.js");
-            const staticCssPath = join(staticDir, "styles.css");
-            
-            await Bun.write(staticClientPath, await Bun.file(clientBundlePath).text());
-            await Bun.write(staticCssPath, await Bun.file(cssBundlePath).text());
+            await this.buildClientBundle(build);
+            await this.buildCSS(build);
 
             // Build individual route functions
             const routeFunctions: string[] = [];
@@ -433,10 +427,10 @@ export function VercelAdapter(): VercelAdapter {
             const catchAllPath = await this.buildCatchAllFunction(build);
             const catchAllDir = join(functionsDir, "index.func");
             await mkdir(catchAllDir, { recursive: true });
-            
+
             const catchAllIndexPath = join(catchAllDir, "index.js");
             await Bun.write(catchAllIndexPath, await Bun.file(catchAllPath).text());
-            
+
             const catchAllVcConfig = {
                 runtime: "edge",
                 entrypoint: "index.js"
@@ -445,26 +439,12 @@ export function VercelAdapter(): VercelAdapter {
 
             // Create main config.json
             const routes = [];
-            
-            // Add routes for static assets
-            routes.push({
-                src: "/client.js",
-                dest: "/static/client.js"
-            });
-            routes.push({
-                src: "/entrypoint-client.js",
-                dest: "/static/client.js"
-            });
-            routes.push({
-                src: "/styles.css", 
-                dest: "/static/styles.css"
-            });
 
             // Add routes for each specific route function
             for (const route of build.routes) {
                 const routeId = printRoutePath(route.matcher).replace(/\[\.\.\.([^\]]+)\]/g, '[...$1]').replace(/\[([^\]]+)\]/g, '[$1]') || 'index';
                 const routePath = "/" + printRoutePath(route.matcher).replace(/\[\.\.\.([^\]]+)\]/g, '*').replace(/\[([^\]]+)\]/g, '*');
-                
+
                 if (route.type === "api") {
                     routes.push({
                         src: routePath,
