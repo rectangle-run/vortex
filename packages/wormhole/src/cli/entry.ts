@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { createPrinter } from "./printer";
 import { colors } from "@vortexjs/cli";
 import { version } from "../../package.json" assert { type: "json" };
-import { command, parseArgs } from "@vortexjs/args";
+import { command, parseArgs, optional, positional } from "@vortexjs/args";
 import { Project } from "~/state";
 import { Lifetime } from "@vortexjs/core";
 import { DevServer } from "~/dev/dev-server";
@@ -56,7 +56,7 @@ const commands = [
 		DevServer(state);
 		StatusBoard(state);
 	}, "dev"),
-	command(async (platform?: string) => {
+	command(async ({ platform }: { platform?: string }) => {
 		const lt = new Lifetime();
 		const state = new Project(process.cwd(), lt);
 
@@ -80,7 +80,7 @@ const commands = [
 		console.log(`Static directory: ${result.staticDir}`);
 		console.log(`Functions directory: ${result.functionsDir}`);
 		console.log(`Config file: ${result.configFile}`);
-	}, "build")
+	}, "build", optional(positional("platform")))
 ]
 
 export async function cliMain(args: string[]) {
