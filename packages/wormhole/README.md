@@ -8,6 +8,32 @@ Wormhole is the metaframework for Vortex, providing an opinionated way to build 
 - What we believe is the best way to structure applications
 - Provides a set of tools that synergize with said reccommended structure
 
+## Build Adapters
+
+Wormhole supports different build adapters for various deployment targets:
+
+### Development
+```bash
+wormhole dev
+```
+Uses the DevAdapter for local development with hot reloading and debugging features.
+
+### Vercel
+```bash
+wormhole build vercel
+```
+Uses the VercelAdapter for production deployment to Vercel. This adapter:
+- Generates production-optimized builds (minified, no dev flags)
+- Creates serverless functions compatible with Vercel's runtime
+- Handles both static assets and server-side rendering
+- Supports API routes
+
+The build output includes:
+- `clientEntry`: Client-side JavaScript bundle
+- `serverEntry`: Server-side bundle for Vercel functions
+- `cssEntry`: Compiled CSS bundle
+- `outdir`: Output directory containing all build artifacts
+
 ## Who this isn't for
 
 - People who don't want to use Vortex
