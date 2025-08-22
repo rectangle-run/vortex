@@ -2,18 +2,6 @@
   "version": 3,
   "routes": [
     {
-      "src": "/client.js",
-      "dest": "/static/client.js"
-    },
-    {
-      "src": "/entrypoint-client.js",
-      "dest": "/static/client.js"
-    },
-    {
-      "src": "/styles.css",
-      "dest": "/static/styles.css"
-    },
-    {
       "src": "/api/add",
       "dest": "/functions/api-api/add.func",
       "methods": [

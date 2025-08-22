@@ -15,7 +15,8 @@
         "valibot": "catalog:"
     },
     "scripts": {
-        "dev": "wormhole dev"
+        "dev": "wormhole dev",
+        "build": "wormhole build vercel"
     },
     "peerDependencies": {
         "typescript": "catalog:"
