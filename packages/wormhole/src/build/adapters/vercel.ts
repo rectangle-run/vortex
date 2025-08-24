@@ -158,7 +158,7 @@ export function VercelAdapter(): VercelAdapter {
 				if (route.method === "GET") {
 					codegenSource += `new URL(request.url).searchParams.get("props")`;
 				} else {
-					codegenSource += `await props.text()`;
+					codegenSource += `await request.text()`;
 				}
 				codegenSource += `;`;
 
