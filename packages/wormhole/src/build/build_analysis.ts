@@ -68,6 +68,10 @@ function flattenNode(
         path.push({ type: "spread", name: node.fallbackTransition.id });
     }
 
+    if (node.layout) {
+        layouts.push(node.layout);
+    }
+
     if (node.page) {
         build.routes.push({
             type: "route",
@@ -75,10 +79,6 @@ function flattenNode(
             frames: [...layouts, node.page],
             is404: false,
         });
-    }
-
-    if (node.layout) {
-        layouts.push(node.layout);
     }
 
     for (const [key, child] of Object.entries(node.cases)) {
