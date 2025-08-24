@@ -154,7 +154,11 @@ export function VercelAdapter(): VercelAdapter {
 				codegenSource += `import { SKL } from "@vortexjs/common";`;
 
 				codegenSource += `export default async function handler(request) {`;
-					codegenSource += `await request.text()`;
+				codegenSource += `const text = `;
+				if (route.method === "GET") {
+					codegenSource += `new URL(request.url).searchParams.get("props")`;
+				} else {
+					codegenSource += `await props.text()`;
 				}
 				codegenSource += `;`;
 
