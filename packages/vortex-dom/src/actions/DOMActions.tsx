@@ -83,7 +83,7 @@ export function DOMKeyboardActions(): JSXNode {
     }, { signal });
 
     window.addEventListener("keyup", (ev) => {
-        const shortcut = Array.from(keys).sort().map(x => getCodeToKey(x));
+        const shortcut = Array.from(keys).map(x => getCodeToKey(x));
         keys.delete(ev.code);
 
         let sortedShortcut = sortKeys(shortcut);
