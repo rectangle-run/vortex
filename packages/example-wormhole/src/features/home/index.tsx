@@ -14,6 +14,8 @@ route("/", {
             }
         })
 
+        const currentTime = time.use({}, { maxAge: 500 });
+
         return (
             <>
                 <DOMKeyboardActions />
@@ -22,7 +24,7 @@ route("/", {
                 </h1>
                 <p>
                     This is an example app, go to the{" "}
-                    <a href="/docs/tada">docs</a>
+                    <a href="/docs/tada">docs</a>, current time is {currentTime}
                 </p>
                 <button on:click={async () => {
                     console.log(await add({
@@ -73,3 +75,10 @@ export const add = query("/api/add", {
         return a + b;
     }
 })
+
+export const time = query("/api/time", {
+    impl() {
+        return new Date().toISOString();
+    },
+    schema: v.object({})
+});

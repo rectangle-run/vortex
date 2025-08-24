@@ -3,10 +3,12 @@ import type { QuerySchema } from "./schema";
 import { useHookLifetime } from "~/lifetime";
 import type { Signal } from "~/signal";
 
+export interface QueryProps { maxAge?: number }
+
 export function useQuery<Args, Result>(
     schema: QuerySchema<Args, Result>,
     args: Args,
-    props?: { maxAge?: number },
+    props?: QueryProps,
 ): Signal<Result | undefined> {
     const contextScope = useContextScope();
     const lt = useHookLifetime();
