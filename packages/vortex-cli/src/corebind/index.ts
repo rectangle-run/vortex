@@ -66,10 +66,10 @@ export function cli({ onUpdate }: { onUpdate?(): void; } = {}): Renderer<TreeNod
 			throw new Error("Function not implemented.");
 		},
 		implementations: [
-			implementIntrinsic(Frame, (props) => {
+			Frame.implement((props) => {
 				return jsx("box", props);
 			}),
-			implementIntrinsic(TextIntrinsic, (props) => {
+			TextIntrinsic.implement((props) => {
 				return jsx("text", props);
 			})
 		]

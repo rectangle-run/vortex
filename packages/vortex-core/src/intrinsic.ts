@@ -4,6 +4,7 @@ export const IntrinsicKey = "~vortex:intrinsic";
 
 export type IntrinsicComponent<Args extends {}, Id extends string> = {
 	"~vortex:intrinsic": Id;
+	implement(impl: (args: Args) => JSXNode): IntrinsicImplementation<Args, Id>;
 } & ((args: Args) => JSXNode);
 
 export function intrinsic<Args extends {}, Id extends string>(id: Id) {
@@ -14,6 +15,12 @@ export function intrinsic<Args extends {}, Id extends string>(id: Id) {
 	}) as unknown as IntrinsicComponent<Args, Id>;
 
 	impl[IntrinsicKey] = id;
+	impl.implement = (implementation) => {
+		return {
+			intrinsic: impl,
+			implementation,
+		};
+	};
 
 	return impl;
 }
@@ -25,13 +32,3 @@ export type IntrinsicImplementation<
 	intrinsic: IntrinsicComponent<Args, Id>;
 	implementation: (args: Args) => JSXNode;
 };
-
-export function implementIntrinsic<Args extends {}, Id extends string>(
-	intrinsic: IntrinsicComponent<Args, Id>,
-	implementation: (args: Args) => JSXNode,
-): IntrinsicImplementation<Args, Id> {
-	return {
-		intrinsic,
-		implementation,
-	};
-}
