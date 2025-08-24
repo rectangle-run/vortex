@@ -69,6 +69,23 @@ function sortKeys(keys: string[]): string[] {
     });
 }
 
+function isNodeEditable(node: HTMLElement): boolean {
+    const tagName = node.tagName.toLowerCase();
+    if (tagName === "input" || tagName === "textarea" || node.isContentEditable) {
+        return true;
+    }
+    if (node.parentElement) {
+        return isNodeEditable(node.parentElement);
+    }
+    return false;
+}
+
+function isEditable(ev: KeyboardEvent): boolean {
+    const target = ev.target as HTMLElement | null;
+    if (!target) return false;
+    return isNodeEditable(target);
+}
+
 export function DOMKeyboardActions(): JSXNode {
     if (!("window" in globalThis)) return <></>;
 
@@ -79,10 +96,12 @@ export function DOMKeyboardActions(): JSXNode {
     const keys = new Set<string>();
 
     window.addEventListener("keydown", (ev) => {
+        if (isEditable(ev)) return;
         keys.add(ev.code);
     }, { signal });
 
     window.addEventListener("keyup", (ev) => {
+        if (isEditable(ev)) return;
         const shortcut = Array.from(keys).map(x => getCodeToKey(x));
         keys.delete(ev.code);
 
