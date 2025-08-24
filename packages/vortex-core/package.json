@@ -14,7 +14,7 @@
         "typescript": "catalog:"
     },
     "scripts": {
-        "build": "tsdown ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts --format esm --dts --out-dir dist"
+        "build": "tsdown ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts ./src/actions/index.tsx --format esm --dts --out-dir dist"
     },
     "exports": {
         ".": {
@@ -31,6 +31,11 @@
             "types": "./dist/jsx/jsx-dev-runtime.d.ts",
             "import": "./dist/jsx/jsx-dev-runtime.js",
             "require": "./dist/jsx/jsx-dev-runtime.cjs"
+        },
+        "./actions": {
+            "types": "./dist/actions/index.d.ts",
+            "import": "./dist/actions/index.js",
+            "require": "./dist/actions/index.cjs"
         }
     },
     "version": "2.6.0",

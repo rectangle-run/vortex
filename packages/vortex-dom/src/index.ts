@@ -164,5 +164,6 @@ export function html(): Renderer<Node, HTMLHydrationContext> {
 	};
 }
 
+export * from "./actions";
 export * from "./jsx/intrinsics";
 export * from "./std";

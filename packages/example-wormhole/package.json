@@ -1,24 +1,24 @@
 {
-	"name": "@vortexjs/example-wormhole",
-	"module": "index.ts",
-	"type": "module",
-	"license": "MIT-0",
-	"private": true,
-	"devDependencies": {
-		"@types/bun": "catalog:"
-	},
-	"dependencies": {
-		"@vortexjs/core": "workspace:*",
-		"@vortexjs/dom": "workspace:*",
-		"@vortexjs/wormhole": "workspace:*",
-		"tailwindcss": "catalog:",
-		"valibot": "catalog:"
-	},
-	"scripts": {
-		"dev": "wormhole dev",
-		"vbuild": "wormhole build vercel"
-	},
-	"peerDependencies": {
-		"typescript": "catalog:"
-	}
+    "name": "@vortexjs/example-wormhole",
+    "module": "index.ts",
+    "type": "module",
+    "license": "MIT-0",
+    "private": true,
+    "devDependencies": {
+        "@types/bun": "catalog:"
+    },
+    "dependencies": {
+        "@vortexjs/core": "workspace:*",
+        "@vortexjs/dom": "workspace:*",
+        "@vortexjs/wormhole": "workspace:*",
+        "tailwindcss": "catalog:",
+        "valibot": "catalog:"
+    },
+    "scripts": {
+        "dev": "wormhole dev",
+        "vbuild": "wormhole build vercel"
+    },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    }
 }

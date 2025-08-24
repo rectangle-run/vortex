@@ -12,6 +12,7 @@ import {
 } from "./fragments";
 import { Reconciler } from "./reconciler";
 import type { IntrinsicImplementation } from "../intrinsic";
+import { ActionProvider } from "../actions";
 
 export * as FL from "./fragments";
 
@@ -46,7 +47,7 @@ function internalRender<RendererNode, HydrationContext>({ renderer, root, compon
     const lt = new Lifetime();
 
     const flNode = reconciler.render({
-        node: component,
+        node: <ActionProvider>{component}</ActionProvider>,
         hydration: renderer.getHydrationContext(root),
         lt,
         context: context ?? ContextScope.current ?? new ContextScope(),

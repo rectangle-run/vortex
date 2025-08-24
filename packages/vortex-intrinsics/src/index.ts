@@ -1,4 +1,5 @@
 import { intrinsic, type JSXChildren } from "@vortexjs/core";
+import type { Action } from "@vortexjs/core/actions";
 
 type TextSize = "title" | "heading" | "subheading" | "body" | "caption";
 
@@ -41,7 +42,7 @@ export const Text = intrinsic<
 export const Button = intrinsic<
 	{
 		children: JSXChildren;
-		onClick?: () => void;
+		action?: Action;
 		disabled?: boolean;
 		style?: "primary" | "secondary" | "ghost" | "outline";
 		size?: "small" | "medium" | "large";
@@ -52,14 +53,14 @@ export const Button = intrinsic<
 
 export type UDLRDescription<T extends string | never> =
 	| {
-		base?: number | T;
-		top?: number | T;
-		right?: number | T;
-		bottom?: number | T;
-		left?: number | T;
-		x?: number | T;
-		y?: number | T;
-	}
+			base?: number | T;
+			top?: number | T;
+			right?: number | T;
+			bottom?: number | T;
+			left?: number | T;
+			x?: number | T;
+			y?: number | T;
+	  }
 	| number
 	| T;
 
@@ -84,15 +85,15 @@ export function resolveUDLRDescription<T extends string | never>(
 
 export type Background =
 	| {
-		color?: string;
-	}
+			color?: string;
+	  }
 	| string;
 export type Border =
 	| {
-		color?: string;
-		width?: number;
-		radius?: number;
-	}
+			color?: string;
+			width?: number;
+			radius?: number;
+	  }
 	| string;
 
 export const Frame = intrinsic<
@@ -114,18 +115,18 @@ export const Frame = intrinsic<
 		gap?: number | string;
 		clip?: boolean;
 		alignItems?:
-		| "flex-start"
-		| "flex-end"
-		| "center"
-		| "stretch"
-		| "baseline";
+			| "flex-start"
+			| "flex-end"
+			| "center"
+			| "stretch"
+			| "baseline";
 		justifyContent?:
-		| "flex-start"
-		| "flex-end"
-		| "center"
-		| "space-between"
-		| "space-around"
-		| "space-evenly";
+			| "flex-start"
+			| "flex-end"
+			| "center"
+			| "space-between"
+			| "space-around"
+			| "space-evenly";
 		position?: "absolute" | "relative" | "static";
 		left?: number;
 		top?: number;
