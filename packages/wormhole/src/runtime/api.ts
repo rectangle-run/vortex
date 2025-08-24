@@ -15,7 +15,7 @@ interface ClientAPIProps<Input, Output> extends BaseAPIProps<Input, Output> {
 }
 
 interface ServerAPIProps<Input, Output> extends BaseAPIProps<Input, Output> {
-    impl(inp: Input): Promise<Output> | Output;
+    impl(): (inp: Input) => Promise<Output> | Output;
 }
 
 export function INTERNAL_client_api<Input, Output>(props: ClientAPIProps<Input, Output>): ((inp: Input) => Promise<Output>) & ({
@@ -75,7 +75,7 @@ export function INTERNAL_server_api<Input, Output>(props: ServerAPIProps<Input, 
     use(args: Input, props: QueryProps): Signal<Output | undefined>;
 } | {}) {
     const result = async function (inp: Input) {
-        return await props.impl(inp);
+        return await props.impl()(inp);
     }
 
     if (props.isQuery) {

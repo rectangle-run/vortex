@@ -1,6 +1,6 @@
 import { unwrap } from "@vortexjs/common";
 import type { CallExpression, Expression } from "oxc-parser";
-import { anonFunct, createObject, defaultSpan, exportNode, identifier, literal } from "../builders";
+import { anonFunct, createObject, defaultSpan, exportNode, identifier, literal, wrapExprInFunct } from "../builders";
 import {
     type CompilerState,
     getObjectKeys,
@@ -56,11 +56,9 @@ export function handleAPIFunction(
 
     if (state.target === "server") {
         const implExportId = exportNode(state, impl);
-        props.impl = identifier(implExportId);
+        props.impl = wrapExprInFunct(identifier(implExportId));
 
         const schemaExportId = exportNode(state, schema);
-
-        props.schema = identifier(schemaExportId);
 
         state.clientEligible = false;
         state.discoveries.push({
