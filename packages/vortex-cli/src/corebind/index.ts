@@ -1,4 +1,4 @@
-import { createContext, getImmediateValue, implementIntrinsic, store, type IntrinsicComponent, type Lifetime, type Renderer, type Store } from "@vortexjs/core";
+import { createContext, getImmediateValue, store, type IntrinsicComponent, type Lifetime, type Renderer, type Store } from "@vortexjs/core";
 import { Box, type TreeNode, Text } from "../tree";
 import { fontWeightToPrimitiveBoldness, Frame, Text as TextIntrinsic, type FontWeight } from "@vortexjs/intrinsics";
 import { jsx } from "@vortexjs/core/jsx-runtime";
