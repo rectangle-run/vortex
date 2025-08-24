@@ -73,10 +73,12 @@ export class Build<AdapterOutput = any> {
     analyze = Build_analyze;
 
     async bundle<Files extends string>(
-        { inputPaths, target, dev = false }: {
+        { inputPaths, target, dev = false, noSplitting = false, outdir = this.outputPath }: {
             inputPaths: Record<Files, string>,
             target: TargetLocation;
             dev?: boolean;
+            noSplitting?: boolean;
+            outdir?: string;
         }
     ): Promise<{
         outputs: Record<Files, string>;
@@ -95,9 +97,9 @@ export class Build<AdapterOutput = any> {
 
         const build = await Bun.build({
             plugins: [p],
-            splitting: true,
+            splitting: !noSplitting,
             entrypoints,
-            outdir: this.outputPath,
+            outdir,
             target: target === "server" ? "bun" : "browser",
             sourcemap: dev ? "inline" : "none",
             naming: {
@@ -111,7 +113,15 @@ export class Build<AdapterOutput = any> {
         for (const [id, entry] of Object.entries(inputPaths)) {
             const name = basename(entry as string);
             const fileName = name.slice(0, name.lastIndexOf("."));
-            const path = join(this.outputPath, fileName + ".js");
+            const originalExt = extname(entry as string);
+
+            // Use correct extension based on input file type
+            let outputExt = ".js"; // default
+            if (originalExt === ".css") {
+                outputExt = ".css";
+            }
+
+            const path = join(outdir, fileName + outputExt);
 
             results[id as Files] = path;
         }
