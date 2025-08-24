@@ -45,11 +45,10 @@ function App({
     useStreaming();
 
     const awaited = useAwait();
-
-    const pathname = pathnameToUse ? useState(pathnameToUse) : usePathname();
+    const pathname = (pathnameToUse && typeof window === "undefined") ? useState(pathnameToUse) : usePathname();
     const route = useDerived((get) => {
         const path = get(pathname);
-        return props.routes.find((r) => matchPath(r.matcher, path));
+        return props.routes.find((r) => matchPath(r.matcher, path).matched);
     });
     const framesPromise = useDerived(async (get) => {
         const rot = unwrap(get(route));

@@ -32,6 +32,7 @@
         "release": "changeset publish",
         "build": "turbo build",
         "wdev": "cd packages/example-wormhole && turbo build && bun dev",
+        "wbuild": "cd packages/example-wormhole && turbo build && bun vbuild",
         "version": "changeset version",
         "dev": "turbo dev",
         "test": "turbo test",

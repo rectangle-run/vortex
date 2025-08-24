@@ -188,7 +188,7 @@ export function matchPath(matcher: RoutePath, path: string): {
     ): { matched: false } | { matched: true, params: Record<string, string>, spreads: Record<string, string[]> } {
         // Base case: both matcher and path are fully consumed
         if (matcherIdx === matcher.length && pathIdx === pathSegments.length) {
-            return { matched: true, params: { ...params }, spreads: { ...spreads } };
+            return { matched: true, params, spreads };
         }
         // If matcher is consumed but path is not, or vice versa, fail
         if (matcherIdx === matcher.length || (pathIdx > pathSegments.length)) {
