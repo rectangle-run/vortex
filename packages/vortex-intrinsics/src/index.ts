@@ -1,4 +1,5 @@
 import { intrinsic, type JSXChildren } from "@vortexjs/core";
+import type { Action } from "@vortexjs/core/actions";
 
 type TextSize = "title" | "heading" | "subheading" | "body" | "caption";
 
@@ -41,7 +42,7 @@ export const Text = intrinsic<
 export const Button = intrinsic<
 	{
 		children: JSXChildren;
-		onClick?: () => void;
+		action?: Action;
 		disabled?: boolean;
 		style?: "primary" | "secondary" | "ghost" | "outline";
 		size?: "small" | "medium" | "large";
