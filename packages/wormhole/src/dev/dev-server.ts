@@ -130,9 +130,8 @@ async function DevServer_processRequest(this: DevServer, request: Request, tags:
     const root = createHTMLRoot();
     const renderer = ssr();
 
-    const context = new ContextScope();
-
     const lifetime = new Lifetime();
+    const context = new ContextScope(lifetime);
 
     serverEntrypoint.main({
         root,

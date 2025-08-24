@@ -233,7 +233,7 @@ export function VercelAdapter(): VercelAdapter {
                 codegenSource += `const renderer = ssr();`;
                 codegenSource += `const root = createHTMLRoot();`;
                 codegenSource += `const lifetime = new Lifetime();`;
-                codegenSource += `const context = new ContextScope();`;
+                codegenSource += `const context = new ContextScope(lifetime);`;
                 codegenSource += `await INTERNAL_entrypoint({
                     props: entrypointProps,
                     loaders,

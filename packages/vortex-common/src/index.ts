@@ -7,6 +7,7 @@ export * from "./hash";
 export * from "./npm";
 export * as SKL from "./skl";
 export * from "./smolify";
+export * from "./time";
 export * from "./ultraglobal";
 export * from "./unreachable";
 export * from "./unwrap";

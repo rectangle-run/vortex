@@ -50,7 +50,7 @@ function internalRender<RendererNode, HydrationContext>({ renderer, root, compon
         node: <ActionProvider>{component}</ActionProvider>,
         hydration: renderer.getHydrationContext(root),
         lt,
-        context: context ?? ContextScope.current ?? new ContextScope(),
+        context: context ?? ContextScope.current ?? new ContextScope(lt),
     });
 
     const portal = new FLPortal(root, renderer);
