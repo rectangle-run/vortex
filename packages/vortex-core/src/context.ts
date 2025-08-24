@@ -63,10 +63,12 @@ export class StreamingContext {
 		const self = this;
 
 		this.loadingCounter++;
+		console.log("markLoading", this.loadingCounter);
 
 		return {
 			[Symbol.dispose]() {
 				self.loadingCounter--;
+				console.log("unmarkLoading", self.loadingCounter);
 				self.updated();
 			},
 		};
@@ -88,6 +90,7 @@ export class StreamingContext {
 			}
 
 			if (self.loadingCounter === 0) {
+				console.log("done loading");
 				self.onDoneLoadingCallback();
 			}
 		}) as unknown as number;
