@@ -55,6 +55,9 @@ const commands = [
 
         DevServer(state);
         StatusBoard(state);
+
+        // wait forever
+        await new Promise(() => { });
     }, "dev"),
     command(async ({ platform }: { platform?: string }) => {
         const lt = new Lifetime();
@@ -73,9 +76,11 @@ const commands = [
         }
 
         const build = new Build(state, adapter);
-        const result = await build.run();
+        await build.run();
 
         console.log(`Successfully built for ${adapter.target}`);
+
+        process.exit(0);
     }, "build", optional(positional("platform")))
 ]
 

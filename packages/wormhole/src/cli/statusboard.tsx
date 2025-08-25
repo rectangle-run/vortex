@@ -42,6 +42,8 @@ function TaskView({ task }: { task: Task }) {
 }
 
 export function StatusBoard(state: Project) {
+    linearView.enabled = false;
+
     const lt = state.lt;
     using _hlt = Lifetime.changeHookLifetime(lt);
 
@@ -238,13 +240,25 @@ function LeftPanel() {
     </Frame>;
 }
 
+const linearView = {
+    enabled: true
+}
+
 export function addTask(props: Omit<Task, typeof Symbol.dispose>): Task {
     const task: Task = {
         ...props,
         [Symbol.dispose]: () => {
             tasks.set(getImmediateValue(tasks).filter((t) => t !== task));
+
+            if (linearView.enabled) {
+                console.log(`[${task.name}]: done`);
+            }
         },
     };
+
+    if (linearView.enabled) {
+        console.log(`[${task.name}]: started`);
+    }
 
     tasks.set([...getImmediateValue(tasks), task]);
 
