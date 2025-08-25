@@ -19,6 +19,7 @@ export interface DevAdapter extends BuildAdapter<DevAdapterResult> {
 
 export function DevAdapter(): DevAdapter {
     return {
+        target: "Embedded Dev Server",
         async buildForLocation(build: Build, location: TargetLocation) {
             using _task = addTask({
                 name: `Rebuilding development ${location}`

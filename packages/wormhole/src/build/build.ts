@@ -29,6 +29,7 @@ export interface BuildPageRoute extends BuildBaseRoute<"route"> {
 export type BuildRoute = BuildAPIRoute | BuildPageRoute;
 
 export interface BuildAdapter<AdapterOutput> {
+    target: string;
     run(
         build: Build<AdapterOutput>,
     ): Promise<AdapterOutput>;

@@ -75,11 +75,7 @@ const commands = [
         const build = new Build(state, adapter);
         const result = await build.run();
 
-        console.log(`Build completed successfully!`);
-        console.log(`Output directory: ${result.outputDir}`);
-        console.log(`Static directory: ${result.staticDir}`);
-        console.log(`Functions directory: ${result.functionsDir}`);
-        console.log(`Config file: ${result.configFile}`);
+        console.log(`Successfully built for ${adapter.target}`);
     }, "build", optional(positional("platform")))
 ]
 

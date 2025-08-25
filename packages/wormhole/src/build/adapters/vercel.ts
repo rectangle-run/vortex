@@ -29,6 +29,7 @@ type VercelRoute = { src: string, dest: string, check?: boolean } | { handle: Ha
 
 export function VercelAdapter(): VercelAdapter {
     return {
+        target: "Vercel",
         async buildClientBundle(build: Build) {
             using _task = addTask({
                 name: "Building client bundle for Vercel"
