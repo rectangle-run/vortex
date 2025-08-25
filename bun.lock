@@ -136,6 +136,20 @@
         "typescript": "catalog:",
       },
     },
+    "packages/vindicator": {
+      "name": "@vortexjs/vindicator",
+      "version": "0.0.1",
+      "dependencies": {
+        "@vortexjs/common": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/bun": "catalog:",
+        "tsdown": "catalog:",
+      },
+      "peerDependencies": {
+        "typescript": "catalog:",
+      },
+    },
     "packages/vortex-cache": {
       "name": "@vortexjs/cache",
       "version": "0.0.1",
@@ -273,6 +287,7 @@
         "@vortexjs/pippin": "workspace:*",
         "@vortexjs/pippin-plugin-tailwind": "workspace:",
         "@vortexjs/ssr": "workspace:*",
+        "@vortexjs/vindicator": "workspace:*",
         "chalk": "catalog:",
       },
       "devDependencies": {
@@ -570,6 +585,8 @@
     "@vortexjs/prime": ["@vortexjs/prime@workspace:packages/vortex-prime"],
 
     "@vortexjs/ssr": ["@vortexjs/ssr@workspace:packages/vortex-ssr"],
+
+    "@vortexjs/vindicator": ["@vortexjs/vindicator@workspace:packages/vindicator"],
 
     "@vortexjs/wormhole": ["@vortexjs/wormhole@workspace:packages/wormhole"],
 
