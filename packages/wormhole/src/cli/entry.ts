@@ -66,7 +66,13 @@ const commands = [
         await state.init();
 
         let adapter;
-        switch (platform) {
+        let plat = platform;
+
+        if (process.env.VERCEL === "1") {
+            plat = "vercel";
+        }
+
+        switch (plat) {
             case "vercel":
                 adapter = VercelAdapter();
                 break;
