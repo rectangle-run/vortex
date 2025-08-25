@@ -308,8 +308,10 @@ export function VercelAdapter(): VercelAdapter {
             await mkdir(functionsDir, { recursive: true });
 
             // Build client bundle and CSS
-            await this.buildClientBundle(build);
-            await this.buildCSS(build);
+            const buildPromises: Promise<any>[] = [];
+
+            buildPromises.push(this.buildClientBundle(build));
+            buildPromises.push(this.buildCSS(build));
 
             let currentPhase: HandlePhase | null = null;
             let vindicatorSteps: MatchStep[] = [];
@@ -318,7 +320,7 @@ export function VercelAdapter(): VercelAdapter {
 
             // Build individual route functions
             const routeFunctions: string[] = [];
-            for (const route of build.routes) {
+            buildPromises.push(...build.routes.map(async (route) => {
                 const functionPath = await this.buildRouteFunction(build, route);
                 routeFunctions.push(functionPath);
 
@@ -361,7 +363,9 @@ export function VercelAdapter(): VercelAdapter {
                     path: srcStr,
                     func: destStr,
                 })
-            }
+            }));
+
+            await Promise.all(buildPromises);
 
             const config = vindicate({
                 steps: vindicatorSteps,
