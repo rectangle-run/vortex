@@ -84,8 +84,13 @@ export function DevAdapter(): DevAdapter {
 				root,
 				pathname: props.pathname,
 				context: props.context,
-				lifetime: props.lifetime ?? new Lifetime(),
-			});`;
+				lifetime: props.lifetime ?? new Lifetime(),`;
+
+            if (location === "client") {
+                codegenSource += `supplement: props.supplement,`;
+            }
+
+            codegenSource += `});`;
 
             codegenSource += `}`;
 

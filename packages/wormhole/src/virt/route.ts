@@ -21,7 +21,7 @@ export type APIQueryFunction = <Input, Output>(
         method?: HTTPMethod;
     }
 ) => ((inp: Input) => Promise<Output>) & {
-    use(args: Input, props: QueryProps): Signal<Output | undefined>;
+    use(args: Input, props?: QueryProps): Signal<Output | undefined>;
 };
 
 export type APIMutationFunction = <Input, Output>(

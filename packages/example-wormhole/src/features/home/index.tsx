@@ -14,7 +14,7 @@ route("/", {
             }
         })
 
-        const currentTime = time.use({}, { maxAge: 500 });
+        const currentTime = time.use({});
 
         return (
             <>

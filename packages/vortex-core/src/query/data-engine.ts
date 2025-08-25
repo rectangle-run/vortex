@@ -1,115 +1,137 @@
-import { useState, type Store } from "~/signal";
+import { getImmediateValue, useState, type Store } from "~/signal";
 import type { QuerySchema } from "./schema";
 import { time } from "@vortexjs/common";
 import type { StreamingContext } from "~/context";
 import type { Lifetime } from "~/lifetime";
 
 export class QueryObservation<Args, Result> {
-    maxAge: number;
-    query: Query<Args, Result>;
+	maxAge: number;
+	query: Query<Args, Result>;
 
-    constructor(
-        props: {
-            query: Query<Args, Result>;
-            maxAge?: number;
-        }
-    ) {
-        this.query = props.query;
-        this.maxAge = props.maxAge ?? time("5m").ms;
-    }
+	constructor(
+		props: {
+			query: Query<Args, Result>;
+			maxAge?: number;
+		}
+	) {
+		this.query = props.query;
+		this.maxAge = props.maxAge ?? time("5m").ms;
+	}
 }
 
+export type QuerySupplement = Record<string, any>;
+
 export class Query<Args, Result> {
-    schema: QuerySchema<Args, Result>;
-    args: Args;
-    data: Store<Result | undefined> = useState(undefined);
-    isLoading: boolean;
-    updatedAt: number;
-    streaming: StreamingContext;
+	schema: QuerySchema<Args, Result>;
+	args: Args;
+	data: Store<Result | undefined> = useState(undefined);
+	isLoading: boolean;
+	updatedAt: number;
+	dataEngine: QueryDataEngine;
 
-    constructor(props: { schema: QuerySchema<Args, Result>; args: Args, streaming: StreamingContext }) {
-        this.schema = props.schema;
-        this.args = props.args;
-        this.isLoading = false;
-        this.updatedAt = 0;
-        this.streaming = props.streaming;
-    }
+	constructor(props: { schema: QuerySchema<Args, Result>; args: Args, dataEngine: QueryDataEngine }) {
+		this.schema = props.schema;
+		this.args = props.args;
+		this.isLoading = false;
+		this.updatedAt = 0;
+		this.dataEngine = props.dataEngine;
+	}
 
-    async update() {
-        if (this.isLoading) return;
+	async update() {
+		if (this.isLoading) return;
 
-        using _data = this.streaming.markLoading();
+		using _data = this.dataEngine.streaming.markLoading();
 
-        this.isLoading = true;
+		this.isLoading = true;
 
-        try {
-            const result = await this.schema.impl(this.args);
-            this.data.set(result);
-            this.updatedAt = Date.now();
-        } catch (e) {
-            console.error("Error fetching query:", e);
-        } finally {
-            this.isLoading = false;
-        }
-    }
+		try {
+			const result = await this.schema.impl(this.args);
+			this.data.set(result);
+			this.updatedAt = Date.now();
+			console.log(`[${this.dataEngine.id}]: Query updated:`, this.schema.getKey(this.args), result);
+		} catch (e) {
+			console.error("Error fetching query:", e);
+		} finally {
+			this.isLoading = false;
+		}
+	}
 }
 
 export class QueryDataEngine {
-    observations: QueryObservation<any, any>[] = [];
-    queries = new Map<string, Query<any, any>>();
-    streaming: StreamingContext;
+	observations: QueryObservation<any, any>[] = [];
+	queries = new Map<string, Query<any, any>>();
+	streaming: StreamingContext;
+	hydrationSupplement: QuerySupplement = {};
+	id = crypto.randomUUID();
 
-    constructor({ streaming, lt }: {
-        streaming: StreamingContext,
-        lt: Lifetime
-    }) {
-        this.streaming = streaming;
-        const int = setInterval(() => this.tick(), 1000);
-        lt.onClosed(() => clearInterval(int));
-    }
+	constructor({ streaming, lt }: {
+		streaming: StreamingContext,
+		lt: Lifetime
+	}) {
+		this.streaming = streaming;
+		const int = setInterval(() => this.tick(), 1000);
+		lt.onClosed(() => clearInterval(int));
+	}
 
-    tick() {
-        const now = Date.now();
+	getSupplement(): QuerySupplement {
+		console.log(`[${this.id}]: I have ${this.queries.size} queries`);
+		const supplement: QuerySupplement = {};
+		for (const [key, query] of this.queries) {
+			const data = getImmediateValue(query.data);
+			console.log(`[${this.id}]: Gathering supplement data for ${key}`, data);
+			if (data === undefined) continue;
+			supplement[key] = data;
+		}
+		return supplement;
+	}
 
-        for (const obs of this.observations) {
-            if (now - obs.query.updatedAt > obs.maxAge) {
-                obs.query.update();
-            }
-        }
-    }
+	tick() {
+		const now = Date.now();
 
-    createObservation<Args, Result>(
-        props: {
-            maxAge?: number;
-            schema: QuerySchema<Args, Result>;
-            args: Args;
-            lt: Lifetime;
-        }
-    ): QueryObservation<Args, Result> {
-        const key = props.schema.getKey(props.args);
+		for (const obs of this.observations) {
+			if (now - obs.query.updatedAt > obs.maxAge) {
+				obs.query.update();
+			}
+		}
+	}
 
-        // Create query if it doesn't exist
-        let query = this.queries.get(key);
+	createObservation<Args, Result>(
+		props: {
+			maxAge?: number;
+			schema: QuerySchema<Args, Result>;
+			args: Args;
+			lt: Lifetime;
+		}
+	): QueryObservation<Args, Result> {
+		const key = props.schema.getKey(props.args);
 
-        if (!query) {
-            query = new Query<Args, Result>({ schema: props.schema, args: props.args, streaming: this.streaming });
-            this.queries.set(key, query);
-            query.update();
-        }
+		// Create query if it doesn't exist
+		let query = this.queries.get(key);
 
-        const observation = new QueryObservation<Args, Result>({
-            query,
-            maxAge: props.maxAge
-        });
-        this.observations.push(observation);
+		if (!query) {
+			query = new Query<Args, Result>({ schema: props.schema, args: props.args, dataEngine: this });
+			this.queries.set(key, query);
+			if (key in this.hydrationSupplement) {
+				query.data.set(this.hydrationSupplement[key]);
+				query.updatedAt = Date.now();
+			} else {
+				query.update();
+			}
+		}
 
-        props.lt.onClosed(() => {
-            const index = this.observations.indexOf(observation);
-            if (index !== -1) {
-                this.observations.splice(index, 1);
-            }
-        });
+		const observation = new QueryObservation<Args, Result>({
+			query,
+			maxAge: props.maxAge
+		});
+		this.observations.push(observation);
 
-        return observation;
-    }
+		props.lt.onClosed(() => {
+			const index = this.observations.indexOf(observation);
+			if (index !== -1) {
+				this.observations.splice(index, 1);
+			}
+		});
+
+		return observation;
+	}
 }

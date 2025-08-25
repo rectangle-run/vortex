@@ -19,7 +19,7 @@ interface ServerAPIProps<Input, Output> extends BaseAPIProps<Input, Output> {
 }
 
 export function INTERNAL_client_api<Input, Output>(props: ClientAPIProps<Input, Output>): ((inp: Input) => Promise<Output>) & ({
-    use(args: Input, props: QueryProps): Signal<Output | undefined>;
+    use(args: Input, props?: QueryProps): Signal<Output | undefined>;
 } | {}) {
     // TODO: Add proper query support once Core Query drops
     const result = async (inp: Input) => {
@@ -72,7 +72,7 @@ export function INTERNAL_client_api<Input, Output>(props: ClientAPIProps<Input, 
 }
 
 export function INTERNAL_server_api<Input, Output>(props: ServerAPIProps<Input, Output>): ((inp: Input) => Promise<Output>) & ({
-    use(args: Input, props: QueryProps): Signal<Output | undefined>;
+    use(args: Input, props?: QueryProps): Signal<Output | undefined>;
 } | {}) {
     const result = async function (inp: Input) {
         return await props.impl()(inp);
