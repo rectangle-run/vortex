@@ -7,76 +7,76 @@ import { mkdir, rmdir } from "node:fs/promises";
 import { printRoutePath, type RoutePath } from "../router";
 
 export interface VercelAdapterResult {
-    outputDir: string;
-    staticDir: string;
-    functionsDir: string;
-    configFile: string;
+	outputDir: string;
+	staticDir: string;
+	functionsDir: string;
+	configFile: string;
 }
 
 export interface VercelAdapter extends BuildAdapter<VercelAdapterResult> {
-    buildClientBundle(build: Build): Promise<string>;
-    buildCSS(build: Build): Promise<string>;
-    buildRouteFunction(build: Build, route: BuildRoute): Promise<string>;
+	buildClientBundle(build: Build): Promise<string>;
+	buildCSS(build: Build): Promise<string>;
+	buildRouteFunction(build: Build, route: BuildRoute): Promise<string>;
 }
 
 export function getRouteId(matcher: RoutePath) {
-    return printRoutePath(matcher).replaceAll(/\\|\//gi, "-").replaceAll(" ", "-") || 'index';
+	return printRoutePath(matcher).replaceAll(/\\|\//gi, "-").replaceAll(" ", "-") || 'index';
 }
 
 export function VercelAdapter(): VercelAdapter {
-    return {
-        async buildClientBundle(build: Build) {
-            using _task = addTask({
-                name: "Building client bundle for Vercel"
-            });
+	return {
+		async buildClientBundle(build: Build) {
+			using _task = addTask({
+				name: "Building client bundle for Vercel"
+			});
 
-            let codegenSource = "";
+			let codegenSource = "";
 
-            codegenSource += `import { INTERNAL_entrypoint } from "@vortexjs/wormhole";`;
-            codegenSource += `import { Lifetime } from "@vortexjs/core";`;
-            codegenSource += `import { html } from "@vortexjs/dom";`;
+			codegenSource += `import { INTERNAL_entrypoint } from "@vortexjs/wormhole";`;
+			codegenSource += `import { Lifetime } from "@vortexjs/core";`;
+			codegenSource += `import { html } from "@vortexjs/dom";`;
 
-            const imports: Export[] = [];
+			const imports: Export[] = [];
 
-            function getExportIndex(exp: Export): number {
-                const index = imports.findIndex(x => x.file === exp.file && x.name === exp.name);
-                if (index === -1) {
-                    imports.push(exp);
-                    return imports.length - 1;
-                }
-                return index;
-            }
+			function getExportIndex(exp: Export): number {
+				const index = imports.findIndex(x => x.file === exp.file && x.name === exp.name);
+				if (index === -1) {
+					imports.push(exp);
+					return imports.length - 1;
+				}
+				return index;
+			}
 
-            const entrypointProps: EntrypointProps = {
-                routes: build.routes.filter(x => x.type === "route").map(x => ({
-                    matcher: x.matcher,
-                    frames: x.frames.map((frame) => ({
-                        index: getExportIndex(frame),
-                    })),
-                    is404: x.is404,
-                }))
-            };
+			const entrypointProps: EntrypointProps = {
+				routes: build.routes.filter(x => x.type === "route").map(x => ({
+					matcher: x.matcher,
+					frames: x.frames.map((frame) => ({
+						index: getExportIndex(frame),
+					})),
+					is404: x.is404,
+				}))
+			};
 
-            codegenSource += `const entrypointProps = JSON.parse(${JSON.stringify(JSON.stringify(entrypointProps))});`;
+			codegenSource += `const entrypointProps = JSON.parse(${JSON.stringify(JSON.stringify(entrypointProps))});`;
 
-            codegenSource += `function main(props) {`;
+			codegenSource += `function main(props) {`;
 
-            codegenSource += 'const loaders = [';
+			codegenSource += 'const loaders = [';
 
-            for (const exp of imports) {
-                const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
+			for (const exp of imports) {
+				const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
 
-                const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
+				const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
 
-                codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
-            }
+				codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
+			}
 
-            codegenSource += '];';
+			codegenSource += '];';
 
-            codegenSource += `const renderer = html();`;
-            codegenSource += `const root = document.documentElement;`;
+			codegenSource += `const renderer = html();`;
+			codegenSource += `const root = document.documentElement;`;
 
-            codegenSource += `return INTERNAL_entrypoint({
+			codegenSource += `return INTERNAL_entrypoint({
 				props: entrypointProps,
 				loaders,
 				renderer,
@@ -84,157 +84,158 @@ export function VercelAdapter(): VercelAdapter {
 				pathname: props.pathname,
 				context: props.context,
 				lifetime: props.lifetime ?? new Lifetime(),
+				supplement: props.supplement
 			});`;
 
-            codegenSource += `}`;
+			codegenSource += `}`;
 
-            codegenSource += `window.wormhole = {};`;
-            codegenSource += `window.wormhole.hydrate = main;`;
+			codegenSource += `window.wormhole = {};`;
+			codegenSource += `window.wormhole.hydrate = main;`;
 
-            const path = await build.writeCodegenned("entrypoint-client", codegenSource);
+			const path = await build.writeCodegenned("entrypoint-client", codegenSource);
 
-            const bundled = await build.bundle({
-                target: "client",
-                inputPaths: {
-                    app: path,
-                },
-                outdir: join(build.project.projectDir, ".vercel", "output", "static"),
-                dev: false
-            });
+			const bundled = await build.bundle({
+				target: "client",
+				inputPaths: {
+					app: path,
+				},
+				outdir: join(build.project.projectDir, ".vercel", "output", "static"),
+				dev: false
+			});
 
-            return bundled.outputs.app;
-        },
+			return bundled.outputs.app;
+		},
 
-        async buildCSS(build: Build) {
-            using _task = addTask({
-                name: "Building CSS for Vercel"
-            });
+		async buildCSS(build: Build) {
+			using _task = addTask({
+				name: "Building CSS for Vercel"
+			});
 
-            let codegenCSS = "";
+			let codegenCSS = "";
 
-            const appCSSPath = join(build.project.projectDir, "src", "app.css");
+			const appCSSPath = join(build.project.projectDir, "src", "app.css");
 
-            if (await Bun.file(appCSSPath).exists()) {
-                codegenCSS += `@import "${appCSSPath}";`;
-            }
+			if (await Bun.file(appCSSPath).exists()) {
+				codegenCSS += `@import "${appCSSPath}";`;
+			}
 
-            const cssPath = await build.writeCodegenned("styles", codegenCSS, "css");
+			const cssPath = await build.writeCodegenned("styles", codegenCSS, "css");
 
-            const bundled = await build.bundle({
-                target: "client",
-                inputPaths: {
-                    app: cssPath,
-                },
-                outdir: join(build.project.projectDir, ".vercel", "output", "static"),
-                dev: false
-            });
+			const bundled = await build.bundle({
+				target: "client",
+				inputPaths: {
+					app: cssPath,
+				},
+				outdir: join(build.project.projectDir, ".vercel", "output", "static"),
+				dev: false
+			});
 
-            return bundled.outputs.app;
-        },
+			return bundled.outputs.app;
+		},
 
-        async buildRouteFunction(build: Build, route: BuildRoute) {
-            using _task = addTask({
-                name: `Building function for route: ${printRoutePath(route.matcher)}`
-            });
+		async buildRouteFunction(build: Build, route: BuildRoute) {
+			using _task = addTask({
+				name: `Building function for route: ${printRoutePath(route.matcher)}`
+			});
 
-            let codegenSource = "";
+			let codegenSource = "";
 
-            if (route.type === "api") {
-                // API route function
-                codegenSource += `import {INTERNAL_tryHandleAPI} from "@vortexjs/wormhole";`;
+			if (route.type === "api") {
+				// API route function
+				codegenSource += `import {INTERNAL_tryHandleAPI} from "@vortexjs/wormhole";`;
 
-                codegenSource += `import { ${JSON.stringify(route.schema.name)} as schema } from ${JSON.stringify(route.schema.file)};`;
-                codegenSource += `import { ${JSON.stringify(route.impl.name)} as impl } from ${JSON.stringify(route.impl.file)};`;
-                codegenSource += `import { SKL } from "@vortexjs/common";`;
+				codegenSource += `import { ${JSON.stringify(route.schema.name)} as schema } from ${JSON.stringify(route.schema.file)};`;
+				codegenSource += `import { ${JSON.stringify(route.impl.name)} as impl } from ${JSON.stringify(route.impl.file)};`;
+				codegenSource += `import { SKL } from "@vortexjs/common";`;
 
-                codegenSource += `export default async function handler(request) {`;
-                codegenSource += `const text = `;
-                if (route.method === "GET") {
-                    codegenSource += `new URL(request.url).searchParams.get("props")`;
-                } else {
-                    codegenSource += `await request.text()`;
-                }
-                codegenSource += `;`;
+				codegenSource += `export default async function handler(request) {`;
+				codegenSource += `const text = `;
+				if (route.method === "GET") {
+					codegenSource += `new URL(request.url).searchParams.get("props")`;
+				} else {
+					codegenSource += `await request.text()`;
+				}
+				codegenSource += `;`;
 
-                codegenSource += `if (!text) { return new Response("Missing body", { status: 400 }); }`;
+				codegenSource += `if (!text) { return new Response("Missing body", { status: 400 }); }`;
 
-                codegenSource += `let body;`;
-                codegenSource += `try { body = SKL.parse(text); } catch (e) { return new Response("Invalid SKL", { status: 400 }); }`;
+				codegenSource += `let body;`;
+				codegenSource += `try { body = SKL.parse(text); } catch (e) { return new Response("Invalid SKL", { status: 400 }); }`;
 
-                // check against standard schema
-                codegenSource += `const parsed = await schema["~standard"].validate(body);`;
+				// check against standard schema
+				codegenSource += `const parsed = await schema["~standard"].validate(body);`;
 
-                codegenSource += `if ("issues" in parsed && parsed.issues != null && parsed.issues.length > 0) {`;
-                codegenSource += `return new Response("Request did not match schema", { status: 400 })`;
-                codegenSource += `}`;
+				codegenSource += `if ("issues" in parsed && parsed.issues != null && parsed.issues.length > 0) {`;
+				codegenSource += `return new Response("Request did not match schema", { status: 400 })`;
+				codegenSource += `}`;
 
-                codegenSource += `try {`;
-                codegenSource += `const result = await impl(parsed.value);`;
-                codegenSource += `return new Response(SKL.stringify(result), { status: 200, headers: { "Content-Type": "application/skl" } });`;
-                codegenSource += `} catch (e) {`;
-                codegenSource += `console.error(e);`;
-                codegenSource += `return new Response("Internal Server Error", { status: 500 });`;
-                codegenSource += `}`;
+				codegenSource += `try {`;
+				codegenSource += `const result = await impl(parsed.value);`;
+				codegenSource += `return new Response(SKL.stringify(result), { status: 200, headers: { "Content-Type": "application/skl" } });`;
+				codegenSource += `} catch (e) {`;
+				codegenSource += `console.error(e);`;
+				codegenSource += `return new Response("Internal Server Error", { status: 500 });`;
+				codegenSource += `}`;
 
-                codegenSource += `}`;
-            } else {
-                // Page route function
-                codegenSource += `import { INTERNAL_entrypoint, INTERNAL_createStreamUtility } from "@vortexjs/wormhole";`;
-                codegenSource += `import { Lifetime, ContextScope } from "@vortexjs/core";`;
-                codegenSource += `import { createHTMLRoot, ssr, printHTML, diffInto } from "@vortexjs/ssr";`;
+				codegenSource += `}`;
+			} else {
+				// Page route function
+				codegenSource += `import { INTERNAL_entrypoint, INTERNAL_createStreamUtility } from "@vortexjs/wormhole";`;
+				codegenSource += `import { Lifetime, ContextScope } from "@vortexjs/core";`;
+				codegenSource += `import { createHTMLRoot, ssr, printHTML, diffInto } from "@vortexjs/ssr";`;
 
-                const imports: Export[] = [];
+				const imports: Export[] = [];
 
-                function getExportIndex(exp: Export): number {
-                    const index = imports.findIndex(x => x.file === exp.file && x.name === exp.name);
-                    if (index === -1) {
-                        imports.push(exp);
-                        return imports.length - 1;
-                    }
-                    return index;
-                }
+				function getExportIndex(exp: Export): number {
+					const index = imports.findIndex(x => x.file === exp.file && x.name === exp.name);
+					if (index === -1) {
+						imports.push(exp);
+						return imports.length - 1;
+					}
+					return index;
+				}
 
-                const entrypointProps: EntrypointProps = {
-                    routes: [{
-                        matcher: route.matcher,
-                        frames: route.frames.map((frame) => ({
-                            index: getExportIndex(frame),
-                        })),
-                        is404: route.is404,
-                    }]
-                };
+				const entrypointProps: EntrypointProps = {
+					routes: [{
+						matcher: route.matcher,
+						frames: route.frames.map((frame) => ({
+							index: getExportIndex(frame),
+						})),
+						is404: route.is404,
+					}]
+				};
 
-                codegenSource += `const entrypointProps = JSON.parse(${JSON.stringify(JSON.stringify(entrypointProps))});`;
+				codegenSource += `const entrypointProps = JSON.parse(${JSON.stringify(JSON.stringify(entrypointProps))});`;
 
-                let idx = 0;
-                for (const exp of imports) {
-                    const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
+				let idx = 0;
+				for (const exp of imports) {
+					const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
 
-                    const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
+					const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
 
-                    codegenSource += `import {${JSON.stringify(exp.name)} as imp${idx}} from ${JSON.stringify(path)};`;
-                    idx++;
-                }
+					codegenSource += `import {${JSON.stringify(exp.name)} as imp${idx}} from ${JSON.stringify(path)};`;
+					idx++;
+				}
 
-                codegenSource += 'const loaders = [';
+				codegenSource += 'const loaders = [';
 
-                idx = 0;
-                for (const exp of imports) {
-                    codegenSource += `(()=>imp${idx}),`;
-                    idx++;
-                }
+				idx = 0;
+				for (const exp of imports) {
+					codegenSource += `(()=>imp${idx}),`;
+					idx++;
+				}
 
-                codegenSource += '];';
+				codegenSource += '];';
 
-                codegenSource += `export default async function handler(request) {`;
-                codegenSource += `const url = new URL(request.url);`;
-                codegenSource += `const pathname = url.pathname;`;
+				codegenSource += `export default async function handler(request) {`;
+				codegenSource += `const url = new URL(request.url);`;
+				codegenSource += `const pathname = url.pathname;`;
 
-                codegenSource += `const renderer = ssr();`;
-                codegenSource += `const root = createHTMLRoot();`;
-                codegenSource += `const lifetime = new Lifetime();`;
-                codegenSource += `const context = new ContextScope();`;
-                codegenSource += `await INTERNAL_entrypoint({
+				codegenSource += `const renderer = ssr();`;
+				codegenSource += `const root = createHTMLRoot();`;
+				codegenSource += `const lifetime = new Lifetime();`;
+				codegenSource += `const context = new ContextScope(lifetime);`;
+				codegenSource += `await INTERNAL_entrypoint({
                     props: entrypointProps,
                     loaders,
                     renderer,
@@ -243,103 +244,103 @@ export function VercelAdapter(): VercelAdapter {
                     context,
                     lifetime,
                 });`;
-                codegenSource += `const streamutil = INTERNAL_createStreamUtility();`;
-                codegenSource += `const html = printHTML(root);`;
-                codegenSource += `async function load() {`;
-                codegenSource += `streamutil.write(html);`;
-                codegenSource += `let currentSnapshot = structuredClone(root);`;
-                codegenSource += `context.streaming.updated();`;
-                codegenSource += `context.streaming.onUpdate(() => {`;
-                codegenSource += `const codegen = diffInto(currentSnapshot, root);`;
-                codegenSource += `const code = codegen.getCode();`;
-                codegenSource += `currentSnapshot = structuredClone(root);`;
-                codegenSource += "streamutil.write(`<script>${code}</script>`);";
-                codegenSource += `});`;
-                codegenSource += `await context.streaming.onDoneLoading;`;
-                codegenSource += "streamutil.write(`<script>window.addEventListener('load', () => {wormhole.hydrate({})});</script>`);";
-                codegenSource += `streamutil.end();`;
-                codegenSource += `lifetime.close();`;
-                codegenSource += `}`;
-                codegenSource += `load();`;
-                codegenSource += `return new Response(streamutil.readable.pipeThrough(new TextEncoderStream()), {`;
-                codegenSource += `status: 200,`;
-                codegenSource += `headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Content-Type-Options': 'nosniff', 'Transfer-Encoding': 'chunked', Connection: 'keep-alive', }`;
-                codegenSource += `});`;
-                codegenSource += `}`;
-            }
+				codegenSource += `const streamutil = INTERNAL_createStreamUtility();`;
+				codegenSource += `const html = printHTML(root);`;
+				codegenSource += `async function load() {`;
+				codegenSource += `streamutil.write(html);`;
+				codegenSource += `let currentSnapshot = structuredClone(root);`;
+				codegenSource += `context.streaming.updated();`;
+				codegenSource += `context.streaming.onUpdate(() => {`;
+				codegenSource += `const codegen = diffInto(currentSnapshot, root);`;
+				codegenSource += `const code = codegen.getCode();`;
+				codegenSource += `currentSnapshot = structuredClone(root);`;
+				codegenSource += "streamutil.write(`<script>${code}</script>`);";
+				codegenSource += `});`;
+				codegenSource += `await context.streaming.onDoneLoading;`;
+				codegenSource += "streamutil.write(`<script>window.addEventListener('load', () => {wormhole.hydrate({supplement:JSON.parse(${JSON.stringify(JSON.stringify(context.query.getSupplement()))})})});</script>`);";
+				codegenSource += `streamutil.end();`;
+				codegenSource += `lifetime.close();`;
+				codegenSource += `}`;
+				codegenSource += `load();`;
+				codegenSource += `return new Response(streamutil.readable.pipeThrough(new TextEncoderStream()), {`;
+				codegenSource += `status: 200,`;
+				codegenSource += `headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Content-Type-Options': 'nosniff', 'Transfer-Encoding': 'chunked', Connection: 'keep-alive', }`;
+				codegenSource += `});`;
+				codegenSource += `}`;
+			}
 
-            const routeId = getRouteId(route.matcher);
-            const filename = `function-${route.type}-${routeId}`;
-            const path = await build.writeCodegenned(filename, codegenSource);
+			const routeId = getRouteId(route.matcher);
+			const filename = `function-${route.type}-${routeId}`;
+			const path = await build.writeCodegenned(filename, codegenSource);
 
-            const bundled = await build.bundle({
-                target: "server",
-                inputPaths: {
-                    main: path,
-                },
-                dev: false,
-                noSplitting: true
-            });
+			const bundled = await build.bundle({
+				target: "server",
+				inputPaths: {
+					main: path,
+				},
+				dev: false,
+				noSplitting: true
+			});
 
-            return bundled.outputs.main;
-        },
+			return bundled.outputs.main;
+		},
 
-        async run(build) {
-            using _task = addTask({
-                name: "Building for Vercel Build Output API"
-            });
+		async run(build) {
+			using _task = addTask({
+				name: "Building for Vercel Build Output API"
+			});
 
-            const outputDir = join(build.project.projectDir, ".vercel", "output");
+			const outputDir = join(build.project.projectDir, ".vercel", "output");
 
-            await rmdir(outputDir, { recursive: true }).catch(() => { /* ignore */ });
+			await rmdir(outputDir, { recursive: true }).catch(() => { /* ignore */ });
 
-            const staticDir = join(outputDir, "static");
-            const functionsDir = join(outputDir, "functions");
+			const staticDir = join(outputDir, "static");
+			const functionsDir = join(outputDir, "functions");
 
-            // Ensure directories exist
-            await mkdir(outputDir, { recursive: true });
-            await mkdir(staticDir, { recursive: true });
-            await mkdir(functionsDir, { recursive: true });
+			// Ensure directories exist
+			await mkdir(outputDir, { recursive: true });
+			await mkdir(staticDir, { recursive: true });
+			await mkdir(functionsDir, { recursive: true });
 
-            // Build client bundle and CSS
-            await this.buildClientBundle(build);
-            await this.buildCSS(build);
+			// Build client bundle and CSS
+			await this.buildClientBundle(build);
+			await this.buildCSS(build);
 
-            // Build individual route functions
-            const routeFunctions: string[] = [];
-            for (const route of build.routes) {
-                const functionPath = await this.buildRouteFunction(build, route);
-                routeFunctions.push(functionPath);
+			// Build individual route functions
+			const routeFunctions: string[] = [];
+			for (const route of build.routes) {
+				const functionPath = await this.buildRouteFunction(build, route);
+				routeFunctions.push(functionPath);
 
-                // Create function directory in Vercel output
-                const functionDir = join(functionsDir, `${printRoutePath(route.matcher) || "index"}.func`);
-                await mkdir(functionDir, { recursive: true });
+				// Create function directory in Vercel output
+				const functionDir = join(functionsDir, `${printRoutePath(route.matcher) || "index"}.func`);
+				await mkdir(functionDir, { recursive: true });
 
-                // Copy function file
-                const functionIndexPath = join(functionDir, "index.js");
-                await Bun.write(functionIndexPath, await Bun.file(functionPath).text());
+				// Copy function file
+				const functionIndexPath = join(functionDir, "index.js");
+				await Bun.write(functionIndexPath, await Bun.file(functionPath).text());
 
-                // Create .vc-config.json for each function
-                const vcConfig = {
-                    runtime: "edge",
-                    entrypoint: "index.js"
-                };
-                await Bun.write(join(functionDir, ".vc-config.json"), JSON.stringify(vcConfig, null, 2));
-            }
+				// Create .vc-config.json for each function
+				const vcConfig = {
+					runtime: "edge",
+					entrypoint: "index.js"
+				};
+				await Bun.write(join(functionDir, ".vc-config.json"), JSON.stringify(vcConfig, null, 2));
+			}
 
-            const config = {
-                version: 3
-            };
+			const config = {
+				version: 3
+			};
 
-            const configPath = join(outputDir, "config.json");
-            await Bun.write(configPath, JSON.stringify(config, null, 2));
+			const configPath = join(outputDir, "config.json");
+			await Bun.write(configPath, JSON.stringify(config, null, 2));
 
-            return {
-                outputDir,
-                staticDir,
-                functionsDir,
-                configFile: configPath
-            };
-        }
-    };
+			return {
+				outputDir,
+				staticDir,
+				functionsDir,
+				configFile: configPath
+			};
+		}
+	};
 }

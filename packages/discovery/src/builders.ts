@@ -137,6 +137,19 @@ export function anonFunct(props: {
 	});
 }
 
+export function wrapExprInFunct(expr: Expression) {
+	return paren({
+		type: "ArrowFunctionExpression",
+		params: [],
+		body: expr,
+		expression: true,
+		async: false,
+		id: null,
+		generator: false,
+		...defaultSpan,
+	});
+}
+
 export function throwStmt(toThrow: Expression): ThrowStatement {
 	return {
 		type: "ThrowStatement",

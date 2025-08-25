@@ -1,4 +1,4 @@
-import type { JSXChildren } from "@vortexjs/core";
+import type { JSXChildren, QueryProps, Signal } from "@vortexjs/core";
 import type { StandardSchemaV1 } from "~/shared/standard";
 import type { HTTPMethod } from "~/shared/http-method";
 
@@ -13,7 +13,18 @@ export type RouteParams<Path extends string> = {
     notFound?: (props: LayoutProps<Path>) => void;
 };
 
-export type APIFunction = <Input, Output>(
+export type APIQueryFunction = <Input, Output>(
+    endpoint: string,
+    props: {
+        schema: StandardSchemaV1<unknown, Input>;
+        impl(props: Input): Promise<Output> | Output;
+        method?: HTTPMethod;
+    }
+) => ((inp: Input) => Promise<Output>) & {
+    use(args: Input, props?: QueryProps): Signal<Output | undefined>;
+};
+
+export type APIMutationFunction = <Input, Output>(
     endpoint: string,
     props: {
         schema: StandardSchemaV1<unknown, Input>;
@@ -47,11 +58,13 @@ const routeFn = ((_path, _params) => {
 export default routeFn;
 export const route = routeFn;
 
-const apiFn = ((_props) => {
+export const query = ((_props) => {
     throw new Error(
-        "You somehow managed to call query/mutation without it being eliminated by the compiler. I don't know how you would fix this, the compiler is deeply ingrained in wormhole.",
+        "You somehow managed to call query without it being eliminated by the compiler. I don't know how you would fix this, the compiler is deeply ingrained in wormhole.",
     );
-}) as APIFunction;
-
-export const query = apiFn;
-export const mutation = apiFn;
+}) as APIQueryFunction;
+export const mutation = ((_props) => {
+    throw new Error(
+        "You somehow managed to call mutation without it being eliminated by the compiler. I don't know how you would fix this, the compiler is deeply ingrained in wormhole.",
+    );
+}) as APIMutationFunction;

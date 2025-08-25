@@ -2,6 +2,7 @@ export * from "./context";
 export * from "./intrinsic";
 export * from "./jsx/jsx-common";
 export * from "./lifetime";
+export * from "./query";
 export * from "./render";
 export * from "./setImmediate.polyfill";
 export * from "./signal";

@@ -1,5 +1,7 @@
 import { unwrap } from "@vortexjs/common";
 import type { JSXNode } from "./jsx/jsx-common";
+import type { Lifetime } from "./lifetime";
+import { QueryDataEngine } from "./query";
 import { clearImmediate, setImmediate } from "./setImmediate.polyfill";
 import { type Signal, type SignalOrValue, toSignal } from "./signal";
 
@@ -97,10 +99,19 @@ export class StreamingContext {
 export class ContextScope {
 	contexts: Record<string, Signal<any>> = {};
 	streaming: StreamingContext = new StreamingContext();
+	query: QueryDataEngine;
+	lt: Lifetime;
+
+	constructor(lt: Lifetime) {
+		this.query = new QueryDataEngine({ streaming: this.streaming, lt });
+		this.lt = lt;
+	}
 
 	fork() {
-		const newScope = new ContextScope();
+		const newScope = new ContextScope(this.lt);
 		newScope.contexts = { ...this.contexts };
+		newScope.streaming = this.streaming;
+		newScope.query = this.query;
 		return newScope;
 	}
 
