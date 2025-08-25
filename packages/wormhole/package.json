@@ -25,6 +25,7 @@
 		"@vortexjs/cli": "workspace:*",
 		"@vortexjs/intrinsics": "workspace:*",
 		"@vortexjs/args": "workspace:*",
+		"@vortexjs/vindicator": "workspace:*",
 		"chalk": "catalog:"
 	},
 	"peerDependencies": {
