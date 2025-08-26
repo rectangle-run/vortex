@@ -1,5 +1,32 @@
 # @vortexjs/wormhole
 
+## 0.4.0
+
+### Minor Changes
+
+- edb950d: Introduce Vercel support
+- edb950d: Introduce Query API
+
+### Patch Changes
+
+- Updated dependencies [edb950d]
+- Updated dependencies [edb950d]
+- Updated dependencies [fab91bb]
+- Updated dependencies [cc6741a]
+- Updated dependencies [dc695c7]
+- Updated dependencies [edb950d]
+  - @vortexjs/intrinsics@0.1.0
+  - @vortexjs/core@2.7.0
+  - @vortexjs/common@0.1.1
+  - @vortexjs/cli@0.0.2
+  - @vortexjs/dom@2.0.6
+  - @vortexjs/ssr@0.0.6
+  - @vortexjs/args@0.0.2
+  - @vortexjs/discovery@0.2.1
+  - @vortexjs/pippin@0.1.1
+  - @vortexjs/pippin-plugin-tailwind@0.0.2
+  - @vortexjs/vindicator@0.0.2
+
 ## 0.3.0
 
 ### Minor Changes

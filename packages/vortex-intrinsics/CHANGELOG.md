@@ -1,5 +1,22 @@
 # @vortexjs/cache
 
+## 0.1.0
+
+### Minor Changes
+
+- edb950d: Introduce Actions
+- edb950d: Introduce Button intrinsic
+
+### Patch Changes
+
+- Updated dependencies [edb950d]
+- Updated dependencies [fab91bb]
+- Updated dependencies [cc6741a]
+- Updated dependencies [dc695c7]
+- Updated dependencies [edb950d]
+  - @vortexjs/core@2.7.0
+  - @vortexjs/common@0.1.1
+
 ## 0.0.1
 
 ### Patch Changes
