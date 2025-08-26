@@ -56,7 +56,7 @@ export function DevAdapter(): DevAdapter {
 
             codegenSource += `const entrypointProps = JSON.parse(${JSON.stringify(JSON.stringify(entrypointProps))});`;
 
-            codegenSource += `export function main(props) {`;
+            codegenSource += `export async function main(props) {`;
 
             codegenSource += 'const loaders = [';
 
@@ -78,14 +78,15 @@ export function DevAdapter(): DevAdapter {
                 codegenSource += `const root = document.documentElement;`;
             }
 
-            codegenSource += `return INTERNAL_entrypoint({
+            codegenSource += `return await INTERNAL_entrypoint({
 				props: entrypointProps,
 				loaders,
 				renderer,
 				root,
 				pathname: props.pathname,
 				context: props.context,
-				lifetime: props.lifetime ?? new Lifetime(),`;
+				lifetime: props.lifetime ?? new Lifetime(),
+				preload: true,`;
 
             if (location === "client") {
                 codegenSource += `supplement: props.supplement,`;

@@ -248,6 +248,7 @@ export function VercelAdapter(): VercelAdapter {
                     pathname,
                     context,
                     lifetime,
+                    preload: true
                 });`;
                 codegenSource += `const streamutil = INTERNAL_createStreamUtility();`;
                 codegenSource += `const html = printHTML(root);`;
