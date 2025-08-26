@@ -1,5 +1,13 @@
 # @vortexjs/core
 
+## 2.7.1
+
+### Patch Changes
+
+- db3f87c: Change build system to make installation work correctly
+- Updated dependencies [db3f87c]
+  - @vortexjs/common@0.1.2
+
 ## 2.7.0
 
 ### Minor Changes

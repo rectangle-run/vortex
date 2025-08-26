@@ -1,5 +1,15 @@
 # @vortexjs/prime
 
+## 1.3.7
+
+### Patch Changes
+
+- db3f87c: Change build system to make installation work correctly
+- Updated dependencies [db3f87c]
+  - @vortexjs/common@0.1.2
+  - @vortexjs/core@2.7.1
+  - @vortexjs/dom@2.0.7
+
 ## 1.3.6
 
 ### Patch Changes

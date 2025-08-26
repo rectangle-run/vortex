@@ -1,5 +1,15 @@
 # @vortexjs/cli
 
+## 0.0.3
+
+### Patch Changes
+
+- db3f87c: Change build system to make installation work correctly
+- Updated dependencies [db3f87c]
+  - @vortexjs/intrinsics@0.1.1
+  - @vortexjs/common@0.1.2
+  - @vortexjs/core@2.7.1
+
 ## 0.0.2
 
 ### Patch Changes
