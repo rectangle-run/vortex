@@ -1,51 +1,51 @@
 {
-	"name": "@vortexjs/wormhole",
-	"type": "module",
-	"license": "MIT-0",
-	"repository": {
-		"url": "https://github.com/andylovescode/vortex"
-	},
-	"bin": {
-		"wormhole": "./dist/cli.js",
-		"wh": "./dist/cli.js"
-	},
-	"devDependencies": {
-		"@types/bun": "catalog:",
-		"tsdown": "catalog:"
-	},
-	"dependencies": {
-		"@speed-highlight/core": "catalog:",
-		"@vortexjs/common": "workspace:*",
-		"@vortexjs/core": "workspace:*",
-		"@vortexjs/discovery": "workspace:*",
-		"@vortexjs/dom": "workspace:*",
-		"@vortexjs/ssr": "workspace:*",
-		"@vortexjs/pippin-plugin-tailwind": "workspace:",
-		"@vortexjs/pippin": "workspace:*",
-		"@vortexjs/cli": "workspace:*",
-		"@vortexjs/intrinsics": "workspace:*",
-		"@vortexjs/args": "workspace:*",
-		"@vortexjs/vindicator": "workspace:*",
-		"chalk": "catalog:"
-	},
-	"peerDependencies": {
-		"typescript": "catalog:"
-	},
-	"scripts": {
-		"build": "tsdown ./src/index.ts ./src/cli.tsx ./src/virt/route.ts --format esm --dts --out-dir dist --external bun",
-		"test": "bun test"
-	},
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
-		},
-		"./route": {
-			"types": "./dist/virt/route.d.ts",
-			"import": "./dist/virt/route.js",
-			"require": "./dist/virt/route.cjs"
-		}
-	},
-	"version": "0.4.0"
+    "name": "@vortexjs/wormhole",
+    "type": "module",
+    "license": "MIT-0",
+    "repository": {
+        "url": "https://github.com/rectangle-run/vortex"
+    },
+    "bin": {
+        "wormhole": "./dist/cli.js",
+        "wh": "./dist/cli.js"
+    },
+    "devDependencies": {
+        "@types/bun": "catalog:",
+        "tsdown": "catalog:"
+    },
+    "dependencies": {
+        "@speed-highlight/core": "catalog:",
+        "@vortexjs/common": "workspace:*",
+        "@vortexjs/core": "workspace:*",
+        "@vortexjs/discovery": "workspace:*",
+        "@vortexjs/dom": "workspace:*",
+        "@vortexjs/ssr": "workspace:*",
+        "@vortexjs/pippin-plugin-tailwind": "workspace:",
+        "@vortexjs/pippin": "workspace:*",
+        "@vortexjs/cli": "workspace:*",
+        "@vortexjs/intrinsics": "workspace:*",
+        "@vortexjs/args": "workspace:*",
+        "@vortexjs/vindicator": "workspace:*",
+        "chalk": "catalog:"
+    },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    },
+    "scripts": {
+        "build": "tsdown ./src/index.ts ./src/cli.tsx ./src/virt/route.ts --format esm --dts --out-dir dist --external bun",
+        "test": "bun test"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./route": {
+            "types": "./dist/virt/route.d.ts",
+            "import": "./dist/virt/route.js",
+            "require": "./dist/virt/route.cjs"
+        }
+    },
+    "version": "0.4.0"
 }

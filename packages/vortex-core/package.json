@@ -4,7 +4,7 @@
     "type": "module",
     "license": "MIT-0",
     "repository": {
-        "url": "https://github.com/andylovescode/vortex"
+        "url": "https://github.com/rectangle-run/vortex"
     },
     "devDependencies": {
         "@types/bun": "catalog:",
