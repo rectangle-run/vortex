@@ -3,7 +3,7 @@
     "module": "src/index.ts",
     "type": "module",
     "license": "MIT-0",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "repository": {
         "url": "https://github.com/rectangle-run/vortex"
     },

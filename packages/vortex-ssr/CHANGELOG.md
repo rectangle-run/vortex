@@ -1,5 +1,15 @@
 # @vortexjs/dom
 
+## 0.0.8
+
+### Patch Changes
+
+- c459920: Just bump all versions
+- Updated dependencies [c459920]
+  - @vortexjs/common@0.1.3
+  - @vortexjs/core@2.7.2
+  - @vortexjs/dom@2.0.8
+
 ## 0.0.7
 
 ### Patch Changes
