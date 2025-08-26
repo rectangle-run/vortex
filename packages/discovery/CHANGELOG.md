@@ -1,5 +1,14 @@
 # @vortexjs/discovery
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [fab91bb]
+  - @vortexjs/common@0.1.1
+  - @vortexjs/pippin@0.1.1
+  - @vortexjs/cache@0.0.2
+
 ## 0.2.0
 
 ### Minor Changes

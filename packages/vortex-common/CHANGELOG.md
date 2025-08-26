@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.1.1
+
+### Patch Changes
+
+- fab91bb: Denamespace SKL
+
 ## 0.1.0
 
 ### Minor Changes

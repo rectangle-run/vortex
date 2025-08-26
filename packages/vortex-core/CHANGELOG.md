@@ -1,5 +1,19 @@
 # @vortexjs/core
 
+## 2.7.0
+
+### Minor Changes
+
+- edb950d: Introduce Actions
+- cc6741a: Add support for intrinsic components
+- dc695c7: Add optional context API
+- edb950d: Introduce Query API
+
+### Patch Changes
+
+- Updated dependencies [fab91bb]
+  - @vortexjs/common@0.1.1
+
 ## 2.6.0
 
 ### Minor Changes
