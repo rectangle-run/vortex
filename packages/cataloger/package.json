@@ -12,8 +12,7 @@
         "cataloger": "./src/index.ts"
     },
     "scripts": {
-        "run": "bun run ./src/index.ts",
-        "publish": "bun publish"
+        "run": "bun run ./src/index.ts"
     },
     "type": "module",
     "license": "MIT-0",
