@@ -1,5 +1,23 @@
 # @vortexjs/wormhole
 
+## 0.4.1
+
+### Patch Changes
+
+- db3f87c: Change build system to make installation work correctly
+- Updated dependencies [db3f87c]
+  - @vortexjs/pippin-plugin-tailwind@0.0.3
+  - @vortexjs/intrinsics@0.1.1
+  - @vortexjs/common@0.1.2
+  - @vortexjs/core@2.7.1
+  - @vortexjs/vindicator@0.0.3
+  - @vortexjs/cli@0.0.3
+  - @vortexjs/dom@2.0.7
+  - @vortexjs/ssr@0.0.7
+  - @vortexjs/discovery@0.2.2
+  - @vortexjs/pippin@0.1.2
+  - @vortexjs/args@0.0.3
+
 ## 0.4.0
 
 ### Minor Changes

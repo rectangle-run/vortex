@@ -1,5 +1,14 @@
 # @vortexjs/pippin-plugin-tailwind
 
+## 0.0.3
+
+### Patch Changes
+
+- db3f87c: Change build system to make installation work correctly
+- Updated dependencies [db3f87c]
+  - @vortexjs/common@0.1.2
+  - @vortexjs/pippin@0.1.2
+
 ## 0.0.2
 
 ### Patch Changes
