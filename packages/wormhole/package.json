@@ -33,7 +33,8 @@
     },
     "scripts": {
         "build": "tsdown ./src/index.ts ./src/cli.tsx ./src/virt/route.ts --format esm --dts --out-dir dist --external bun",
-        "test": "bun test"
+        "test": "bun test",
+        "publish": "bun publish"
     },
     "exports": {
         ".": {

@@ -1,23 +1,24 @@
 {
-	"name": "@vortexjs/cataloger",
-	"module": "src/index.ts",
-	"devDependencies": {
-		"@types/bun": "catalog:"
-	},
-	"peerDependencies": {
-		"typescript": "catalog:"
-	},
-	"bin": {
-		"cataloger": "./src/index.ts"
-	},
-	"private": true,
-	"scripts": {
-		"run": "bun run ./src/index.ts"
-	},
-	"type": "module",
-	"license": "MIT-0",
-	"dependencies": {
-		"@inquirer/prompts": "catalog:",
-		"@vortexjs/common": "workspace:*"
-	}
+    "name": "@vortexjs/cataloger",
+    "module": "src/index.ts",
+    "devDependencies": {
+        "@types/bun": "catalog:"
+    },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    },
+    "bin": {
+        "cataloger": "./src/index.ts"
+    },
+    "private": true,
+    "scripts": {
+        "run": "bun run ./src/index.ts",
+        "publish": "bun publish"
+    },
+    "type": "module",
+    "license": "MIT-0",
+    "dependencies": {
+        "@inquirer/prompts": "catalog:",
+        "@vortexjs/common": "workspace:*"
+    }
 }

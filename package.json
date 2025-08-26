@@ -29,7 +29,7 @@
     },
     "scripts": {
         "change": "changeset",
-        "release": "changeset publish",
+        "release": "turbo run publish",
         "build": "turbo build",
         "wdev": "cd packages/example-wormhole && turbo build && bun dev",
         "wbuild": "cd packages/example-wormhole && turbo build && bun vbuild",

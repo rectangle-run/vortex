@@ -14,7 +14,8 @@
         "typescript": "catalog:"
     },
     "scripts": {
-        "build": "tsdown ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts ./src/actions/index.tsx --format esm --dts --out-dir dist"
+        "build": "tsdown ./src/index.ts ./src/jsx/jsx-runtime.ts ./src/jsx/jsx-dev-runtime.ts ./src/actions/index.tsx --format esm --dts --out-dir dist",
+        "publish": "bun publish"
     },
     "exports": {
         ".": {

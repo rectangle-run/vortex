@@ -37,6 +37,10 @@
                 "src/**",
                 "test/**"
             ]
+        },
+        "publish": {
+            "persistent": false,
+            "cache": false
         }
     }
 }

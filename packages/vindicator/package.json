@@ -16,7 +16,8 @@
         "typescript": "catalog:"
     },
     "scripts": {
-        "build": "tsdown ./src/index.ts --format esm --dts --out-dir dist"
+        "build": "tsdown ./src/index.ts --format esm --dts --out-dir dist",
+        "publish": "bun publish"
     },
     "exports": {
         ".": {

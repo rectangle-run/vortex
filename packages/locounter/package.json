@@ -20,6 +20,7 @@
         "typescript": "catalog:"
     },
     "scripts": {
-        "count": "bun run src/index.ts"
+        "count": "bun run src/index.ts",
+        "publish": "bun publish"
     }
 }

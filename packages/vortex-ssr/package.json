@@ -19,7 +19,8 @@
     },
     "scripts": {
         "build": "tsdown ./src/index.ts --format esm --dts --out-dir dist",
-        "test": "bun test"
+        "test": "bun test",
+        "publish": "bun publish"
     },
     "exports": {
         ".": {
