@@ -1,5 +1,23 @@
 # @vortexjs/wormhole
 
+## 0.4.2
+
+### Patch Changes
+
+- c459920: Just bump all versions
+- Updated dependencies [c459920]
+  - @vortexjs/args@0.0.4
+  - @vortexjs/discovery@0.2.4
+  - @vortexjs/pippin@0.1.4
+  - @vortexjs/pippin-plugin-tailwind@0.0.4
+  - @vortexjs/vindicator@0.0.4
+  - @vortexjs/cli@0.0.4
+  - @vortexjs/common@0.1.3
+  - @vortexjs/core@2.7.2
+  - @vortexjs/dom@2.0.8
+  - @vortexjs/intrinsics@0.1.2
+  - @vortexjs/ssr@0.0.8
+
 ## 0.4.1
 
 ### Patch Changes
