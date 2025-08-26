@@ -1,5 +1,14 @@
 # @vortexjs/pippin
 
+## 0.1.2
+
+### Patch Changes
+
+- db3f87c: Change build system to make installation work correctly
+- Updated dependencies [db3f87c]
+  - @vortexjs/common@0.1.2
+  - @vortexjs/cache@0.0.3
+
 ## 0.1.1
 
 ### Patch Changes

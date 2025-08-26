@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.1.2
+
+### Patch Changes
+
+- db3f87c: Change build system to make installation work correctly
+
 ## 0.1.1
 
 ### Patch Changes
