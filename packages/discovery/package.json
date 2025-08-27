@@ -1,35 +1,34 @@
 {
-    "name": "@vortexjs/discovery",
-    "type": "module",
-    "license": "MIT-0",
-    "repository": {
-        "url": "https://github.com/rectangle-run/vortex"
-    },
-    "devDependencies": {
-        "@types/bun": "catalog:",
-        "tsdown": "catalog:"
-    },
-    "dependencies": {
-        "@vortexjs/cache": "workspace:*",
-        "@vortexjs/common": "workspace:*",
-        "@vortexjs/pippin": "workspace:*",
-        "esrap": "catalog:",
-        "oxc-parser": "catalog:"
-    },
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
-    "scripts": {
-        "build": "tsdown ./src/index.ts --format esm --dts --out-dir dist",
-        "test": "bun test",
-        "publish": "bun publish"
-    },
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
-        }
-    },
-    "version": "0.2.5"
+	"name": "@vortexjs/discovery",
+	"type": "module",
+	"license": "MIT-0",
+	"repository": {
+		"url": "https://github.com/rectangle-run/vortex"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"tsdown": "catalog:"
+	},
+	"dependencies": {
+		"@vortexjs/cache": "workspace:*",
+		"@vortexjs/common": "workspace:*",
+		"@vortexjs/pippin": "workspace:*",
+		"esrap": "catalog:",
+		"oxc-parser": "catalog:"
+	},
+	"peerDependencies": {
+		"typescript": "catalog:"
+	},
+	"scripts": {
+		"build": "tsdown ./src/index.ts --format esm --dts --out-dir dist",
+		"test": "bun test"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"version": "0.2.5"
 }

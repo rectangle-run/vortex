@@ -1,32 +1,31 @@
 {
-    "name": "@vortexjs/pippin",
-    "type": "module",
-    "license": "MIT-0",
-    "repository": {
-        "url": "https://github.com/rectangle-run/vortex"
-    },
-    "devDependencies": {
-        "@types/bun": "catalog:",
-        "tsdown": "catalog:"
-    },
-    "dependencies": {
-        "@jridgewell/source-map": "catalog:",
-        "@vortexjs/common": "workspace:*",
-        "@vortexjs/cache": "workspace:*"
-    },
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
-    "scripts": {
-        "build": "tsdown ./src/index.ts --format esm --dts --out-dir dist",
-        "publish": "bun publish"
-    },
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
-        }
-    },
-    "version": "0.1.5"
+	"name": "@vortexjs/pippin",
+	"type": "module",
+	"license": "MIT-0",
+	"repository": {
+		"url": "https://github.com/rectangle-run/vortex"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"tsdown": "catalog:"
+	},
+	"dependencies": {
+		"@jridgewell/source-map": "catalog:",
+		"@vortexjs/common": "workspace:*",
+		"@vortexjs/cache": "workspace:*"
+	},
+	"peerDependencies": {
+		"typescript": "catalog:"
+	},
+	"scripts": {
+		"build": "tsdown ./src/index.ts --format esm --dts --out-dir dist"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"version": "0.1.5"
 }
