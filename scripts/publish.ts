@@ -20,6 +20,11 @@ interface NpmPackage extends RichPackage {
 	latestVersion: string | null;
 }
 
+if (Bun.env.NPM_TOKEN) {
+	console.log("Signing in...");
+	await Bun.$`bunx npm set //registry.npmjs.org/:_authToken=${Bun.env.NPM_TOKEN}`;
+}
+
 console.log("Getting package info...");
 const packages: TurborepoPackages = await Bun.$`turbo ls --output json`.json();
 
