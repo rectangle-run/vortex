@@ -1,5 +1,15 @@
 # @vortexjs/discovery
 
+## 0.2.4
+
+### Patch Changes
+
+- c459920: Just bump all versions
+- Updated dependencies [c459920]
+  - @vortexjs/pippin@0.1.4
+  - @vortexjs/cache@0.0.4
+  - @vortexjs/common@0.1.3
+
 ## 0.2.2
 
 ### Patch Changes

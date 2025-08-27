@@ -39,7 +39,7 @@
             "require": "./dist/actions/index.cjs"
         }
     },
-    "version": "2.7.1",
+    "version": "2.7.2",
     "dependencies": {
         "@vortexjs/common": "workspace:*"
     }

@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.1.3
+
+### Patch Changes
+
+- c459920: Just bump all versions
+
 ## 0.1.2
 
 ### Patch Changes

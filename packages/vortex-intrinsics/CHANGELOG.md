@@ -1,5 +1,14 @@
 # @vortexjs/cache
 
+## 0.1.2
+
+### Patch Changes
+
+- c459920: Just bump all versions
+- Updated dependencies [c459920]
+  - @vortexjs/common@0.1.3
+  - @vortexjs/core@2.7.2
+
 ## 0.1.1
 
 ### Patch Changes
