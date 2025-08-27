@@ -22,7 +22,7 @@ interface NpmPackage extends RichPackage {
 
 if (Bun.env.NPM_TOKEN) {
 	console.log("Signing in...");
-	await Bun.$`bunx npm set //registry.npmjs.org/:_authToken=${Bun.env.NPM_TOKEN}`;
+	await Bun.$`npm set //registry.npmjs.org/:_authToken=${Bun.env.NPM_TOKEN}`;
 }
 
 console.log("Getting package info...");
@@ -64,7 +64,8 @@ console.log(`Publishing ${toPublish.length} packages...`);
 
 await Promise.all(toPublish.map(async (pkg) => {
 	console.log(`Publishing ${pkg.name}...`);
-	await Bun.$.cwd(pkg.path)`bun publish --access=public`;
+	await Bun.$.cwd(pkg.path)`bun pm pack --destination ./tarball.tgz`;
+	await Bun.$.cwd(pkg.path)`npm publish ./tarball.tgz --access public`;
 }));
 
 export { }
