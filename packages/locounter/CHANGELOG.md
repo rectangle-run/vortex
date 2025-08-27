@@ -1,5 +1,13 @@
 # @vortexjs/locounter
 
+## 0.0.4
+
+### Patch Changes
+
+- Version
+- Updated dependencies
+  - @vortexjs/common@0.1.4
+
 ## 0.0.3
 
 ### Patch Changes

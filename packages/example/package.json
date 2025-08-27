@@ -1,6 +1,6 @@
 {
     "name": "@vortexjs/bun-example",
-    "version": "1.5.8",
+    "version": "1.5.9",
     "private": true,
     "type": "module",
     "license": "MIT-0",
