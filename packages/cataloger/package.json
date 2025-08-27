@@ -1,23 +1,26 @@
 {
-    "name": "@vortexjs/cataloger",
-    "module": "src/index.ts",
-    "version": "0.0.2",
-    "devDependencies": {
-        "@types/bun": "catalog:"
-    },
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
-    "bin": {
-        "cataloger": "./src/index.ts"
-    },
-    "scripts": {
-        "run": "bun run ./src/index.ts"
-    },
-    "type": "module",
-    "license": "MIT-0",
-    "dependencies": {
-        "@inquirer/prompts": "catalog:",
-        "@vortexjs/common": "workspace:*"
-    }
+	"name": "@vortexjs/cataloger",
+	"module": "src/index.ts",
+	"version": "0.0.2",
+	"devDependencies": {
+		"@types/bun": "catalog:"
+	},
+	"peerDependencies": {
+		"typescript": "catalog:"
+	},
+	"repository": {
+		"url": "https://github.com/rectangle-run/vortex"
+	},
+	"bin": {
+		"cataloger": "./src/index.ts"
+	},
+	"scripts": {
+		"run": "bun run ./src/index.ts"
+	},
+	"type": "module",
+	"license": "MIT-0",
+	"dependencies": {
+		"@inquirer/prompts": "catalog:",
+		"@vortexjs/common": "workspace:*"
+	}
 }
