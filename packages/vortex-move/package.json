@@ -1,0 +1,31 @@
+{
+	"name": "@vortexjs/move",
+	"type": "module",
+	"license": "MIT-0",
+	"repository": {
+		"url": "https://github.com/rectangle-run/vortex"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:",
+		"tsdown": "catalog:"
+	},
+	"dependencies": {
+		"@vortexjs/core": "workspace:*",
+		"@vortexjs/dom": "workspace:*",
+		"@vortexjs/common": "workspace:*"
+	},
+	"peerDependencies": {
+		"typescript": "catalog:"
+	},
+	"scripts": {
+		"build": "tsdown ./src/index.ts --format esm --dts --out-dir dist"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"version": "1.3.9"
+}
