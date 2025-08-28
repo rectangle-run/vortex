@@ -37,7 +37,7 @@ function SpringSliders() {
 					top: "50vh",
 					transform: "translate(-50%, -50%)",
 				}}
-			></div>
+			/>
 		</>
 	);
 }
