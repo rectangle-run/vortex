@@ -11,7 +11,7 @@
     },
     "packages/args": {
       "name": "@vortexjs/args",
-      "version": "0.0.2",
+      "version": "0.0.5",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
       },
@@ -25,6 +25,7 @@
     },
     "packages/cataloger": {
       "name": "@vortexjs/cataloger",
+      "version": "0.0.3",
       "bin": {
         "cataloger": "./src/index.ts",
       },
@@ -41,7 +42,7 @@
     },
     "packages/discovery": {
       "name": "@vortexjs/discovery",
-      "version": "0.2.1",
+      "version": "0.2.5",
       "dependencies": {
         "@vortexjs/cache": "workspace:*",
         "@vortexjs/common": "workspace:*",
@@ -59,10 +60,11 @@
     },
     "packages/example": {
       "name": "@vortexjs/bun-example",
-      "version": "1.5.6",
+      "version": "1.5.9",
       "dependencies": {
         "@vortexjs/core": "workspace:*",
         "@vortexjs/dom": "workspace:*",
+        "@vortexjs/move": "workspace:*",
       },
       "devDependencies": {
         "@types/bun": "catalog:",
@@ -89,7 +91,7 @@
     },
     "packages/locounter": {
       "name": "@vortexjs/locounter",
-      "version": "0.0.1",
+      "version": "0.0.4",
       "bin": {
         "locounter": "./src/index.ts",
       },
@@ -105,7 +107,7 @@
     },
     "packages/pippin": {
       "name": "@vortexjs/pippin",
-      "version": "0.1.1",
+      "version": "0.1.5",
       "dependencies": {
         "@jridgewell/source-map": "catalog:",
         "@vortexjs/cache": "workspace:*",
@@ -121,7 +123,7 @@
     },
     "packages/pippin-plugin-tailwind": {
       "name": "@vortexjs/pippin-plugin-tailwind",
-      "version": "0.0.2",
+      "version": "0.0.5",
       "dependencies": {
         "@tailwindcss/node": "catalog:",
         "@tailwindcss/oxide": "catalog:",
@@ -138,7 +140,7 @@
     },
     "packages/vindicator": {
       "name": "@vortexjs/vindicator",
-      "version": "0.0.2",
+      "version": "0.0.5",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
       },
@@ -152,7 +154,7 @@
     },
     "packages/vortex-cache": {
       "name": "@vortexjs/cache",
-      "version": "0.0.2",
+      "version": "0.0.5",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
       },
@@ -166,7 +168,7 @@
     },
     "packages/vortex-cli": {
       "name": "@vortexjs/cli",
-      "version": "0.0.2",
+      "version": "0.0.5",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
@@ -183,7 +185,7 @@
     },
     "packages/vortex-common": {
       "name": "@vortexjs/common",
-      "version": "0.1.1",
+      "version": "0.1.4",
       "devDependencies": {
         "@types/bun": "catalog:",
         "tsdown": "catalog:",
@@ -194,7 +196,7 @@
     },
     "packages/vortex-core": {
       "name": "@vortexjs/core",
-      "version": "2.7.0",
+      "version": "2.7.3",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
       },
@@ -208,7 +210,7 @@
     },
     "packages/vortex-dom": {
       "name": "@vortexjs/dom",
-      "version": "2.0.6",
+      "version": "2.0.9",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
@@ -223,7 +225,7 @@
     },
     "packages/vortex-intrinsics": {
       "name": "@vortexjs/intrinsics",
-      "version": "0.1.0",
+      "version": "0.1.3",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
@@ -236,9 +238,25 @@
         "typescript": "catalog:",
       },
     },
+    "packages/vortex-move": {
+      "name": "@vortexjs/move",
+      "version": "1.3.9",
+      "dependencies": {
+        "@vortexjs/common": "workspace:*",
+        "@vortexjs/core": "workspace:*",
+        "@vortexjs/dom": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/bun": "catalog:",
+        "tsdown": "catalog:",
+      },
+      "peerDependencies": {
+        "typescript": "catalog:",
+      },
+    },
     "packages/vortex-prime": {
       "name": "@vortexjs/prime",
-      "version": "1.3.6",
+      "version": "1.3.9",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
@@ -254,7 +272,7 @@
     },
     "packages/vortex-ssr": {
       "name": "@vortexjs/ssr",
-      "version": "0.0.6",
+      "version": "0.0.9",
       "dependencies": {
         "@vortexjs/common": "workspace:*",
         "@vortexjs/core": "workspace:*",
@@ -270,7 +288,7 @@
     },
     "packages/wormhole": {
       "name": "@vortexjs/wormhole",
-      "version": "0.4.0",
+      "version": "0.4.3",
       "bin": {
         "wormhole": "./dist/cli.js",
         "wh": "./dist/cli.js",
@@ -577,6 +595,8 @@
     "@vortexjs/intrinsics": ["@vortexjs/intrinsics@workspace:packages/vortex-intrinsics"],
 
     "@vortexjs/locounter": ["@vortexjs/locounter@workspace:packages/locounter"],
+
+    "@vortexjs/move": ["@vortexjs/move@workspace:packages/vortex-move"],
 
     "@vortexjs/pippin": ["@vortexjs/pippin@workspace:packages/pippin"],
 
