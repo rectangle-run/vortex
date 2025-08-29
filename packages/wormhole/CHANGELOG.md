@@ -1,5 +1,16 @@
 # @vortexjs/wormhole
 
+## 0.4.4
+
+### Patch Changes
+
+- Updated dependencies [8e5938f]
+  - @vortexjs/core@3.0.0
+  - @vortexjs/dom@3.0.0
+  - @vortexjs/cli@0.0.6
+  - @vortexjs/intrinsics@0.1.4
+  - @vortexjs/ssr@0.0.10
+
 ## 0.4.3
 
 ### Patch Changes
