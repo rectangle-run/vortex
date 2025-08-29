@@ -1,5 +1,13 @@
 # @vortexjs/prime
 
+## 1.3.10
+
+### Patch Changes
+
+- Updated dependencies [8e5938f]
+  - @vortexjs/core@3.0.0
+  - @vortexjs/dom@3.0.0
+
 ## 1.3.9
 
 ### Patch Changes

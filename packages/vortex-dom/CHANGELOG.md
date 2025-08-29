@@ -1,5 +1,16 @@
 # @vortexjs/dom
 
+## 3.0.0
+
+### Major Changes
+
+- 8e5938f: Improve `use` refs
+
+### Patch Changes
+
+- Updated dependencies [8e5938f]
+  - @vortexjs/core@3.0.0
+
 ## 2.0.9
 
 ### Patch Changes
