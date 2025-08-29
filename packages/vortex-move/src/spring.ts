@@ -6,19 +6,51 @@ import {
 } from "@vortexjs/core";
 import { useAnimation } from "./scheduler";
 
+export type SpringSettings =
+	| {
+			weight?: number;
+			speed?: number;
+			instant?: boolean;
+	  }
+	| undefined;
+
 export class Spring {
 	target = 0;
 	value = 0;
 	velocity = 0;
-
-	// parameters (NOTE: not perfectly realistic)
-	tension = 100;
-	reboundFriction = 50;
+	tension = 0;
+	reboundFriction = 0;
 	typicalFriction = 0;
+	isInstant = false;
 
 	signal = store(0);
 
+	applyConfig(settings?: SpringSettings) {
+		this.typicalFriction = 0;
+		this.reboundFriction = 50 / (settings?.weight ?? 1);
+		this.tension = 100 * (settings?.speed ?? 1);
+		this.isInstant = settings?.instant ?? false;
+
+		return this;
+	}
+
+	constructor(initialValue?: number, settings?: SpringSettings) {
+		if (initialValue !== undefined) {
+			this.value = initialValue;
+			this.target = initialValue;
+			this.signal.set(initialValue);
+		}
+		this.applyConfig(settings);
+	}
+
 	update(dt: number) {
+		if (this.isInstant) {
+			this.value = this.target;
+			this.velocity = 0;
+			this.signal.set(this.value);
+			return;
+		}
+
 		// Break NaNs
 		// (shouldn't happen, but just in case)
 		if (Number.isNaN(this.value)) this.value = 0;

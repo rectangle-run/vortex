@@ -4,11 +4,12 @@ import {
 	list,
 	render,
 	useDerived,
+	useHookLifetime,
 	useState,
 	when,
 } from "@vortexjs/core";
 import { html } from "@vortexjs/dom";
-import { useSpring } from "@vortexjs/move";
+import { layout } from "@vortexjs/move";
 
 const TestingContext = createContext<string>("TestingContext");
 
@@ -18,26 +19,69 @@ function TestingComponent() {
 	return <p>This is a testing component. Context data: {ctxData}</p>;
 }
 
-function SpringSliders() {
+function LayoutTest() {
 	const targetValue = useState(0);
-	const spring = useSpring(targetValue);
-	const height = useDerived((get) => `${get(spring.signal)}px`);
-	const width = useDerived((get) => `${10000 / get(spring.signal)}px`);
+	const lt = useHookLifetime();
 
 	return (
 		<>
-			<input type="range" min="25" max="125" bind:value={targetValue} />
 			<div
 				style={{
-					backgroundColor: "red",
-					width,
-					height,
-					position: "fixed",
-					left: "50vw",
-					top: "50vh",
-					transform: "translate(-50%, -50%)",
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+					width: "200px",
+					height: "200px",
+					backgroundColor: "#eee",
 				}}
-			/>
+			>
+				<button type="button" use={layout()}>
+					Test
+				</button>
+			</div>
+			<div className="resizer">
+				{list(
+					"Fugiat reprehenderit occaecat aute id esse enim ea labore do minim amet velit deserunt exercitation. Minim esse voluptate fugiat est non et fugiat amet duis.".split(
+						" ",
+					),
+				).show((x, _i) => (
+					<>
+						<span
+							className="inline-char"
+							use={layout({ spring: { weight: 0.05 } })}
+						>
+							{x}
+						</span>
+						<span> </span>
+					</>
+				))}
+			</div>
+		</>
+	);
+}
+
+function PopupTest() {
+	const isOpen = useState(false);
+
+	return (
+		<>
+			<button
+				type="button"
+				on:click={() => {
+					isOpen.set(!getImmediateValue(isOpen));
+				}}
+				use={layout({ id: "popupButton", spring: { weight: 0.5 } })}
+			>
+				Toggle Popup
+			</button>
+			{when(isOpen, () => (
+				<div
+					className="popup"
+					use={layout({ startsFrom: "popupButton" })}
+				>
+					This is a popup!
+				</div>
+			))}
 		</>
 	);
 }
@@ -67,7 +111,6 @@ function App() {
 				on:click={() => {
 					counter.set(getImmediateValue(counter) + 100);
 				}}
-				use={({ ref: element }) => console.log("button element: ", element)}
 				type="button"
 			>
 				Increment
@@ -86,7 +129,8 @@ function App() {
 				</p>
 			))}
 
-			<SpringSliders />
+			<LayoutTest />
+			<PopupTest />
 		</>
 	);
 }
