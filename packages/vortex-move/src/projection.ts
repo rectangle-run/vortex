@@ -11,26 +11,27 @@ export function getElementAbsoluteTransform(element: HTMLElement): DOMMatrix {
 	const matrix = new DOMMatrix(transform);
 
 	if (element.parentElement) {
-		matrix.preMultiplySelf(getElementAbsoluteTransform(element.parentElement));
+		matrix.preMultiplySelf(
+			getElementAbsoluteTransform(element.parentElement),
+		);
 	}
 
 	return matrix;
 }
 
-export function projectElementToBox(
-	element: HTMLElement,
-	target: Box
-) {
+export function projectElementToBox(element: HTMLElement, target: Box) {
 	element.style.transform = "";
 
 	const currentRect = element.getBoundingClientRect();
 
-	const translateX = (
-		target.left + target.width / 2
-	) - (currentRect.left + currentRect.width / 2);
-	const translateY = (
-		target.top + target.height / 2
-	) - (currentRect.top + currentRect.height / 2);
+	const translateX =
+		target.left +
+		target.width / 2 -
+		(currentRect.left + currentRect.width / 2);
+	const translateY =
+		target.top +
+		target.height / 2 -
+		(currentRect.top + currentRect.height / 2);
 	let scaleX = target.width / currentRect.width;
 	let scaleY = target.height / currentRect.height;
 
@@ -47,7 +48,9 @@ export function projectElementToBox(
 		.scale(scaleX, scaleY);
 
 	if (element.parentElement) {
-		matrix.preMultiplySelf(getElementAbsoluteTransform(element.parentElement).inverse());
+		matrix.preMultiplySelf(
+			getElementAbsoluteTransform(element.parentElement).inverse(),
+		);
 	}
 
 	element.style.transform = matrix.toString();
