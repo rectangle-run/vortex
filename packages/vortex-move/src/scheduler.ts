@@ -73,9 +73,8 @@ export class Scheduler {
 
 const sceduler = new Scheduler();
 
-export function useAnimation(callback: SchedulerCallback) {
+export function useAnimation(callback: SchedulerCallback, lt = useHookLifetime()) {
 	const closable = sceduler.addCallback(callback);
-	const lt = useHookLifetime();
 
 	lt.onClosed(() => {
 		closable.close();
