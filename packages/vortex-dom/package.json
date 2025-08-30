@@ -1,6 +1,9 @@
 {
 	"name": "@vortexjs/dom",
 	"type": "module",
+	"files": [
+		"dist"
+	],
 	"license": "MIT-0",
 	"repository": {
 		"url": "https://github.com/rectangle-run/vortex"
@@ -36,5 +39,5 @@
 			"require": "./dist/jsx/jsx-dev-runtime.cjs"
 		}
 	},
-	"version": "2.0.9"
+	"version": "3.0.0"
 }

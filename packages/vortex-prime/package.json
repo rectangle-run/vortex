@@ -1,6 +1,9 @@
 {
 	"name": "@vortexjs/prime",
 	"type": "module",
+	"files": [
+		"dist"
+	],
 	"license": "MIT-0",
 	"repository": {
 		"url": "https://github.com/rectangle-run/vortex"
@@ -27,5 +30,5 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"version": "1.3.9"
+	"version": "1.3.10"
 }

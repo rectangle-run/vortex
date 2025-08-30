@@ -2,6 +2,9 @@
 	"name": "@vortexjs/core",
 	"module": "src/index.ts",
 	"type": "module",
+	"files": [
+		"dist"
+	],
 	"license": "MIT-0",
 	"repository": {
 		"url": "https://github.com/rectangle-run/vortex"
@@ -38,7 +41,7 @@
 			"require": "./dist/actions/index.cjs"
 		}
 	},
-	"version": "2.7.3",
+	"version": "3.0.0",
 	"dependencies": {
 		"@vortexjs/common": "workspace:*"
 	}

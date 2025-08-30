@@ -1,5 +1,24 @@
 # @vortexjs/wormhole
 
+## 0.4.4
+
+### Patch Changes
+
+- Add files so that way release works
+- Updated dependencies
+- Updated dependencies [8e5938f]
+  - @vortexjs/pippin-plugin-tailwind@0.0.6
+  - @vortexjs/intrinsics@0.1.4
+  - @vortexjs/common@0.1.5
+  - @vortexjs/core@3.0.0
+  - @vortexjs/vindicator@0.0.6
+  - @vortexjs/cli@0.0.6
+  - @vortexjs/dom@3.0.0
+  - @vortexjs/ssr@0.0.10
+  - @vortexjs/discovery@0.2.6
+  - @vortexjs/pippin@0.1.6
+  - @vortexjs/args@0.0.6
+
 ## 0.4.3
 
 ### Patch Changes

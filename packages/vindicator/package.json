@@ -1,6 +1,9 @@
 {
 	"name": "@vortexjs/vindicator",
 	"type": "module",
+	"files": [
+		"dist"
+	],
 	"license": "MIT-0",
 	"repository": {
 		"url": "https://github.com/rectangle-run/vortex"
@@ -25,5 +28,5 @@
 			"require": "./dist/index.cjs"
 		}
 	},
-	"version": "0.0.5"
+	"version": "0.0.6"
 }

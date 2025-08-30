@@ -1,5 +1,13 @@
 # @vortexjs/locounter
 
+## 0.0.5
+
+### Patch Changes
+
+- Add files so that way release works
+- Updated dependencies
+  - @vortexjs/common@0.1.5
+
 ## 0.0.4
 
 ### Patch Changes

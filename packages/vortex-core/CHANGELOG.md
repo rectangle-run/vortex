@@ -1,5 +1,17 @@
 # @vortexjs/core
 
+## 3.0.0
+
+### Major Changes
+
+- 8e5938f: Improve `use` refs
+
+### Patch Changes
+
+- Add files so that way release works
+- Updated dependencies
+  - @vortexjs/common@0.1.5
+
 ## 2.7.3
 
 ### Patch Changes

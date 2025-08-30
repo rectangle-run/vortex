@@ -1,6 +1,9 @@
 {
 	"name": "@vortexjs/wormhole",
 	"type": "module",
+	"files": [
+		"dist"
+	],
 	"license": "MIT-0",
 	"repository": {
 		"url": "https://github.com/rectangle-run/vortex"
@@ -47,5 +50,5 @@
 			"require": "./dist/virt/route.cjs"
 		}
 	},
-	"version": "0.4.3"
+	"version": "0.4.4"
 }

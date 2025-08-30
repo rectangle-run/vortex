@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.1.5
+
+### Patch Changes
+
+- Add files so that way release works
+
 ## 0.1.4
 
 ### Patch Changes

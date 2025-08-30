@@ -1,5 +1,22 @@
 # @vortexjs/bun-example
 
+## 2.0.0
+
+### Major Changes
+
+- 8e5938f: Improve `use` refs
+
+### Patch Changes
+
+- Add files so that way release works
+- Updated dependencies
+- Updated dependencies [8e5938f]
+- Updated dependencies [5973997]
+- Updated dependencies [3a60d12]
+  - @vortexjs/core@3.0.0
+  - @vortexjs/move@0.1.0
+  - @vortexjs/dom@3.0.0
+
 ## 1.5.9
 
 ### Patch Changes

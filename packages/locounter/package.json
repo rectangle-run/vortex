@@ -2,8 +2,11 @@
 	"name": "@vortexjs/locounter",
 	"module": "src/index.ts",
 	"type": "module",
+	"files": [
+		"dist"
+	],
 	"license": "MIT-0",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"repository": {
 		"url": "https://github.com/rectangle-run/vortex"
 	},
