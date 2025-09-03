@@ -1,5 +1,14 @@
 # @vortexjs/cli
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @vortexjs/common@0.1.6
+  - @vortexjs/core@3.0.1
+  - @vortexjs/intrinsics@0.1.5
+
 ## 0.0.6
 
 ### Patch Changes

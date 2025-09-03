@@ -447,6 +447,7 @@ export function serializeContext_writeObject(
 	}
 	if (obj instanceof Date) {
 		serializeContext_write(context, `date(unix=${obj.getTime()})`);
+		return;
 	}
 	if (obj instanceof Set) {
 		serializeContext_write(context, "set(");
@@ -457,6 +458,7 @@ export function serializeContext_writeObject(
 		serializeContext_dedent(context);
 		serializeContext_newline(context);
 		serializeContext_write(context, ")");
+		return;
 	}
 	if (obj instanceof Map) {
 		serializeContext_write(context, "map(");
@@ -467,6 +469,7 @@ export function serializeContext_writeObject(
 		serializeContext_dedent(context);
 		serializeContext_newline(context);
 		serializeContext_write(context, ")");
+		return;
 	}
 	if (typeof obj === "object") {
 		serializeContext_write(context, "(");

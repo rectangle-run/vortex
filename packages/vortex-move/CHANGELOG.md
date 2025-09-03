@@ -1,5 +1,14 @@
 # @vortexjs/move
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @vortexjs/common@0.1.6
+  - @vortexjs/core@3.0.1
+  - @vortexjs/dom@3.0.1
+
 ## 0.1.0
 
 ### Minor Changes
