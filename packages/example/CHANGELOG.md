@@ -1,5 +1,15 @@
 # @vortexjs/bun-example
 
+## 2.0.2
+
+### Patch Changes
+
+- Rerelease
+- Updated dependencies
+  - @vortexjs/core@3.0.2
+  - @vortexjs/dom@3.0.2
+  - @vortexjs/move@0.1.2
+
 ## 2.0.1
 
 ### Patch Changes

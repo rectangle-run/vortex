@@ -1,5 +1,14 @@
 # @vortexjs/pippin
 
+## 0.1.8
+
+### Patch Changes
+
+- Rerelease
+- Updated dependencies
+  - @vortexjs/cache@0.0.8
+  - @vortexjs/common@0.1.7
+
 ## 0.1.7
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @vortexjs/wormhole
 
+## 0.4.6
+
+### Patch Changes
+
+- Rerelease
+- Updated dependencies
+  - @vortexjs/args@0.0.8
+  - @vortexjs/discovery@0.2.8
+  - @vortexjs/pippin@0.1.8
+  - @vortexjs/pippin-plugin-tailwind@0.0.8
+  - @vortexjs/vindicator@0.0.8
+  - @vortexjs/cli@0.0.8
+  - @vortexjs/common@0.1.7
+  - @vortexjs/core@3.0.2
+  - @vortexjs/dom@3.0.2
+  - @vortexjs/intrinsics@0.1.6
+  - @vortexjs/ssr@0.0.12
+
 ## 0.4.5
 
 ### Patch Changes

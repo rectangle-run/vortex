@@ -1,7 +1,7 @@
 {
 	"name": "@vortexjs/cataloger",
 	"module": "src/index.ts",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"devDependencies": {
 		"@types/bun": "catalog:"
 	},
