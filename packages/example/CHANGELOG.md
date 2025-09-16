@@ -1,5 +1,15 @@
 # @vortexjs/bun-example
 
+## 2.0.4
+
+### Patch Changes
+
+- yeehaw
+- Updated dependencies
+  - @vortexjs/core@3.0.4
+  - @vortexjs/dom@3.0.4
+  - @vortexjs/move@0.1.4
+
 ## 2.0.3
 
 ### Patch Changes

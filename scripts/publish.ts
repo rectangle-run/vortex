@@ -1,3 +1,5 @@
+import { join } from "node:path";
+
 // Query packages with Turborepo
 interface TurborepoPackages {
 	packageManager: string;
@@ -64,8 +66,9 @@ console.log(`Publishing ${toPublish.length} packages...`);
 
 await Promise.all(toPublish.map(async (pkg) => {
 	console.log(`Publishing ${pkg.name}...`);
-	await Bun.$.cwd(pkg.path)`bun pm pack --filename ./tarball.tgz`;
-	await Bun.$.cwd(pkg.path)`npm publish ./tarball.tgz --access public`;
+	const tarballPath = join(pkg.path, "tarball.tgz");
+	await Bun.$.cwd(pkg.path)`bun pm pack --filename ${tarballPath}`;
+	await Bun.$.cwd(pkg.path)`npm publish ${tarballPath} --access public`;
 }));
 
 export { }

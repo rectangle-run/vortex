@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.1.9
+
+### Patch Changes
+
+- yeehaw
+
 ## 0.1.8
 
 ### Patch Changes

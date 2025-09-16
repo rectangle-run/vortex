@@ -1,5 +1,13 @@
 # @vortexjs/args
 
+## 0.0.10
+
+### Patch Changes
+
+- yeehaw
+- Updated dependencies
+  - @vortexjs/common@0.1.9
+
 ## 0.0.9
 
 ### Patch Changes

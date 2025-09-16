@@ -1,5 +1,14 @@
 # @vortexjs/pippin-plugin-tailwind
 
+## 0.0.10
+
+### Patch Changes
+
+- yeehaw
+- Updated dependencies
+  - @vortexjs/pippin@0.1.10
+  - @vortexjs/common@0.1.9
+
 ## 0.0.9
 
 ### Patch Changes

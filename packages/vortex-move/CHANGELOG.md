@@ -1,5 +1,15 @@
 # @vortexjs/move
 
+## 0.1.4
+
+### Patch Changes
+
+- yeehaw
+- Updated dependencies
+  - @vortexjs/common@0.1.9
+  - @vortexjs/core@3.0.4
+  - @vortexjs/dom@3.0.4
+
 ## 0.1.3
 
 ### Patch Changes
