@@ -1,5 +1,15 @@
 # @vortexjs/discovery
 
+## 0.2.11
+
+### Patch Changes
+
+- hooooly hell just work
+- Updated dependencies
+  - @vortexjs/pippin@0.1.11
+  - @vortexjs/cache@0.0.11
+  - @vortexjs/common@0.1.10
+
 ## 0.2.10
 
 ### Patch Changes

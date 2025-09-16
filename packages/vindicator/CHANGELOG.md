@@ -1,5 +1,13 @@
 # @vortexjs/vindicator
 
+## 0.0.11
+
+### Patch Changes
+
+- hooooly hell just work
+- Updated dependencies
+  - @vortexjs/common@0.1.10
+
 ## 0.0.10
 
 ### Patch Changes

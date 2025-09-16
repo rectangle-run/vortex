@@ -1,5 +1,13 @@
 # @vortexjs/cataloger
 
+## 0.0.9
+
+### Patch Changes
+
+- hooooly hell just work
+- Updated dependencies
+  - @vortexjs/common@0.1.10
+
 ## 0.0.8
 
 ### Patch Changes

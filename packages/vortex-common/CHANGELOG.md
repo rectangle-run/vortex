@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.1.10
+
+### Patch Changes
+
+- hooooly hell just work
+
 ## 0.1.9
 
 ### Patch Changes

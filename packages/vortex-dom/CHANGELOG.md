@@ -1,5 +1,14 @@
 # @vortexjs/dom
 
+## 3.0.5
+
+### Patch Changes
+
+- hooooly hell just work
+- Updated dependencies
+  - @vortexjs/common@0.1.10
+  - @vortexjs/core@3.0.5
+
 ## 3.0.4
 
 ### Patch Changes

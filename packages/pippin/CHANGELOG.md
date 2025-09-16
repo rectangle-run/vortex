@@ -1,5 +1,14 @@
 # @vortexjs/pippin
 
+## 0.1.11
+
+### Patch Changes
+
+- hooooly hell just work
+- Updated dependencies
+  - @vortexjs/cache@0.0.11
+  - @vortexjs/common@0.1.10
+
 ## 0.1.10
 
 ### Patch Changes
