@@ -64,7 +64,7 @@ console.log(`Publishing ${toPublish.length} packages...`);
 
 await Promise.all(toPublish.map(async (pkg) => {
 	console.log(`Publishing ${pkg.name}...`);
-	await Bun.$.cwd(pkg.path)`bun pm pack --destination ./tarball.tgz`;
+	await Bun.$.cwd(pkg.path)`bun pm pack --filename ./tarball.tgz`;
 	await Bun.$.cwd(pkg.path)`npm publish ./tarball.tgz --access public`;
 }));
 

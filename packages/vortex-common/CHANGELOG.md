@@ -1,5 +1,11 @@
 # @vortexjs/common
 
+## 0.1.8
+
+### Patch Changes
+
+- Version all
+
 ## 0.1.7
 
 ### Patch Changes

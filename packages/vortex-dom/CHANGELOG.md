@@ -1,5 +1,14 @@
 # @vortexjs/dom
 
+## 3.0.3
+
+### Patch Changes
+
+- Version all
+- Updated dependencies
+  - @vortexjs/common@0.1.8
+  - @vortexjs/core@3.0.3
+
 ## 3.0.2
 
 ### Patch Changes

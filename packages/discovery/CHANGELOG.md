@@ -1,5 +1,15 @@
 # @vortexjs/discovery
 
+## 0.2.9
+
+### Patch Changes
+
+- Version all
+- Updated dependencies
+  - @vortexjs/pippin@0.1.9
+  - @vortexjs/cache@0.0.9
+  - @vortexjs/common@0.1.8
+
 ## 0.2.8
 
 ### Patch Changes

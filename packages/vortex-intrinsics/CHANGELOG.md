@@ -1,5 +1,14 @@
 # @vortexjs/cache
 
+## 0.1.7
+
+### Patch Changes
+
+- Version all
+- Updated dependencies
+  - @vortexjs/common@0.1.8
+  - @vortexjs/core@3.0.3
+
 ## 0.1.6
 
 ### Patch Changes

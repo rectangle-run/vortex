@@ -39,5 +39,5 @@
 			"require": "./dist/jsx/jsx-dev-runtime.cjs"
 		}
 	},
-	"version": "3.0.2"
+	"version": "3.0.3"
 }
