@@ -7,7 +7,7 @@ import { getImmediateValue } from "@vortexjs/core";
 import pippinPluginTailwind from "@vortexjs/pippin-plugin-tailwind";
 import { pippinPluginDiscovery } from "@vortexjs/discovery";
 import { basename, extname, join } from "node:path";
-import { rm, rmdir } from "node:fs/promises";
+import { mkdir, rm, rmdir, writeFile } from "node:fs/promises";
 import type { HTTPMethod } from "~/shared/http-method";
 
 export interface BuildBaseRoute<Type extends string> {
@@ -66,7 +66,15 @@ export class Build<AdapterOutput = any> {
     ): Promise<string> {
         const path = join(this.workingPath, `${name}.${ext}`);
 
-        await Bun.write(path, content);
+        await mkdir(this.workingPath, { recursive: true });
+
+        await writeFile(path, content);
+
+        const stat = await Bun.file(path).stat();
+
+        if (stat.size !== content.length) {
+            throw new Error(`Failed to write file: ${path}`);
+        }
 
         return path;
     }

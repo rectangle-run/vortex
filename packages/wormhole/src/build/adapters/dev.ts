@@ -63,9 +63,9 @@ export function DevAdapter(): DevAdapter {
             for (const exp of imports) {
                 const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
 
-                const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
+                // const path = await build.writeCodegenned(reexporterName, `import {${exp.name}} from ${JSON.stringify(exp.file)} ;export{${exp.name}};`);
 
-                codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
+                codegenSource += `(async () => (await import(${JSON.stringify(exp.file)}))[${JSON.stringify(exp.name)}]),`;
             }
 
             codegenSource += '];';
@@ -125,9 +125,9 @@ export function DevAdapter(): DevAdapter {
                 for (const exp of apiIndicies) {
                     const reexporterName = "proxy-" + Bun.hash(`${exp.file}-${exp.name}`).toString(36);
 
-                    const path = await build.writeCodegenned(reexporterName, `export { ${JSON.stringify(exp.name)} } from ${JSON.stringify(exp.file)}`);
+                    //const path = await build.writeCodegenned(reexporterName, `import {${exp.name}} from ${JSON.stringify(exp.file)} ;export {${exp.name}};`);
 
-                    codegenSource += `(async () => (await import(${JSON.stringify(path)}))[${JSON.stringify(exp.name)}]),`;
+                    codegenSource += `(async () => (await import(${JSON.stringify(exp.file)}))[${JSON.stringify(exp.name)}]),`;
                 }
 
                 codegenSource += `]);`;

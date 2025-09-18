@@ -14,6 +14,7 @@ export interface DevServer {
     processRequest(request: Request, tags: RequestTag[]): Promise<Response>;
     rebuild(): Promise<void>;
     buildResult: Promise<DevAdapterResult>;
+    buildQueued: boolean;
     project: Project;
 }
 
@@ -36,7 +37,8 @@ export function DevServer(project: Project): DevServer {
         processRequest: DevServer_processRequest,
         rebuild: DevServer_rebuild,
         buildResult: new Promise(() => { }),
-        project
+        project,
+        buildQueued: true
     }
 
     server.reload({
@@ -78,24 +80,34 @@ export function DevServer(project: Project): DevServer {
 
     project.lt.onClosed(devServerTask[Symbol.dispose]);
 
-    self.rebuild();
-
     // Watch sourcedir
     const watcher = watch(join(project.projectDir, "src"), { recursive: true });
 
-    let isWaitingForRebuild = false;
-
     watcher.on("change", async (eventType, filename) => {
-        if (isWaitingForRebuild) return;
-        isWaitingForRebuild = true;
-        await self.buildResult;
-        isWaitingForRebuild = false;
-        self.rebuild();
+        self.buildQueued = true;
     });
 
     project.lt.onClosed(() => {
         watcher.close();
     });
+
+    let closed = false;
+
+    project.lt.onClosed(() => {
+        closed = true;
+    });
+
+    const rebuildLoop = async () => {
+        while (!closed) {
+            if (self.buildQueued) {
+                self.buildQueued = false;
+                await self.rebuild();
+            }
+            await new Promise(res => setTimeout(res, 100));
+        }
+    }
+
+    rebuildLoop();
 
     return self;
 }
