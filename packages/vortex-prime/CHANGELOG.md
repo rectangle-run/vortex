@@ -1,5 +1,25 @@
 # @vortexjs/prime
 
+## 1.3.17
+
+### Patch Changes
+
+- PUUUUUUUUUUUUUUUUUUUUBLISH
+- Updated dependencies
+  - @vortexjs/common@0.1.12
+  - @vortexjs/core@3.0.7
+  - @vortexjs/dom@3.0.7
+
+## 1.3.16
+
+### Patch Changes
+
+- republish this goofy guy
+- Updated dependencies
+  - @vortexjs/common@0.1.11
+  - @vortexjs/core@3.0.6
+  - @vortexjs/dom@3.0.6
+
 ## 1.3.15
 
 ### Patch Changes

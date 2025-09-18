@@ -6,7 +6,7 @@
 		"dist"
 	],
 	"license": "MIT-0",
-	"version": "0.0.10",
+	"version": "0.0.12",
 	"repository": {
 		"url": "https://github.com/rectangle-run/vortex"
 	},

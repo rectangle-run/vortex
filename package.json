@@ -1,55 +1,55 @@
 {
-	"name": "vortex",
-	"private": true,
-	"license": "MIT-0",
-	"workspaces": {
-		"packages": [
-			"packages/*"
-		],
-		"catalog": {
-			"@speed-highlight/core": "^1.2.7",
-			"bun-plugin-tailwind": "^0.0.15",
-			"chalk": "^5.4.1",
-			"@types/bun": "latest",
-			"tsdown": "^0.14.1",
-			"typescript": "^5",
-			"@napi-rs/cli": "^3.0.0-alpha.89",
-			"@vortexjs/discovery-win32-x64-msvc": "0.0.0",
-			"@vortexjs/discovery-darwin-x64": "0.0.0",
-			"@vortexjs/discovery-linux-x64-gnu": "0.0.0",
-			"tailwindcss": "^4.1.10",
-			"@inquirer/prompts": "^7.5.3",
-			"@tailwindcss/node": "^4.1.11",
-			"@tailwindcss/oxide": "^4.1.11",
-			"@jridgewell/source-map": "^0.3.10",
-			"esrap": "https://pkg.pr.new/sveltejs/esrap@76",
-			"oxc-parser": "^0.75.1",
-			"valibot": "^1.1.0"
-		}
-	},
-	"scripts": {
-		"change": "changeset",
-		"release": "bun ./scripts/publish.ts",
-		"build": "turbo build",
-		"wdev": "cd packages/example-wormhole && turbo build && bun dev",
-		"wbuild": "cd packages/example-wormhole && turbo build && bun vbuild",
-		"version": "changeset version",
-		"dev": "turbo dev",
-		"test": "turbo test",
-		"fmt": "bunx @biomejs/biome@2.0.6 check --write",
-		"reset-builds": "rm -rf packages/*/dist .turbo"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.0.6",
-		"@changesets/cli": "^2.29.4",
-		"turbo": "^2.5.5"
-	},
-	"trustedDependencies": [
-		"@biomejs/biome",
-		"esbuild"
-	],
-	"packageManager": "bun@1.2.15",
-	"patchedDependencies": {
-		"@speed-highlight/core@1.2.7": "patches/@speed-highlight%2Fcore@1.2.7.patch"
-	}
+    "name": "vortex",
+    "private": true,
+    "license": "MIT-0",
+    "workspaces": {
+        "packages": [
+            "packages/*"
+        ],
+        "catalog": {
+            "@speed-highlight/core": "^1.2.7",
+            "bun-plugin-tailwind": "^0.0.15",
+            "chalk": "^5.4.1",
+            "@types/bun": "latest",
+            "tsdown": "^0.14.1",
+            "typescript": "^5",
+            "@napi-rs/cli": "^3.0.0-alpha.89",
+            "@vortexjs/discovery-win32-x64-msvc": "0.0.0",
+            "@vortexjs/discovery-darwin-x64": "0.0.0",
+            "@vortexjs/discovery-linux-x64-gnu": "0.0.0",
+            "tailwindcss": "^4.1.10",
+            "@inquirer/prompts": "^7.5.3",
+            "@tailwindcss/node": "^4.1.11",
+            "@tailwindcss/oxide": "^4.1.11",
+            "@jridgewell/source-map": "^0.3.10",
+            "esrap": "https://pkg.pr.new/sveltejs/esrap@76",
+            "oxc-parser": "^0.75.1",
+            "valibot": "^1.1.0"
+        }
+    },
+    "scripts": {
+        "change": "changeset",
+        "release": "bun install && bun ./scripts/publish.ts",
+        "build": "turbo build",
+        "wdev": "cd packages/example-wormhole && turbo build && bun dev",
+        "wbuild": "cd packages/example-wormhole && turbo build && bun vbuild",
+        "version": "changeset version",
+        "dev": "turbo dev",
+        "test": "turbo test",
+        "fmt": "bunx @biomejs/biome@2.0.6 check --write",
+        "reset-builds": "rm -rf packages/*/dist .turbo"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "2.0.6",
+        "@changesets/cli": "^2.29.4",
+        "turbo": "^2.5.5"
+    },
+    "trustedDependencies": [
+        "@biomejs/biome",
+        "esbuild"
+    ],
+    "packageManager": "bun@1.2.15",
+    "patchedDependencies": {
+        "@speed-highlight/core@1.2.7": "patches/@speed-highlight%2Fcore@1.2.7.patch"
+    }
 }

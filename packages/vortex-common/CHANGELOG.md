@@ -1,5 +1,17 @@
 # @vortexjs/common
 
+## 0.1.12
+
+### Patch Changes
+
+- PUUUUUUUUUUUUUUUUUUUUBLISH
+
+## 0.1.11
+
+### Patch Changes
+
+- republish this goofy guy
+
 ## 0.1.10
 
 ### Patch Changes

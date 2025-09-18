@@ -1,5 +1,41 @@
 # @vortexjs/wormhole
 
+## 0.4.12
+
+### Patch Changes
+
+- PUUUUUUUUUUUUUUUUUUUUBLISH
+- Updated dependencies
+  - @vortexjs/pippin-plugin-tailwind@0.0.13
+  - @vortexjs/intrinsics@0.1.11
+  - @vortexjs/common@0.1.12
+  - @vortexjs/core@3.0.7
+  - @vortexjs/vindicator@0.0.13
+  - @vortexjs/cli@0.0.13
+  - @vortexjs/dom@3.0.7
+  - @vortexjs/ssr@0.0.17
+  - @vortexjs/discovery@0.2.13
+  - @vortexjs/pippin@0.1.13
+  - @vortexjs/args@0.0.13
+
+## 0.4.11
+
+### Patch Changes
+
+- republish this goofy guy
+- Updated dependencies
+  - @vortexjs/args@0.0.12
+  - @vortexjs/discovery@0.2.12
+  - @vortexjs/pippin@0.1.12
+  - @vortexjs/pippin-plugin-tailwind@0.0.12
+  - @vortexjs/vindicator@0.0.12
+  - @vortexjs/cli@0.0.12
+  - @vortexjs/common@0.1.11
+  - @vortexjs/core@3.0.6
+  - @vortexjs/dom@3.0.6
+  - @vortexjs/intrinsics@0.1.10
+  - @vortexjs/ssr@0.0.16
+
 ## 0.4.10
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @vortexjs/args
 
+## 0.0.13
+
+### Patch Changes
+
+- PUUUUUUUUUUUUUUUUUUUUBLISH
+- Updated dependencies
+  - @vortexjs/common@0.1.12
+
+## 0.0.12
+
+### Patch Changes
+
+- republish this goofy guy
+- Updated dependencies
+  - @vortexjs/common@0.1.11
+
 ## 0.0.11
 
 ### Patch Changes

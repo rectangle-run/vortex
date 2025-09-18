@@ -1,5 +1,23 @@
 # @vortexjs/pippin
 
+## 0.1.13
+
+### Patch Changes
+
+- PUUUUUUUUUUUUUUUUUUUUBLISH
+- Updated dependencies
+  - @vortexjs/common@0.1.12
+  - @vortexjs/cache@0.0.13
+
+## 0.1.12
+
+### Patch Changes
+
+- republish this goofy guy
+- Updated dependencies
+  - @vortexjs/cache@0.0.12
+  - @vortexjs/common@0.1.11
+
 ## 0.1.11
 
 ### Patch Changes
