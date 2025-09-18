@@ -1,5 +1,11 @@
 # @vortexjs/wormhole
 
+## 0.4.13
+
+### Patch Changes
+
+- bc6a8d0: Fix a bug with proxy imports
+
 ## 0.4.12
 
 ### Patch Changes
